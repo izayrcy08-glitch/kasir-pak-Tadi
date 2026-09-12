@@ -1,0 +1,217 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
+* { box-sizing: border-box; }
+body { margin: 0; }
+.root {
+  width: 1440px; height: 900px; display: flex;
+  background: #57735F; font-family: 'Work Sans', system-ui, sans-serif;
+  color: #202A22;
+}
+.sidebar {
+  width: 120px; flex-shrink: 0; background: #3F5B49; display: flex;
+  flex-direction: column; align-items: center; padding: 28px 0;
+}
+.logo-badge {
+  width: 44px; height: 44px; border-radius: 12px; background: #E4A24A; color: #241400;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.15rem; margin-bottom: 30px;
+}
+.nav-list { display: flex; flex-direction: column; gap: 8px; }
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 10px 6px; border-radius: 12px; width: 92px;
+  color: rgba(245,247,242,.62);
+}
+.nav-item span { font-size: .66rem; font-weight: 500; text-align: center; line-height: 1.2; }
+.nav-item svg { width: 21px; height: 21px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.nav-item.active { background: rgba(255,255,255,.13); color: #F5F7F2; }
+.nav-item.active svg { stroke: #E4A24A; }
+
+.main { flex: 1; padding: 36px 40px; display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.page-head { display: flex; align-items: flex-end; justify-content: space-between; }
+.page-head h1 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.62rem; color: #F5F7F2; margin: 0 0 4px; letter-spacing: -.005em; }
+.page-head .sub { font-size: .87rem; color: rgba(245,247,242,.66); margin: 0; }
+
+.btn-accent { background: #E4A24A; color: #241400; border: none; border-radius: 999px; padding: 13px 20px; font-weight: 600; font-size: .87rem; display: inline-flex; align-items: center; gap: 8px; }
+.btn-accent svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.1; }
+
+.toolbar { display: flex; align-items: center; gap: 14px; }
+.search { flex: 1; max-width: 340px; display: flex; align-items: center; gap: 10px; background: rgba(245,247,242,.14); border: 1px solid rgba(245,247,242,.22); border-radius: 12px; padding: 12px 15px; }
+.search svg { width: 16px; height: 16px; stroke: rgba(245,247,242,.75); fill: none; stroke-width: 1.8; flex-shrink: 0; }
+.search span { color: rgba(245,247,242,.75); font-size: .87rem; }
+.chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-chip { padding: 8px 15px; border-radius: 999px; border: 1.5px solid rgba(245,247,242,.28); font-size: .78rem; font-weight: 500; color: rgba(245,247,242,.8); }
+.filter-chip.active { background: #E4A24A; border-color: #E4A24A; color: #241400; }
+
+.card { background: #FFFFFF; border-radius: 20px; padding: 8px 24px 4px; box-shadow: 0 1px 2px rgba(20,26,18,.06), 0 14px 34px rgba(20,26,18,.12); }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: .62rem; text-transform: uppercase; letter-spacing: .06em; color: #5B665C; font-weight: 600; padding: 16px 12px 10px; border-bottom: 1px solid rgba(32,42,34,.09); }
+td { padding: 13px 12px; font-size: .84rem; border-bottom: 1px solid rgba(32,42,34,.07); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+.mono { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
+.cat-chip { display: inline-block; background: rgba(63,91,73,.1); color: #3F5B49; font-family: 'IBM Plex Mono', monospace; font-size: .64rem; font-weight: 600; padding: 3px 9px; border-radius: 999px; }
+.pill-warn { display: inline-flex; align-items: center; gap: 5px; background: rgba(214,92,74,.12); color: #D65C4A; font-family: 'IBM Plex Mono', monospace; font-size: .64rem; font-weight: 600; padding: 3px 9px; border-radius: 999px; margin-left: 8px; }
+.pill-warn::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #D65C4A; }
+.icon-btn { width: 30px; height: 30px; border-radius: 8px; border: 1px solid rgba(32,42,34,.12); background: none; display: inline-flex; align-items: center; justify-content: center; color: #5B665C; margin-left: 5px; }
+.icon-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.name-cell .code { display: block; font-family: 'IBM Plex Mono', monospace; font-size: .68rem; color: #5B665C; margin-bottom: 2px; }
+</style>
+</helmet>
+
+<div class="root">
+  <div class="sidebar">
+    <div class="logo-badge">T</div>
+    <div class="nav-list">
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg>
+        <span>Transaksi</span>
+      </div>
+      <div class="nav-item active">
+        <svg viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5v-9Z"/><path d="M3 7.5 12 12l9-4.5"/><path d="M12 12v9"/></svg>
+        <span>Produk</span>
+      </div>
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M11 20V4"/><path d="M18 20v-7"/><path d="M3 20h18"/></svg>
+        <span>Laporan</span>
+      </div>
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="9" cy="6" r="1.8"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="15" cy="12" r="1.8"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="11" cy="18" r="1.8"/></svg>
+        <span>Pengaturan</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="page-head">
+      <div>
+        <h1>Manajemen Produk</h1>
+        <p class="sub">12 produk terdaftar &middot; 2 stok rendah</p>
+      </div>
+      <button class="btn-accent">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Tambah Produk
+      </button>
+    </div>
+
+    <div class="toolbar">
+      <div class="search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg>
+        <span>Cari nama atau kode part&hellip;</span>
+      </div>
+      <div class="chip-row">
+        <div class="filter-chip active">Semua</div>
+        <div class="filter-chip">Oli</div>
+        <div class="filter-chip">Kampas Rem</div>
+        <div class="filter-chip">Busi</div>
+        <div class="filter-chip">Aki</div>
+        <div class="filter-chip">Filter</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>Produk</th><th>Kategori</th><th>Harga Beli</th><th>Harga Jual</th><th>Stok</th><th>Satuan</th><th>Aksi</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="name-cell"><span class="code">KRD-014</span>Kampas Rem Depan &mdash; Beat</td>
+            <td><span class="cat-chip">Kampas Rem</span></td>
+            <td class="mono">Rp 32.000</td>
+            <td class="mono">Rp 45.000</td>
+            <td class="mono">24</td>
+            <td>pcs</td>
+            <td>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M12.9 4.5 15.5 7.1 6.6 16H4v-2.6L12.9 4.5Z"/><path d="M11.2 6.2 13.8 8.8"/></svg></button>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12"/></svg></button>
+            </td>
+          </tr>
+          <tr>
+            <td class="name-cell"><span class="code">OMS-001</span>Oli Mesin 1L &mdash; Shell Advance</td>
+            <td><span class="cat-chip">Oli</span></td>
+            <td class="mono">Rp 45.000</td>
+            <td class="mono">Rp 58.000</td>
+            <td class="mono">15</td>
+            <td>botol</td>
+            <td>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M12.9 4.5 15.5 7.1 6.6 16H4v-2.6L12.9 4.5Z"/><path d="M11.2 6.2 13.8 8.8"/></svg></button>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12"/></svg></button>
+            </td>
+          </tr>
+          <tr>
+            <td class="name-cell"><span class="code">BSN-220</span>Busi NGK Iridium</td>
+            <td><span class="cat-chip">Busi</span></td>
+            <td class="mono">Rp 25.000</td>
+            <td class="mono">Rp 35.000</td>
+            <td class="mono">30</td>
+            <td>pcs</td>
+            <td>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M12.9 4.5 15.5 7.1 6.6 16H4v-2.6L12.9 4.5Z"/><path d="M11.2 6.2 13.8 8.8"/></svg></button>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12"/></svg></button>
+            </td>
+          </tr>
+          <tr>
+            <td class="name-cell"><span class="code">AKI-GS12</span>Aki GS Astra 12V</td>
+            <td><span class="cat-chip">Aki</span></td>
+            <td class="mono">Rp 275.000</td>
+            <td class="mono">Rp 320.000</td>
+            <td class="mono">2<span class="pill-warn">Stok rendah</span></td>
+            <td>pcs</td>
+            <td>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M12.9 4.5 15.5 7.1 6.6 16H4v-2.6L12.9 4.5Z"/><path d="M11.2 6.2 13.8 8.8"/></svg></button>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12"/></svg></button>
+            </td>
+          </tr>
+          <tr>
+            <td class="name-cell"><span class="code">FUV-125</span>Filter Udara &mdash; Vario 125</td>
+            <td><span class="cat-chip">Filter</span></td>
+            <td class="mono">Rp 28.000</td>
+            <td class="mono">Rp 42.000</td>
+            <td class="mono">4<span class="pill-warn">Stok rendah</span></td>
+            <td>pcs</td>
+            <td>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M12.9 4.5 15.5 7.1 6.6 16H4v-2.6L12.9 4.5Z"/><path d="M11.2 6.2 13.8 8.8"/></svg></button>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12"/></svg></button>
+            </td>
+          </tr>
+          <tr>
+            <td class="name-cell"><span class="code">RGS-SPR</span>Rantai + Gear Set &mdash; Supra</td>
+            <td><span class="cat-chip">Rantai/Gear</span></td>
+            <td class="mono">Rp 140.000</td>
+            <td class="mono">Rp 185.000</td>
+            <td class="mono">9</td>
+            <td>set</td>
+            <td>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M12.9 4.5 15.5 7.1 6.6 16H4v-2.6L12.9 4.5Z"/><path d="M11.2 6.2 13.8 8.8"/></svg></button>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12"/></svg></button>
+            </td>
+          </tr>
+          <tr>
+            <td class="name-cell"><span class="code">PRS-BLK</span>Per Std Belakang &mdash; Beat</td>
+            <td><span class="cat-chip">Per</span></td>
+            <td class="mono">Rp 38.000</td>
+            <td class="mono">Rp 52.000</td>
+            <td class="mono">11</td>
+            <td>pcs</td>
+            <td>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M12.9 4.5 15.5 7.1 6.6 16H4v-2.6L12.9 4.5Z"/><path d="M11.2 6.2 13.8 8.8"/></svg></button>
+              <button class="icon-btn"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12"/></svg></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

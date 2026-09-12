@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
+* { box-sizing: border-box; }
+body { margin: 0; }
+.root {
+  width: 1440px; height: 900px; display: flex;
+  background: #57735F; font-family: 'Work Sans', system-ui, sans-serif;
+  color: #202A22;
+}
+.sidebar {
+  width: 120px; flex-shrink: 0; background: #3F5B49; display: flex;
+  flex-direction: column; align-items: center; padding: 28px 0;
+}
+.logo-badge {
+  width: 44px; height: 44px; border-radius: 12px; background: #E4A24A; color: #241400;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.15rem; margin-bottom: 30px;
+}
+.nav-list { display: flex; flex-direction: column; gap: 8px; }
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 10px 6px; border-radius: 12px; width: 92px;
+  color: rgba(245,247,242,.62);
+}
+.nav-item span { font-size: .66rem; font-weight: 500; text-align: center; line-height: 1.2; }
+.nav-item svg { width: 21px; height: 21px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.nav-item.active { background: rgba(255,255,255,.13); color: #F5F7F2; }
+.nav-item.active svg { stroke: #E4A24A; }
+
+.main { flex: 1; padding: 36px 40px; display: flex; flex-direction: column; gap: 22px; min-width: 0; align-items: flex-start; }
+.back-link { display: flex; align-items: center; gap: 6px; color: rgba(245,247,242,.68); font-size: .8rem; font-weight: 500; margin-bottom: 12px; }
+.back-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+.page-head h1 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.62rem; color: #F5F7F2; margin: 0 0 4px; letter-spacing: -.005em; }
+.page-head .sub { font-size: .87rem; color: rgba(245,247,242,.66); margin: 0; }
+
+.card { background: #FFFFFF; border-radius: 20px; padding: 32px; width: 460px; box-shadow: 0 1px 2px rgba(20,26,18,.06), 0 14px 34px rgba(20,26,18,.12); display: flex; flex-direction: column; gap: 24px; }
+
+.logo-field { display: flex; align-items: center; gap: 18px; }
+.logo-upload { width: 84px; height: 84px; border-radius: 16px; border: 1.5px dashed rgba(32,42,34,.22); background: #F5F6F1; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #3F5B49; font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.6rem; }
+.logo-meta p { margin: 0 0 4px; font-size: .8rem; color: #5B665C; line-height: 1.5; }
+.btn-outline { background: none; border: 1.5px solid rgba(32,42,34,.16); color: #202A22; border-radius: 999px; padding: 9px 16px; font-weight: 500; font-size: .8rem; }
+
+.form-field label { display: block; font-family: 'Work Sans', sans-serif; font-size: .78rem; font-weight: 600; color: #5B665C; margin-bottom: 8px; }
+.form-input { width: 100%; border: 1.5px solid rgba(32,42,34,.14); border-radius: 10px; padding: 13px 15px; font-family: 'Work Sans', sans-serif; font-size: .9rem; color: #202A22; background: #F5F6F1; }
+
+.btn-accent { background: #E4A24A; color: #241400; border: none; border-radius: 999px; padding: 14px; font-weight: 600; font-size: .88rem; align-self: flex-start; padding-left: 22px; padding-right: 22px; }
+</style>
+</helmet>
+
+<div class="root">
+  <div class="sidebar">
+    <div class="logo-badge">T</div>
+    <div class="nav-list">
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg>
+        <span>Transaksi</span>
+      </div>
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5v-9Z"/><path d="M3 7.5 12 12l9-4.5"/><path d="M12 12v9"/></svg>
+        <span>Produk</span>
+      </div>
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M11 20V4"/><path d="M18 20v-7"/><path d="M3 20h18"/></svg>
+        <span>Laporan</span>
+      </div>
+      <div class="nav-item active">
+        <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="9" cy="6" r="1.8"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="15" cy="12" r="1.8"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="11" cy="18" r="1.8"/></svg>
+        <span>Pengaturan</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="page-head">
+      <div class="back-link"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Pengaturan</div>
+      <h1>Identitas Toko</h1>
+      <p class="sub">Nama dan logo di sini dipakai sebagai header struk.</p>
+    </div>
+
+    <div class="card">
+      <div class="logo-field">
+        <div class="logo-upload">T</div>
+        <div class="logo-meta">
+          <p>PNG/JPG, disimpan sebagai WebP.<br>Disarankan persegi, min. 256&times;256px.</p>
+          <button class="btn-outline">Ganti Logo</button>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Nama Toko</label>
+        <input class="form-input" type="text" value="Toko Sparepart Pak Tadi">
+      </div>
+      <button class="btn-accent">Simpan Perubahan</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

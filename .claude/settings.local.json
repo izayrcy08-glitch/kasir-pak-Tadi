@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node 'C:\\\\Users\\\\USER\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\bundled-skills\\\\2.1.266\\\\279779fad4f5ece44e2a13c501e58efd\\\\design\\\\seed-canvas.mjs' --template 'C:\\\\Users\\\\USER\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\bundled-skills\\\\2.1.266\\\\279779fad4f5ece44e2a13c501e58efd\\\\design\\\\payload.template.html' --out kasir-pak-tadi-mockup.html --title 'Kasir Pak Tadi' --artboard Main.dc.html --artboard Produk.dc.html --artboard Laporan.dc.html --artboard Pengaturan.dc.html --canvas canvas.json)",
+      "Bash(node \"C:\\\\Users\\\\USER\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\bundled-skills\\\\2.1.266\\\\279779fad4f5ece44e2a13c501e58efd\\\\design\\\\seed-canvas.mjs\" --check kasir-pak-tadi-mockup.html)",
+      "Bash(node 'C:\\\\Users\\\\USER\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\bundled-skills\\\\2.1.266\\\\279779fad4f5ece44e2a13c501e58efd\\\\design\\\\seed-canvas.mjs' --template 'C:\\\\Users\\\\USER\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\bundled-skills\\\\2.1.266\\\\279779fad4f5ece44e2a13c501e58efd\\\\design\\\\payload.template.html' --out kasir-pak-tadi-mockup.html --title 'Kasir Pak Tadi' --artboard Main.dc.html --artboard Produk.dc.html --artboard Laporan.dc.html --artboard Pengaturan.dc.html --artboard PengaturanIdentitas.dc.html --artboard PengaturanPrinter.dc.html --canvas canvas.json)",
+      "Bash(node 'C:\\\\Users\\\\USER\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\bundled-skills\\\\2.1.266\\\\279779fad4f5ece44e2a13c501e58efd\\\\design\\\\seed-canvas.mjs' --template 'C:\\\\Users\\\\USER\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\bundled-skills\\\\2.1.266\\\\279779fad4f5ece44e2a13c501e58efd\\\\design\\\\payload.template.html' --out kasir-pak-tadi-mockup.html --title 'Kasir Pak Tadi' --artboard Main.dc.html --artboard Produk.dc.html --artboard TambahProduk.dc.html --artboard Laporan.dc.html --artboard Pengaturan.dc.html --artboard PengaturanIdentitas.dc.html --artboard PengaturanPrinter.dc.html --canvas canvas.json)"
+    ]
+  }
+}
