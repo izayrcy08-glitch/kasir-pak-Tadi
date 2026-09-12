@@ -1,0 +1,23 @@
+.pageHead h1 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.62rem;
+  color: var(--color-text-on-dark);
+  margin: 0 0 4px;
+  letter-spacing: -0.005em;
+}
+
+.pageHead .sub {
+  font-size: 0.87rem;
+  color: var(--text-on-dark-66);
+  margin: 0;
+}
+
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}

@@ -1,0 +1,115 @@
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  padding: 32px;
+  width: 560px;
+  max-width: 100%;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.span2 {
+  grid-column: 1 / -1;
+}
+
+.formField label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+}
+
+.opt {
+  font-weight: 400;
+  font-style: italic;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+}
+
+.formInput {
+  width: 100%;
+  border: var(--border-input);
+  border-radius: 10px;
+  padding: 13px 15px;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--color-text-primary);
+  background: var(--color-input-bg);
+}
+
+.formHint {
+  margin: 6px 0 0;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.formError {
+  margin: 6px 0 0;
+  font-size: 0.72rem;
+  color: var(--color-alert);
+}
+
+.inputRp {
+  position: relative;
+}
+
+.inputRp .prefix {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  color: var(--color-text-muted);
+}
+
+.inputRp .formInput {
+  padding-left: 38px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.btnAccent {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 14px 24px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.btnAccent:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btnText {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 10px;
+  cursor: pointer;
+}

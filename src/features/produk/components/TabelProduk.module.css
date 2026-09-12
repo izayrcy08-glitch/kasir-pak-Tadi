@@ -1,0 +1,112 @@
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 8px 24px 4px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  padding: 16px 12px 10px;
+  border-bottom: var(--border-subtle);
+}
+
+td {
+  padding: 13px 12px;
+  font-size: 0.84rem;
+  border-bottom: var(--border-subtle-faint);
+  vertical-align: middle;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.catChip {
+  display: inline-block;
+  background: var(--color-cat-chip-bg);
+  color: var(--color-sidebar);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+}
+
+.pillWarn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--color-pill-warn-bg);
+  color: var(--color-alert);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  margin-left: 8px;
+}
+
+.pillWarn::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-alert);
+}
+
+.iconBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: var(--border-subtle-strong);
+  background: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.iconBtn svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nameCell .code {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2px;
+}
+
+.empty {
+  padding: 40px 12px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.87rem;
+  margin: 0;
+}

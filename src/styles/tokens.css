@@ -30,4 +30,25 @@
   --shadow-card: 0 1px 2px rgba(20, 26, 18, 0.06), 0 14px 34px rgba(20, 26, 18, 0.12);
   --border-subtle: 1px solid rgba(32, 42, 34, 0.09);
   --border-subtle-strong: 1px solid rgba(32, 42, 34, 0.12);
+  --border-subtle-faint: 1px solid rgba(32, 42, 34, 0.07);
+  --border-input: 1.5px solid rgba(32, 42, 34, 0.14);
+
+  /* Overlay teks/permukaan di atas background gelap (sidebar, header halaman) */
+  --text-on-dark-62: rgba(245, 247, 242, 0.62);
+  --text-on-dark-66: rgba(245, 247, 242, 0.66);
+  --text-on-dark-68: rgba(245, 247, 242, 0.68);
+  --text-on-dark-75: rgba(245, 247, 242, 0.75);
+  --text-on-dark-80: rgba(245, 247, 242, 0.8);
+  --surface-on-dark-13: rgba(255, 255, 255, 0.13);
+  --surface-on-dark-14: rgba(245, 247, 242, 0.14);
+  --border-on-dark-22: 1px solid rgba(245, 247, 242, 0.22);
+  --border-on-dark-28: 1.5px solid rgba(245, 247, 242, 0.28);
+
+  /* Teks tersier (placeholder/hint/opsional) & input di atas card putih */
+  --color-text-muted: #8a9186;
+  --color-input-bg: #f5f6f1;
+
+  /* Chip kategori & pill peringatan (stok rendah) */
+  --color-cat-chip-bg: rgba(63, 91, 73, 0.1);
+  --color-pill-warn-bg: rgba(214, 92, 74, 0.12);
 }
