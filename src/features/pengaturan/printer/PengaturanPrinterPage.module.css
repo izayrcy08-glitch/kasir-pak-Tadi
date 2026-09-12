@@ -1,0 +1,193 @@
+.pageHead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-on-dark-68);
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.backLink svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+.pageHead h1 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.62rem;
+  color: var(--color-text-on-dark);
+  margin: 0 0 4px;
+  letter-spacing: -0.005em;
+}
+
+.sub {
+  font-size: 0.87rem;
+  color: var(--text-on-dark-66);
+  margin: 0 0 22px;
+}
+
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 32px;
+  width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.connToggle {
+  display: flex;
+  gap: 8px;
+}
+
+.connBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  border: var(--border-input);
+  background: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.connBtn svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.connBtn.selected {
+  background: var(--color-sidebar);
+  border-color: var(--color-sidebar);
+  color: var(--color-text-on-dark);
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.statusLeft {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.statusDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.statusText {
+  font-size: 0.84rem;
+  color: var(--color-text-secondary);
+}
+
+.formField label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+}
+
+.chipRow {
+  display: flex;
+  gap: 8px;
+}
+
+.paperChip {
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: var(--border-input);
+  background: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.paperChip.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+.testRow {
+  display: flex;
+  gap: 10px;
+}
+
+.btnOutlineFlex {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: none;
+  border: var(--border-input);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-button);
+  padding: 12px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.btnOutlineFlex svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.btnOutlineFlex:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.catatan {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}

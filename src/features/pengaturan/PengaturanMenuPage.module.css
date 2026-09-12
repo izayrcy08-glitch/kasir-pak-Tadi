@@ -1,0 +1,87 @@
+.pageHead h1 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.62rem;
+  color: var(--color-text-on-dark);
+  margin: 0 0 4px;
+  letter-spacing: -0.005em;
+}
+
+.sub {
+  font-size: 0.87rem;
+  color: var(--text-on-dark-66);
+  margin: 0 0 22px;
+}
+
+.menuList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 460px;
+}
+
+.menuRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-card);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  width: 100%;
+}
+
+.iconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-tile);
+  background: var(--color-input-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-sidebar);
+  flex-shrink: 0;
+}
+
+.iconWrap svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin: 0 0 3px;
+  color: var(--color-text-primary);
+}
+
+.rowSub {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.chev {
+  width: 16px;
+  height: 16px;
+  stroke: var(--color-text-secondary);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
