@@ -1,0 +1,325 @@
+.cartHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cartHead h2 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.count {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--color-text-secondary);
+  background: var(--color-input-bg);
+  padding: 4px 9px;
+  border-radius: var(--radius-pill);
+}
+
+.empty {
+  padding: 24px 4px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 0;
+}
+
+.item + .item {
+  border-top: var(--border-subtle-faint);
+}
+
+.itemInfo {
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--font-body);
+  font-size: 0.83rem;
+  font-weight: 500;
+  margin: 0 0 5px;
+  color: var(--color-text-primary);
+}
+
+.qtyRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qtyRow button {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-button);
+  border: var(--border-subtle-strong);
+  background: none;
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.qtyRow button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.qty {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.7rem;
+  color: var(--color-text-primary);
+  min-width: 14px;
+  text-align: center;
+}
+
+.hargaSatuan {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  margin-left: 2px;
+}
+
+.itemAksi {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.lineTotal {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 0.83rem;
+  white-space: nowrap;
+  color: var(--color-text-primary);
+}
+
+.hapusBtn {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-button);
+  border: none;
+  background: none;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.hapusBtn svg {
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sum {
+  display: flex;
+  flex-direction: column;
+  padding-top: 4px;
+  border-top: var(--border-subtle-faint);
+}
+
+.sumRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  padding: 5px 0;
+}
+
+.val {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+
+.total {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  padding-top: 10px;
+  border-top: var(--border-subtle-faint);
+  margin-top: 4px;
+}
+
+.linkDiskon {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.diskonEditor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0 10px;
+}
+
+.tipeToggle {
+  display: flex;
+  border: var(--border-subtle-strong);
+  border-radius: var(--radius-button);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.tipeBtn {
+  padding: 6px 10px;
+  background: none;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.tipeBtn.selected {
+  background: var(--color-sidebar);
+  color: var(--color-card);
+}
+
+.diskonInput {
+  flex: 1;
+  min-width: 0;
+  border: var(--border-input);
+  border-radius: var(--radius-button);
+  padding: 8px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: var(--color-input-bg);
+  color: var(--color-text-primary);
+}
+
+.hapusDiskonBtn {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: var(--color-pill-warn-bg);
+  color: var(--color-alert);
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.payToggle {
+  display: flex;
+  gap: 8px;
+}
+
+.payBtn {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  border-radius: var(--radius-button);
+  font-weight: 600;
+  font-size: 0.81rem;
+  border: var(--border-subtle-strong);
+  background: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.payBtn.selected {
+  background: var(--color-sidebar);
+  border-color: var(--color-sidebar);
+  color: var(--color-card);
+}
+
+.fieldRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.81rem;
+  color: var(--color-text-secondary);
+  padding: 6px 0;
+}
+
+.amt {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.dibayarInput {
+  width: 140px;
+  text-align: right;
+  border: var(--border-input);
+  border-radius: var(--radius-button);
+  padding: 8px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: var(--color-input-bg);
+  color: var(--color-text-primary);
+}
+
+.ctaFull {
+  width: 100%;
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  border: none;
+  border-radius: var(--radius-tile);
+  padding: 15px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.ctaFull:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.ctaFull svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+}

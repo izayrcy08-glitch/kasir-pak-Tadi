@@ -1,0 +1,71 @@
+.pageHead h1 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.62rem;
+  color: var(--color-text-on-dark);
+  margin: 0 0 4px;
+  letter-spacing: -0.005em;
+}
+
+.sub {
+  font-size: 0.87rem;
+  color: var(--text-on-dark-66);
+  margin: 0;
+}
+
+.errorBanner {
+  background: var(--color-pill-warn-bg);
+  color: var(--color-alert);
+  border-radius: var(--radius-button);
+  padding: 12px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 16px;
+}
+
+.successBanner {
+  background: var(--color-cat-chip-bg);
+  color: var(--color-sidebar);
+  border-radius: var(--radius-button);
+  padding: 12px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 16px;
+}
+
+.workspace {
+  display: flex;
+  gap: 22px;
+  flex: 1;
+  min-height: 0;
+  margin-top: 22px;
+}
+
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 0;
+}
+
+.panelSearch {
+  flex: 1.65;
+}
+
+.panelCart {
+  flex: 1;
+  max-width: 380px;
+  gap: 16px;
+}
+
+.empty {
+  padding: 40px 12px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.87rem;
+  margin: 0;
+}

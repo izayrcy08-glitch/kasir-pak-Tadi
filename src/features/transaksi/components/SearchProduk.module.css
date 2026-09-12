@@ -1,0 +1,33 @@
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-input-bg);
+  border: var(--border-subtle);
+  border-radius: var(--radius-button);
+  padding: 12px 15px;
+}
+
+.search svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--color-text-secondary);
+  fill: none;
+  stroke-width: 1.8;
+  flex-shrink: 0;
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  outline: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 0.87rem;
+}
+
+.search input::placeholder {
+  color: var(--color-text-muted);
+}
