@@ -51,4 +51,11 @@
   /* Chip kategori & pill peringatan (stok rendah) */
   --color-cat-chip-bg: rgba(63, 91, 73, 0.1);
   --color-pill-warn-bg: rgba(214, 92, 74, 0.12);
+
+  /* Pill metode bayar & angka "terjual" di Laporan */
+  --color-paytag-tunai-bg: rgba(228, 162, 74, 0.18);
+  --color-paytag-tunai-text: #8a5a16;
+  --color-paytag-qris-bg: rgba(63, 91, 73, 0.12);
+  --color-paytag-qris-text: #3f5b49;
+  --color-rank-qty: #3f5b49;
 }

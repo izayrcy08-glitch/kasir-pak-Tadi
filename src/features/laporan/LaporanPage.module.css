@@ -1,0 +1,85 @@
+.pageHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pageHead h1 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.62rem;
+  color: var(--color-text-on-dark);
+  margin: 0 0 4px;
+  letter-spacing: -0.005em;
+}
+
+.sub {
+  font-size: 0.87rem;
+  color: var(--text-on-dark-66);
+  margin: 0;
+}
+
+.headAksi {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rangeChip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-on-dark-14);
+  border: var(--border-on-dark-22);
+  border-radius: var(--radius-pill);
+  padding: 10px 16px;
+  color: var(--color-text-on-dark);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.rangeChip svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+}
+
+.muatUlangBtn {
+  background: none;
+  border: var(--border-on-dark-28);
+  border-radius: var(--radius-pill);
+  padding: 10px 16px;
+  color: var(--color-text-on-dark);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.errorBanner {
+  background: var(--color-pill-warn-bg);
+  color: var(--color-alert);
+  border-radius: var(--radius-button);
+  padding: 12px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  flex: 1;
+  min-height: 0;
+}
+
+.kolomKiri {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 0;
+}

@@ -1,0 +1,29 @@
+.statRow {
+  display: flex;
+  gap: 18px;
+}
+
+.statTile {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 20px 22px;
+  flex: 1;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  margin: 0 0 9px;
+}
+
+.value {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,100 @@
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-card);
+  flex: 1;
+  min-width: 0;
+}
+
+.card h2 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 0 0 16px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  padding: 0 10px 10px;
+  border-bottom: var(--border-subtle);
+}
+
+td {
+  padding: 12px 10px;
+  font-size: 0.82rem;
+  border-bottom: var(--border-subtle-faint);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.row {
+  cursor: pointer;
+}
+
+.row:hover td {
+  background: var(--color-input-bg);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.payTag {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+}
+
+.payTag.tunai {
+  background: var(--color-paytag-tunai-bg);
+  color: var(--color-paytag-tunai-text);
+}
+
+.payTag.qris {
+  background: var(--color-paytag-qris-bg);
+  color: var(--color-paytag-qris-text);
+}
+
+.muatLebih {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: var(--radius-button);
+  border: var(--border-subtle-strong);
+  background: none;
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.muatLebih:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.empty {
+  padding: 24px 4px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  margin: 0;
+}

@@ -1,9 +1,24 @@
-import { collection, doc, increment, runTransaction, serverTimestamp } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  type DocumentData,
+  getDocs,
+  increment,
+  limit,
+  orderBy,
+  query,
+  type QueryDocumentSnapshot,
+  runTransaction,
+  serverTimestamp,
+  startAfter,
+  Timestamp,
+  where,
+} from 'firebase/firestore';
 import { hitungKembalian } from '../../features/transaksi/logic/hitungKembalian';
 import { hitungTotal } from '../../features/transaksi/logic/hitungTotal';
 import { idHariIni } from '../lib/idHariIni';
 import type { Produk } from '../types/produk';
-import type { ItemTransaksi, MetodeBayar, TransaksiDraft } from '../types/transaksi';
+import type { ItemTransaksi, MetodeBayar, Transaksi, TransaksiDraft } from '../types/transaksi';
 import { COLLECTIONS } from './collections';
 import { db } from './config';
 
@@ -131,4 +146,35 @@ export async function simpanTransaksi(draft: TransaksiDraft): Promise<string> {
 
     return transaksiRef.id;
   });
+}
+
+export interface RiwayatTransaksiHalaman {
+  daftar: Transaksi[];
+  kursorBerikutnya: QueryDocumentSnapshot<DocumentData> | null;
+}
+
+const BATAS_RIWAYAT_DEFAULT = 50;
+
+// Riwayat berpaginasi (limit + startAfter) karena toko yang ramai bisa
+// punya ratusan transaksi sebulan — tidak realistis fetch semuanya
+// sekaligus. Inequality & orderBy sama-sama di field `dibuatPada`, jadi
+// tidak butuh index komposit tambahan di firestore.indexes.json.
+export async function ambilRiwayatTransaksi(
+  rentang: { mulai: Date; akhir: Date },
+  opsi?: { batas?: number; kursorSetelah?: QueryDocumentSnapshot<DocumentData> | null },
+): Promise<RiwayatTransaksiHalaman> {
+  const batas = opsi?.batas ?? BATAS_RIWAYAT_DEFAULT;
+  const klausa = [
+    where('dibuatPada', '>=', Timestamp.fromDate(rentang.mulai)),
+    where('dibuatPada', '<=', Timestamp.fromDate(rentang.akhir)),
+    orderBy('dibuatPada', 'desc'),
+    limit(batas),
+    ...(opsi?.kursorSetelah ? [startAfter(opsi.kursorSetelah)] : []),
+  ] as const;
+
+  const snap = await getDocs(query(transaksiCollection, ...klausa));
+  const daftar = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Transaksi);
+  const kursorBerikutnya = snap.docs.length === batas ? (snap.docs.at(-1) ?? null) : null;
+
+  return { daftar, kursorBerikutnya };
 }
