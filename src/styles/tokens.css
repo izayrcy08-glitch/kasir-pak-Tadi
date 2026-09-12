@@ -1,0 +1,33 @@
+/*
+ * Design tokens — sumber kebenaran tunggal untuk warna/font/radius/shadow.
+ * Nilai diambil literal dari design/Main.dc.html (palet "Sage Lembut").
+ * Dilarang menulis hex/px baru langsung di komponen — selalu lewat var(--...) di sini.
+ */
+:root {
+  /* Warna */
+  --color-bg-app: #57735f;
+  --color-sidebar: #3f5b49;
+  --color-card: #ffffff;
+  --color-accent: #e4a24a;
+  --color-accent-text: #241400;
+  --color-text-primary: #202a22;
+  --color-text-secondary: #5b665c;
+  --color-alert: #d65c4a;
+  --color-text-on-dark: #f5f7f2;
+
+  /* Tipografi */
+  --font-heading: 'Fraunces', Georgia, serif;
+  --font-body: 'Work Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace; /* semua angka/harga/kode/chip, tabular-nums */
+
+  /* Radius */
+  --radius-card: 20px;
+  --radius-tile: 14px;
+  --radius-button: 12px;
+  --radius-pill: 999px;
+
+  /* Shadow & border */
+  --shadow-card: 0 1px 2px rgba(20, 26, 18, 0.06), 0 14px 34px rgba(20, 26, 18, 0.12);
+  --border-subtle: 1px solid rgba(32, 42, 34, 0.09);
+  --border-subtle-strong: 1px solid rgba(32, 42, 34, 0.12);
+}

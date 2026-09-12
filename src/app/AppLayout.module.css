@@ -1,0 +1,89 @@
+.root {
+  min-height: 100vh;
+  display: flex;
+  background: var(--color-bg-app);
+}
+
+.sidebar {
+  width: 120px;
+  flex-shrink: 0;
+  background: var(--color-sidebar);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 0;
+}
+
+.logoBadge {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-button);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin-bottom: 30px;
+}
+
+.navList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px;
+  border-radius: var(--radius-button);
+  width: 92px;
+  color: rgba(245, 247, 242, 0.62);
+  font-size: 0.66rem;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.navItem.active {
+  background: rgba(255, 255, 255, 0.13);
+  color: var(--color-text-on-dark);
+}
+
+.main {
+  flex: 1;
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+
+.pageHead h1 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.62rem;
+  color: var(--color-text-on-dark);
+  margin: 0 0 4px;
+  letter-spacing: -0.005em;
+}
+
+.pageHead .sub {
+  font-size: 0.87rem;
+  color: rgba(245, 247, 242, 0.66);
+  margin: 0;
+}
+
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}

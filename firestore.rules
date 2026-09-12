@@ -1,0 +1,12 @@
+rules_version = '2';
+
+// Default deny semua akses. Satu akun sharing (Pak Tadi & istri) login
+// lewat Email/Password Firebase Auth — wajib login sebelum baca/tulis apa pun.
+// Jangan pernah deploy dalam mode "test" (terbuka untuk siapa saja).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
