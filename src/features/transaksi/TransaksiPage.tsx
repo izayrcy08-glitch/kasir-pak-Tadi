@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getPrinterAdapter } from '../../platform/print';
 import { simpanTransaksi, StokTidakCukupError } from '../../shared/firebase/transaksi.repo';
 import type { Diskon, ItemTransaksi, MetodeBayar, TransaksiDraft } from '../../shared/types/transaksi';
@@ -33,6 +33,14 @@ export function TransaksiPage() {
     keranjang.item.length > 0 &&
     !menyimpan &&
     (metodeBayar !== 'tunai' || (kembalian !== undefined && kembalian >= 0));
+
+  // Notifikasi sukses sengaja sementara (toast) — bukan banner permanen —
+  // supaya tidak menghalangi keranjang berikutnya sampai di-dismiss manual.
+  useEffect(() => {
+    if (!sukses) return;
+    const timer = setTimeout(() => setSukses(''), 3000);
+    return () => clearTimeout(timer);
+  }, [sukses]);
 
   async function handleBayar() {
     setErrorSimpan('');
@@ -99,7 +107,15 @@ export function TransaksiPage() {
       </div>
 
       {errorSimpan && <div className={styles.errorBanner}>{errorSimpan}</div>}
-      {sukses && <div className={styles.successBanner}>{sukses}</div>}
+      {sukses && (
+        <div className={styles.successToast} role="status">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M8 12.5 10.8 15.3 16 9.5" />
+          </svg>
+          {sukses}
+        </div>
+      )}
 
       <div className={styles.workspace}>
         <div className={`${styles.card} ${styles.panelSearch}`}>
