@@ -37,8 +37,11 @@ export function PengaturanPrinterPage() {
     bacaDariLocalStorage(KUNCI_LEBAR_KERTAS, ['58', '80'], '58'),
   );
   const [pesanAksi, setPesanAksi] = useState('');
+  const [terhubung, setTerhubung] = useState(false);
 
   const adapter = getPrinterAdapter();
+  // isSupported() cuma berarti platform ini punya API-nya (mis. Web Serial
+  // di Chrome/Edge desktop) — bukan berarti printer sudah dipilih/tersambung.
   const printerTersedia = adapter.isSupported();
 
   function handleGantiKoneksi(nilai: KoneksiPrinter) {
@@ -55,9 +58,11 @@ export function PengaturanPrinterPage() {
     setPesanAksi('');
     try {
       await adapter.connect();
+      setTerhubung(true);
       const payload = gabungkanPerintah(buildInisialisasi(), buildTeksBaris('Tes cetak — Kasir Pak Tadi'));
       await adapter.printReceipt(payload);
     } catch {
+      setTerhubung(false);
       setPesanAksi('Gagal tes cetak. Printer belum terhubung.');
     }
   }
@@ -66,8 +71,10 @@ export function PengaturanPrinterPage() {
     setPesanAksi('');
     try {
       await adapter.connect();
+      setTerhubung(true);
       await adapter.printReceipt(buildBukaLaciKas());
     } catch {
+      setTerhubung(false);
       setPesanAksi('Gagal membuka laci kas. Printer belum terhubung.');
     }
   }
@@ -105,9 +112,13 @@ export function PengaturanPrinterPage() {
 
         <div className={styles.statusRow}>
           <div className={styles.statusLeft}>
-            <span className={styles.statusDot} />
+            <span className={`${styles.statusDot} ${terhubung ? styles.terhubung : ''}`} />
             <span className={styles.statusText}>
-              {printerTersedia ? 'Terhubung' : 'Belum terhubung — integrasi printer menyusul'}
+              {!printerTersedia
+                ? 'Platform ini belum mendukung printer'
+                : terhubung
+                  ? 'Terhubung'
+                  : 'Belum terhubung — klik Tes Cetak untuk pilih printer'}
             </span>
           </div>
         </div>
@@ -154,8 +165,8 @@ export function PengaturanPrinterPage() {
         {pesanAksi && <p className={styles.catatan}>{pesanAksi}</p>}
         {!printerTersedia && (
           <p className={styles.catatan}>
-            Koneksi Bluetooth/USB sungguhan menyusul pada tahap berikutnya — halaman ini menyiapkan
-            pengaturan & format perintah ESC/POS terlebih dahulu.
+            Perangkat ini belum bisa dipakai untuk cetak — printer USB (Web Serial) baru didukung di
+            Chrome/Edge Windows, sedangkan Bluetooth Android menyusul terpisah.
           </p>
         )}
       </div>

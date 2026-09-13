@@ -112,6 +112,10 @@
   flex-shrink: 0;
 }
 
+.statusDot.terhubung {
+  background: var(--color-sidebar);
+}
+
 .statusText {
   font-size: 0.84rem;
   color: var(--color-text-secondary);
