@@ -3,6 +3,7 @@ import type { Diskon, ItemTransaksi, MetodeBayar } from '../../../shared/types/t
 import type { RingkasanTotal } from './hitungTotal';
 
 export interface DataStruk {
+  namaToko?: string;
   transaksiId: string;
   item: ItemTransaksi[];
   ringkasan: RingkasanTotal;
@@ -19,11 +20,15 @@ const LABEL_METODE: Record<MetodeBayar, string> = {
 };
 
 // Format teks polos struk — dipakai sebagai payload printReceipt (di-encode
-// TextEncoder di titik pemanggilan). Sengaja tidak tahu apa-apa soal
-// identitas toko (logo/nama) karena fitur Pengaturan Toko belum ada;
-// pemanggil bisa menambahkan header itu sebelum baris ini.
+// TextEncoder di titik pemanggilan). Logo toko sengaja tidak dicetak di sini:
+// itu butuh command ESC/POS raster image yang belum ada, ditunda sampai
+// adapter printer sungguhan dikerjakan (lihat src/platform/print/).
 export function formatStruk(data: DataStruk): string {
   const baris: string[] = [];
+  if (data.namaToko) {
+    baris.push(data.namaToko);
+    baris.push('--------------------------------');
+  }
   baris.push(`No. Transaksi: ${data.transaksiId}`);
   baris.push(data.dibuatPada.toLocaleString('id-ID'));
   baris.push('--------------------------------');

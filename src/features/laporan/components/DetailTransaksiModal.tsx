@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { getPrinterAdapter } from '../../../platform/print';
+import { usePengaturanToko } from '../../../shared/hooks/usePengaturanToko';
 import { formatRupiah } from '../../../shared/lib/formatRupiah';
 import { formatTanggalPendek, formatWaktu } from '../../../shared/lib/formatTanggal';
 import type { MetodeBayar, Transaksi } from '../../../shared/types/transaksi';
@@ -18,6 +19,7 @@ const LABEL_METODE: Record<MetodeBayar, string> = {
 
 export function DetailTransaksiModal({ transaksi, onTutup }: Props) {
   const [mengirim, setMengirim] = useState(false);
+  const { pengaturan } = usePengaturanToko();
   const waktu = transaksi.dibuatPada.toDate();
 
   // Printer masih noop (belum ada hardware sungguhan tersambung) — jangan
@@ -28,6 +30,7 @@ export function DetailTransaksiModal({ transaksi, onTutup }: Props) {
     setMengirim(true);
     try {
       const teks = formatStruk({
+        namaToko: pengaturan?.namaToko,
         transaksiId: transaksi.id,
         item: transaksi.item,
         ringkasan: { subtotal: transaksi.subtotal, totalDiskon: transaksi.totalDiskon, total: transaksi.total },

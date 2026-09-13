@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getPrinterAdapter } from '../../platform/print';
 import { simpanTransaksi, StokTidakCukupError } from '../../shared/firebase/transaksi.repo';
+import { usePengaturanToko } from '../../shared/hooks/usePengaturanToko';
 import type { Diskon, ItemTransaksi, MetodeBayar, TransaksiDraft } from '../../shared/types/transaksi';
 import { filterProduk } from '../produk/logic/filterProduk';
 import { useProduk } from '../produk/hooks/useProduk';
@@ -15,6 +16,7 @@ import styles from './TransaksiPage.module.css';
 
 export function TransaksiPage() {
   const { daftar, loading, error } = useProduk();
+  const { pengaturan } = usePengaturanToko();
   const keranjang = useKeranjang();
 
   const [kataKunci, setKataKunci] = useState('');
@@ -65,6 +67,7 @@ export function TransaksiPage() {
           subtotalItem: it.hargaSatuan * it.qty,
         }));
         const teks = formatStruk({
+          namaToko: pengaturan?.namaToko,
           transaksiId: id,
           item: itemStruk,
           ringkasan,

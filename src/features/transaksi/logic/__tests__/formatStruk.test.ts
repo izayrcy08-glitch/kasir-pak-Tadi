@@ -51,4 +51,35 @@ describe('formatStruk', () => {
 
     expect(teks).toContain('Diskon');
   });
+
+  it('menampilkan nama toko sebagai baris pertama saat diisi', () => {
+    const teks = formatStruk({
+      namaToko: 'Toko Sparepart Pak Tadi',
+      transaksiId: 'n1',
+      item: [{ produkId: 'p1', nama: 'X', hargaSatuan: 10000, qty: 1, subtotalItem: 10000 }],
+      ringkasan: { subtotal: 10000, totalDiskon: 0, total: 10000 },
+      diskon: null,
+      metodeBayar: 'tunai',
+      dibayar: 10000,
+      kembalian: 0,
+      dibuatPada: new Date(2026, 0, 1, 10, 0, 0),
+    });
+
+    expect(teks.split('\n')[0]).toBe('Toko Sparepart Pak Tadi');
+  });
+
+  it('tidak menambah baris header saat nama toko tidak diisi', () => {
+    const teks = formatStruk({
+      transaksiId: 'n2',
+      item: [{ produkId: 'p1', nama: 'X', hargaSatuan: 10000, qty: 1, subtotalItem: 10000 }],
+      ringkasan: { subtotal: 10000, totalDiskon: 0, total: 10000 },
+      diskon: null,
+      metodeBayar: 'tunai',
+      dibayar: 10000,
+      kembalian: 0,
+      dibuatPada: new Date(2026, 0, 1, 10, 0, 0),
+    });
+
+    expect(teks.split('\n')[0]).toBe('No. Transaksi: n2');
+  });
 });
