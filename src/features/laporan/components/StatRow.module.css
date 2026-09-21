@@ -1,14 +1,16 @@
+/* auto-fit: 1 kolom di HP, otomatis sebaris penuh begitu lebarnya cukup. */
 .statRow {
-  display: flex;
-  gap: 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+  gap: 12px;
 }
 
 .statTile {
   background: var(--color-card);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  padding: 20px 22px;
-  flex: 1;
+  padding: 16px 18px;
+  min-width: 0;
 }
 
 .label {
@@ -23,7 +25,21 @@
 .value {
   font-family: var(--font-mono);
   font-weight: 600;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   margin: 0;
   font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 1024px) {
+  .statRow {
+    gap: 18px;
+  }
+
+  .statTile {
+    padding: 20px 22px;
+  }
+
+  .value {
+    font-size: 1.5rem;
+  }
 }

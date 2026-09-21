@@ -25,8 +25,10 @@
 
 .successToast {
   position: fixed;
-  top: 28px;
-  right: 40px;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  justify-content: center;
   z-index: 20;
   display: flex;
   align-items: center;
@@ -68,32 +70,29 @@
   }
 }
 
+/* Mobile-first: keranjang menumpuk di bawah daftar produk; dua kolom ala
+   mockup baru dipakai di stasiun kasir (>=1024px). */
 .workspace {
   display: flex;
-  gap: 22px;
+  flex-direction: column;
+  gap: 16px;
   flex: 1;
   min-height: 0;
-  margin-top: 22px;
+  margin-top: 16px;
 }
 
 .card {
   background: var(--color-card);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  padding: 24px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
   gap: 18px;
   min-height: 0;
 }
 
-.panelSearch {
-  flex: 1.65;
-}
-
 .panelCart {
-  flex: 1;
-  max-width: 380px;
   gap: 16px;
 }
 
@@ -103,4 +102,37 @@
   color: var(--color-text-secondary);
   font-size: 0.87rem;
   margin: 0;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 24px;
+  }
+
+  .successToast {
+    left: auto;
+    right: 28px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .workspace {
+    flex-direction: row;
+    gap: 22px;
+    margin-top: 22px;
+  }
+
+  .panelSearch {
+    flex: 1.65;
+  }
+
+  .panelCart {
+    flex: 1;
+    max-width: 380px;
+  }
+
+  .successToast {
+    top: 28px;
+    right: 40px;
+  }
 }

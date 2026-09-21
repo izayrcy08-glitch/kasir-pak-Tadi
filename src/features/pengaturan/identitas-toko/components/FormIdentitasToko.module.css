@@ -2,8 +2,9 @@
   background: var(--color-card);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  padding: 32px;
-  width: 460px;
+  padding: 20px;
+  width: 100%;
+  max-width: 460px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -19,7 +20,7 @@
   width: 84px;
   height: 84px;
   border-radius: var(--radius-tile);
-  border: 1.5px dashed rgba(32, 42, 34, 0.22);
+  border: var(--border-dashed);
   background: var(--color-input-bg);
   display: flex;
   align-items: center;
@@ -50,7 +51,7 @@
   border: var(--border-input);
   color: var(--color-text-primary);
   border-radius: var(--radius-pill);
-  padding: 9px 16px;
+  padding: 12px 18px;
   font-weight: 500;
   font-size: 0.8rem;
   cursor: pointer;
@@ -108,4 +109,10 @@
 .btnAccent:disabled {
   opacity: 0.6;
   cursor: default;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 32px;
+  }
 }

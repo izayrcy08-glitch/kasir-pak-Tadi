@@ -1,50 +1,49 @@
+/* Mobile-first: base = HP (nav menempel di bawah layar, konten satu kolom).
+   Sidebar kiri ala mockup baru muncul di >=1024px (laptop / tablet landscape). */
+
 .root {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   background: var(--color-bg-app);
 }
 
+/* --- Nav bawah (HP & tablet potrait) --- */
 .sidebar {
-  width: 120px;
-  flex-shrink: 0;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 25;
   background: var(--color-sidebar);
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 28px 0;
+  align-items: stretch;
+  /* Ruang tambahan untuk home indicator iPhone; 0 di perangkat lain. */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+/* Logo cuma relevan di sidebar vertikal — di nav bawah hanya makan tempat. */
 .logoBadge {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-button);
-  background: var(--color-accent);
-  color: var(--color-accent-text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 1.15rem;
-  margin-bottom: 30px;
+  display: none;
 }
 
 .navList {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex: 1;
 }
 
 .navItem {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 10px 6px;
-  border-radius: var(--radius-button);
-  width: 92px;
+  /* >=48px tinggi sentuh, sesuai ambang target sentuh yang nyaman. */
+  min-height: 52px;
+  padding: 8px 4px;
   color: var(--text-on-dark-62);
-  font-size: 0.66rem;
+  font-size: 0.72rem;
   font-weight: 500;
   text-align: center;
   line-height: 1.2;
@@ -52,15 +51,82 @@
 }
 
 .navItem.active {
-  background: var(--surface-on-dark-13);
   color: var(--color-text-on-dark);
+  /* Garis penanda di atas item; background pill dipakai di sidebar desktop. */
+  box-shadow: inset 0 2px 0 0 var(--color-accent);
 }
 
 .main {
   flex: 1;
-  padding: 36px 40px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 16px;
   min-width: 0;
+  padding: 18px 16px;
+  /* Sisakan ruang supaya konten terakhir tidak tertutup nav bawah. */
+  padding-bottom: calc(52px + 18px + env(safe-area-inset-bottom, 0px));
+}
+
+/* --- Tablet potrait --- */
+@media (min-width: 768px) {
+  .main {
+    gap: 20px;
+    padding: 28px 28px calc(52px + 28px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* --- Laptop & tablet landscape: sidebar kiri, persis mockup --- */
+@media (min-width: 1024px) {
+  .root {
+    flex-direction: row;
+  }
+
+  .sidebar {
+    position: static;
+    width: 120px;
+    flex-shrink: 0;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 0;
+  }
+
+  .logoBadge {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-button);
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin-bottom: 30px;
+  }
+
+  .navList {
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .navItem {
+    flex: 0 0 auto;
+    min-height: 0;
+    width: 92px;
+    padding: 10px 6px;
+    border-radius: var(--radius-button);
+    font-size: 0.66rem;
+  }
+
+  .navItem.active {
+    background: var(--surface-on-dark-13);
+    box-shadow: none;
+  }
+
+  .main {
+    gap: 22px;
+    padding: 36px 40px;
+  }
 }

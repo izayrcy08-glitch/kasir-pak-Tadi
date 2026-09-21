@@ -1,7 +1,7 @@
-import { formatRupiah } from '../../../shared/lib/formatRupiah';
-import type { Produk } from '../../../shared/types/produk';
-import { hitungStokRendah } from '../logic/hitungStokRendah';
-import styles from './TabelProduk.module.css';
+import { formatRupiah } from "../../../shared/lib/formatRupiah";
+import type { Produk } from "../../../shared/types/produk";
+import { hitungStokRendah } from "../logic/hitungStokRendah";
+import styles from "./TabelProduk.module.css";
 
 interface Props {
   daftar: Produk[];
@@ -12,7 +12,7 @@ interface Props {
 
 export function TabelProduk({
   daftar,
-  pesanKosong = 'Belum ada produk yang cocok. Coba ubah kata kunci atau kategori.',
+  pesanKosong = "Belum ada produk yang cocok. Coba ubah kata kunci atau kategori.",
   onEdit,
   onHapus,
 }: Props) {
@@ -40,24 +40,35 @@ export function TabelProduk({
         </thead>
         <tbody>
           {daftar.map((produk) => {
-            const stokRendah = hitungStokRendah(produk.stok, produk.ambangStokRendah);
+            const stokRendah = hitungStokRendah(
+              produk.stok,
+              produk.ambangStokRendah,
+            );
             return (
               <tr key={produk.id}>
-                <td className={styles.nameCell}>
-                  {produk.kodePart && <span className={styles.code}>{produk.kodePart}</span>}
+                <td className={styles.nameCell} data-label="Produk">
+                  {produk.kodePart && (
+                    <span className={styles.code}>{produk.kodePart}</span>
+                  )}
                   {produk.nama}
                 </td>
-                <td>
+                <td data-label="Kategori">
                   <span className={styles.catChip}>{produk.kategori}</span>
                 </td>
-                <td className={styles.mono}>{formatRupiah(produk.hargaBeli)}</td>
-                <td className={styles.mono}>{formatRupiah(produk.hargaJual)}</td>
-                <td className={styles.mono}>
-                  {produk.stok}
-                  {stokRendah && <span className={styles.pillWarn}>Stok rendah</span>}
+                <td className={styles.mono} data-label="Harga Beli">
+                  {formatRupiah(produk.hargaBeli)}
                 </td>
-                <td>{produk.satuan}</td>
-                <td>
+                <td className={styles.mono} data-label="Harga Jual">
+                  {formatRupiah(produk.hargaJual)}
+                </td>
+                <td className={styles.mono} data-label="Stok">
+                  {produk.stok}
+                  {stokRendah && (
+                    <span className={styles.pillWarn}>Stok rendah</span>
+                  )}
+                </td>
+                <td data-label="Satuan">{produk.satuan}</td>
+                <td className={styles.aksiCell} data-label="Aksi">
                   <button
                     type="button"
                     className={styles.iconBtn}

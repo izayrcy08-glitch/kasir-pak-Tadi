@@ -1,8 +1,7 @@
 .pageHead {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
 }
 
@@ -69,10 +68,11 @@
   font-weight: 500;
 }
 
+/* Mobile-first: satu kolom bertumpuk; dua kolom ala mockup di >=1024px. */
 .grid2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  grid-template-columns: 1fr;
+  gap: 16px;
   flex: 1;
   min-height: 0;
 }
@@ -80,6 +80,28 @@
 .kolomKiri {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
   min-height: 0;
+}
+
+.headAksi {
+  flex-wrap: wrap;
+}
+
+@media (min-width: 1024px) {
+  .pageHead {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .grid2 {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .kolomKiri {
+    gap: 18px;
+  }
 }

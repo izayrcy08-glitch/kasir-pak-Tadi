@@ -32,7 +32,8 @@
 .items {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  /* Di HP halaman yang menggulir; panel bergulir sendiri baru di desktop. */
+  overflow-y: visible;
 }
 
 .item {
@@ -66,8 +67,8 @@
 }
 
 .qtyRow button {
-  width: 20px;
-  height: 20px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-button);
   border: var(--border-subtle-strong);
   background: none;
@@ -120,8 +121,8 @@
 }
 
 .hapusBtn {
-  width: 22px;
-  height: 22px;
+  width: 36px;
+  height: 36px;
   border-radius: var(--radius-button);
   border: none;
   background: none;
@@ -181,7 +182,9 @@
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
-  padding: 0;
+  /* Teksnya kecil; padding dipakai supaya area ketuknya tetap layak jari. */
+  padding: 12px 0;
+  margin: -12px 0;
   text-decoration: underline;
 }
 
@@ -283,11 +286,12 @@
 }
 
 .dibayarInput {
-  width: 140px;
+  width: 130px;
+  max-width: 45vw;
   text-align: right;
   border: var(--border-input);
   border-radius: var(--radius-button);
-  padding: 8px 10px;
+  padding: 12px 10px;
   font-family: var(--font-mono);
   font-size: 0.85rem;
   background: var(--color-input-bg);
@@ -322,4 +326,26 @@
   stroke: currentColor;
   fill: none;
   stroke-width: 1.9;
+}
+
+@media (min-width: 1024px) {
+  .items {
+    overflow-y: auto;
+  }
+
+  /* Di stasiun kasir pakai mouse/stylus — kembali ke ukuran rapat ala mockup. */
+  .qtyRow button {
+    width: 20px;
+    height: 20px;
+  }
+
+  .hapusBtn {
+    width: 22px;
+    height: 22px;
+  }
+
+  .dibayarInput {
+    width: 140px;
+    max-width: none;
+  }
 }

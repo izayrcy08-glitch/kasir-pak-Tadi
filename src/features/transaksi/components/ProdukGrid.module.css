@@ -1,14 +1,18 @@
+/* Mobile-first: 2 kolom dipatok di HP (auto-fill jatuh ke 1 kolom di layar
+   360px begitu scrollbar ikut menyita lebar). Dari tablet potrait kolom
+   menyesuaikan sendiri, lalu dikunci 3 kolom ala mockup di stasiun kasir. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  overflow-y: auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  /* Di HP halaman yang menggulir, bukan grid-nya. */
+  overflow-y: visible;
 }
 
 .tile {
   border: var(--border-subtle);
   border-radius: var(--radius-tile);
-  padding: 15px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -33,10 +37,14 @@
   line-height: 1.3;
 }
 
+/* Di tile sempit (HP) harga + tombol bulat 44px bertabrakan kalau sebaris,
+   jadi tombol turun jadi bar selebar tile — sekalian target sentuh lebih lega.
+   Kembali sebaris dengan tombol bulat ala mockup di >=1024px. */
 .meta {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
   margin-top: auto;
 }
 
@@ -59,7 +67,7 @@
 }
 
 .lowDot::before {
-  content: '';
+  content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -67,9 +75,10 @@
 }
 
 .addBtn {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-pill);
+  /* Target sentuh 44px di HP; mengecil ke 28px ala mockup di desktop. */
+  width: 100%;
+  height: 44px;
+  border-radius: var(--radius-button);
   background: var(--color-sidebar);
   color: var(--color-card);
   border: none;
@@ -100,4 +109,36 @@
   color: var(--color-text-secondary);
   font-size: 0.87rem;
   margin: 0;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr));
+    gap: 12px;
+  }
+
+  .tile {
+    padding: 15px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    overflow-y: auto;
+  }
+
+  .meta {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .addBtn {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-pill);
+  }
 }

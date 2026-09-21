@@ -12,7 +12,7 @@
 }
 
 .filterChip {
-  padding: 8px 15px;
+  padding: 11px 16px;
   border-radius: var(--radius-pill);
   border: var(--border-on-dark-28);
   background: none;
@@ -33,13 +33,15 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .dateInput {
   background: var(--surface-on-dark-14);
   border: var(--border-on-dark-22);
   border-radius: var(--radius-button);
-  padding: 8px 12px;
+  padding: 11px 12px;
+  min-width: 0;
   color: var(--color-text-on-dark);
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -49,4 +51,14 @@
 .sampai {
   font-size: 0.78rem;
   color: var(--text-on-dark-66);
+}
+
+@media (min-width: 1024px) {
+  .filterChip {
+    padding: 8px 15px;
+  }
+
+  .dateInput {
+    padding: 8px 12px;
+  }
 }

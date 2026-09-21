@@ -1,7 +1,7 @@
 .card {
   background: var(--color-card);
   border-radius: var(--radius-card);
-  padding: 32px;
+  padding: 20px;
   width: 560px;
   max-width: 100%;
   box-shadow: var(--shadow-card);
@@ -10,10 +10,11 @@
   gap: 20px;
 }
 
+/* Mobile-first: satu kolom; berpasangan ala mockup mulai tablet potrait. */
 .formGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
 .span2 {
@@ -112,4 +113,15 @@
   font-size: 0.85rem;
   padding: 10px;
   cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 32px;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
 }

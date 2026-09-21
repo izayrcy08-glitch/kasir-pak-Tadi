@@ -11,10 +11,13 @@
   color: var(--text-on-dark-68);
   font-size: 0.8rem;
   font-weight: 500;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   background: none;
   border: none;
-  padding: 0;
+  /* Padding vertikal + margin negatif: area ketuk layak jari tanpa menggeser
+     posisi visualnya dari mockup. */
+  padding: 11px 12px 11px 0;
+  margin-left: -2px;
   cursor: pointer;
   font-family: var(--font-body);
 }

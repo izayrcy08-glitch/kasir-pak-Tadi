@@ -5,7 +5,9 @@
   background: var(--color-input-bg);
   border: var(--border-subtle);
   border-radius: var(--radius-button);
-  padding: 12px 15px;
+  /* Padding dipindah ke <input> supaya area ketuknya setinggi kotaknya,
+     bukan cuma setinggi satu baris teks. */
+  padding: 0 15px;
 }
 
 .search svg {
@@ -26,6 +28,8 @@
   color: var(--color-text-primary);
   font-family: var(--font-body);
   font-size: 0.87rem;
+  padding: 13px 0;
+  min-height: 44px;
 }
 
 .search input::placeholder {

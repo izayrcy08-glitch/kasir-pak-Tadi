@@ -1,8 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
-@import './tokens.css';
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap");
+@import "./tokens.css";
+
+/*
+ * Breakpoint proyek (mobile-first — base = HP, min-width menambah layout besar).
+ * Ditulis literal di tiap @media karena CSS var tidak bisa dipakai di media query.
+ *   base            : HP potrait (iOS PWA = mode pantau/kelola)
+ *   min-width 768px : tablet potrait
+ *   min-width 1024px: laptop & tablet landscape = stasiun kasir, layout mockup
+ */
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  /* iOS memperbesar teks sendiri saat rotate kalau ini tidak dikunci. */
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -10,4 +23,20 @@ body {
   font-family: var(--font-body);
   color: var(--color-text-primary);
   background: var(--color-bg-app);
+  /* Layout sudah mobile-first; ini jaring pengaman supaya satu elemen nakal
+     tidak membuat seluruh halaman bisa digeser ke samping di HP. */
+  overflow-x: hidden;
+}
+
+/*
+ * iOS Safari auto-zoom ke input yang font-size-nya < 16px dan zoom itu tidak
+ * pernah kembali sendiri — fatal untuk PWA. Di bawah 1024px semua kontrol form
+ * dipaksa 16px; di laptop/tablet landscape ukuran mockup dipakai lagi.
+ */
+@media (max-width: 1023px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
 }

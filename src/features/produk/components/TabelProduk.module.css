@@ -1,8 +1,16 @@
+/*
+ * Mobile-first. Tabel 7 kolom tidak mungkin muat di HP, jadi di bawah 1024px
+ * tiap baris dirender sebagai kartu: thead disembunyikan dan tiap <td> memakai
+ * label dari atribut data-label (itu sebabnya TabelProduk.tsx menuliskannya).
+ * Markup-nya tetap <table> asli supaya struktur & pembacaan screen reader utuh.
+ * Di >=1024px (stasiun kasir) tampil sebagai tabel persis mockup.
+ */
+
 .card {
   background: var(--color-card);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  padding: 8px 24px 4px;
+  padding: 12px;
 }
 
 table {
@@ -10,27 +18,69 @@ table {
   border-collapse: collapse;
 }
 
-th {
-  text-align: left;
+thead {
+  /* Disembunyikan dari mata, tetap terbaca screen reader. */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+tbody tr {
+  display: block;
+  border: var(--border-subtle);
+  border-radius: var(--radius-tile);
+  padding: 14px;
+}
+
+tbody tr + tr {
+  margin-top: 10px;
+}
+
+td {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 5px 0;
+  font-size: 0.86rem;
+  border-bottom: none;
+}
+
+td::before {
+  content: attr(data-label);
   font-family: var(--font-mono);
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--color-text-secondary);
   font-weight: 600;
-  padding: 16px 12px 10px;
-  border-bottom: var(--border-subtle);
+  flex-shrink: 0;
 }
 
-td {
-  padding: 13px 12px;
-  font-size: 0.84rem;
+/* Nama produk jadi judul kartu, bukan baris berlabel. */
+.nameCell {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0 0 10px;
+  margin-bottom: 6px;
   border-bottom: var(--border-subtle-faint);
-  vertical-align: middle;
 }
 
-tr:last-child td {
-  border-bottom: none;
+.nameCell::before {
+  content: none;
+}
+
+.aksiCell {
+  justify-content: flex-end;
+  padding-top: 12px;
+}
+
+.aksiCell::before {
+  margin-right: auto;
 }
 
 .mono {
@@ -64,7 +114,7 @@ tr:last-child td {
 }
 
 .pillWarn::before {
-  content: '';
+  content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -72,8 +122,9 @@ tr:last-child td {
 }
 
 .iconBtn {
-  width: 30px;
-  height: 30px;
+  /* Target sentuh 40px di HP; mengecil ke 30px ala mockup di desktop. */
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   border: var(--border-subtle-strong);
   background: none;
@@ -86,8 +137,8 @@ tr:last-child td {
 }
 
 .iconBtn svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   stroke: currentColor;
   fill: none;
   stroke-width: 1.7;
@@ -99,6 +150,7 @@ tr:last-child td {
   display: block;
   font-family: var(--font-mono);
   font-size: 0.68rem;
+  font-weight: 500;
   color: var(--color-text-secondary);
   margin-bottom: 2px;
 }
@@ -109,4 +161,79 @@ tr:last-child td {
   color: var(--color-text-secondary);
   font-size: 0.87rem;
   margin: 0;
+}
+
+/* --- Stasiun kasir: kembali jadi tabel sungguhan --- */
+@media (min-width: 1024px) {
+  .card {
+    padding: 8px 24px 4px;
+  }
+
+  thead {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+  }
+
+  th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    padding: 16px 12px 10px;
+    border-bottom: var(--border-subtle);
+  }
+
+  tbody tr {
+    display: table-row;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  tbody tr + tr {
+    margin-top: 0;
+  }
+
+  td {
+    display: table-cell;
+    padding: 13px 12px;
+    font-size: 0.84rem;
+    border-bottom: var(--border-subtle-faint);
+    vertical-align: middle;
+  }
+
+  td::before {
+    content: none;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .nameCell {
+    display: table-cell;
+    font-weight: 400;
+    font-size: 0.84rem;
+    margin-bottom: 0;
+  }
+
+  .aksiCell {
+    padding-top: 13px;
+  }
+
+  .iconBtn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .iconBtn svg {
+    width: 14px;
+    height: 14px;
+  }
 }

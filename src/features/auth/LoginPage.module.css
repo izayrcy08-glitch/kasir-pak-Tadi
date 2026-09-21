@@ -11,8 +11,9 @@
   background: var(--color-card);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  padding: 36px 32px;
-  width: 380px;
+  padding: 28px 22px;
+  width: 100%;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -97,4 +98,10 @@
 .btnAccent:disabled {
   opacity: 0.6;
   cursor: default;
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 36px 32px;
+  }
 }
