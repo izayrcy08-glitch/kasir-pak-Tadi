@@ -1,21 +1,13 @@
 rules_version = '2';
 
-// !!! SEMENTARA — TERBUKA UNTUK SIAPA SAJA, TANPA LOGIN !!!
-// Dilonggarkan sengaja karena halaman Login (Email/Password) belum dibangun,
-// supaya fitur Produk bisa dites lewat Firebase Emulator. Rules ini adalah
-// FILE YANG SAMA dipakai emulator lokal maupun project Firebase asli kalau
-// di-deploy (`firebase deploy --only firestore:rules`) — project ini cuma
-// satu (langsung produksi), jadi JANGAN PERNAH deploy rules ini ke Firebase
-// asli. Kembalikan ke versi wajib-login di bawah begitu halaman Login sudah
-// ada:
-//
-//   match /{document=**} {
-//     allow read, write: if request.auth != null;
-//   }
+// Wajib login — hanya request dengan Firebase Auth token valid yang boleh
+// baca/tulis. Satu akun sharing (Email/Password), lihat halaman Login di
+// src/features/auth/. File ini sama persis dipakai emulator lokal maupun
+// project Firebase asli.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
-      allow read, write: if true;
+      allow read, write: if request.auth != null;
     }
   }
 }

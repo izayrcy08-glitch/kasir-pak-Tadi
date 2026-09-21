@@ -2,14 +2,13 @@
 
 Aplikasi kasir untuk toko sparepart motor/mobil. Solo dev non-teknis, sepenuhnya AI-assisted ("vibe coding"). **Ini bukan proyek MVP yang boleh asal jalan** — akan dipakai produksi sehari-hari oleh Pak Tadi & istri untuk transaksi & stok toko sungguhan. "MVP" di `DAFTAR-FITUR.md` hanya soal cakupan fitur, bukan standar kualitas kode.
 
-## 🔴 Blocker sebelum device dipasang di toko sungguhan (dicatat 2026-09-16)
+## 🔴 Sebelum device dipasang di toko sungguhan (diperbarui 2026-09-21)
 
-Belum dikerjakan — tapi **wajib** selesai sebelum build APK/PWA ini dipasang dan dipakai transaksi asli, karena proyek ini cuma punya **satu** project Firebase (langsung produksi, lihat `CATATAN-KEPUTUSAN.md`):
+Halaman Login sudah ada (`src/features/auth/`) dan `firestore.rules` sudah wajib-login (`request.auth != null`). Sisa langkah manual sebelum deploy ke project Firebase asli & pasang build di device toko:
 
-1. **Halaman Login belum ada.** Tidak ada fitur auth apa pun di kode saat ini walau sudah direncanakan (Firebase Auth Email/Password, satu akun sharing).
-2. **`firestore.rules` saat ini `allow read, write: if true`** — terbuka untuk siapa saja yang tahu config Firebase (yang selalu ikut terkirim ke browser di web app, jadi bukan rahasia). Ini sengaja dibuat sementara (lihat komentar di file itu) supaya fitur Produk bisa dites lewat emulator sebelum Login ada — **tapi kalau lupa dikembalikan sebelum `firebase deploy --only firestore:rules` ke project asli, data toko (transaksi, stok, harga) terbuka penuh untuk siapa saja.**
-3. Urutan yang harus diikuti: bangun halaman Login dulu → ganti `firestore.rules` ke versi wajib-login (versi wajib-login sudah ditulis sebagai komentar di file `firestore.rules`, tinggal diaktifkan) → baru boleh deploy rules ke project Firebase asli dan pasang build di device toko.
-4. Belum ada CI — `npm run check` cuma jalan manual di laptop. Bukan blocker produksi, tapi kalau lupa jalankan sebelum commit, disiplin test/lint yang sudah bagus di proyek ini jadi sia-sia.
+1. **Buat akun Firebase Auth di project asli** — Firebase Console > Authentication > Users > Add user, pakai email+password yang sudah disepakati. Ini harus dilakukan manual oleh pemilik project (Claude tidak boleh membuat akun produksi secara otomatis).
+2. Pastikan `firestore.rules` yang ter-deploy memang versi wajib-login (`allow read, write: if request.auth != null`) — cek file ini sebelum tiap `firebase deploy --only firestore:rules`, karena project cuma satu (langsung produksi, lihat `CATATAN-KEPUTUSAN.md`).
+3. Belum ada CI — `npm run check` cuma jalan manual di laptop. Bukan blocker produksi, tapi kalau lupa jalankan sebelum commit, disiplin test/lint yang sudah bagus di proyek ini jadi sia-sia.
 
 ## Stack (final — lihat CATATAN-KEPUTUSAN.md untuk alasan lengkap)
 - Vite + React + TypeScript (PWA), satu codebase untuk Android/Windows/iOS.
@@ -20,8 +19,8 @@ Belum dikerjakan — tapi **wajib** selesai sebelum build APK/PWA ini dipasang d
 
 ## Struktur folder (feature-based)
 ```
-src/app/            AppLayout (sidebar+shell)
-src/features/{transaksi,produk,laporan,pengaturan}/
+src/app/            AppLayout (sidebar+shell), RequireAuth (route guard)
+src/features/{auth,transaksi,produk,laporan,pengaturan}/
                      logic/ (pure fn + __tests__/) + components/ + hooks/ + CLAUDE.md
 src/shared/          components/, firebase/ (config.ts, collections.ts), lib/, types/
 src/platform/print/  adapter per platform (bluetooth.ts=Android, webserial.ts=Windows, noop.ts=iOS)

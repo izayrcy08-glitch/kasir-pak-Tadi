@@ -10,10 +10,11 @@
 - Pengguna: **satu akun sharing** dipakai Pak Tadi & istri — tidak perlu multi-akun/shift terpisah untuk MVP.
 - Metode bayar: **Tunai + QRIS/transfer** (QRIS dicatat manual, tanpa integrasi payment gateway real-time).
 
-## 0. Login (belum dibangun — lihat CLAUDE.md "Blocker")
+## 0. Login
 
-- Firebase Auth Email/Password, satu akun sharing (dipakai Pak Tadi & istri bersama, tidak perlu akun terpisah per orang untuk MVP).
-- **Wajib selesai sebelum aplikasi dipasang di device toko** — `firestore.rules` saat ini terbuka untuk siapa saja karena menunggu halaman ini.
+- Firebase Auth Email/Password, satu akun sharing (dipakai Pak Tadi & istri bersama, tidak perlu akun terpisah per orang untuk MVP). Sesi persist per device — login cuma sekali per HP/laptop.
+- Tidak ada signup/lupa-password di UI — akun dibuat manual lewat Firebase Console.
+- Sisa langkah sebelum device toko boleh dipasang: buat akun di project Firebase asli — lihat `CLAUDE.md`.
 
 ## 1. Manajemen Produk & Stok
 

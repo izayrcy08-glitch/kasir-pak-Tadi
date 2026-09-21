@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { keluar } from '../../shared/firebase/auth.repo';
 import styles from './PengaturanMenuPage.module.css';
 
 const MENU = [
@@ -52,6 +53,17 @@ export function PengaturanMenuPage() {
           </button>
         ))}
       </div>
+
+      <button type="button" className={styles.logoutRow} onClick={() => keluar()}>
+        <div className={styles.iconWrapAlert}>
+          <svg viewBox="0 0 24 24">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <path d="M16 17l5-5-5-5" />
+            <path d="M21 12H9" />
+          </svg>
+        </div>
+        <p className={styles.title}>Keluar</p>
+      </button>
     </>
   );
 }
