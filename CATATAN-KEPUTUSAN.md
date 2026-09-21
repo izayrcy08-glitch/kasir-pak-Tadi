@@ -34,6 +34,7 @@
 - **Plugin Bluetooth Serial dipakai**: `@nosslabs/bluetooth-classic` (npm, repo `nossdev/bluetooth-classic`). Dipilih dibanding kandidat lain (`@kduma-autoid/capacitor-bluetooth-printer`, plugin vendor seperti `capacitor-thermal-printer`) karena method `write()`-nya terima raw bytes (`number[]`) langsung — cocok dipasangkan dengan `escposBuilder.ts` (`Uint8Array` command ESC/POS) tanpa konversi ke string yang berisiko merusak byte kontrol biner. Plugin ini niche/community (bukan resmi Ionic), jadi kalau di kemudian hari bermasalah/berhenti di-maintain, perlu dievaluasi ulang — implementasinya diisolasi di `src/platform/print/bluetooth.ts` lewat interface `PrinterAdapter` supaya gampang diganti.
 - **appId Android**: `com.kasirsparepart.app` — sengaja tidak menyertakan nama "Pak Tadi" di identifier teknis (domain/package name); nama toko tetap dipakai di `appName` tampilan & header struk.
 - **Login**: Firebase Auth Email/Password, satu akun sharing (`kasir@kasirsparepart.app`, domain sama seperti appId — tidak perlu domain asli terdaftar, Firebase cuma butuh format email valid). Tidak ada fitur signup/lupa-password di UI — akun dibuat manual sekali lewat Firebase Console oleh pemilik project, baik di project asli maupun di Auth Emulator untuk testing lokal. Pesan error login disamakan untuk "email tidak ada" vs "password salah" (`pesanErrorAuth.ts`) supaya tidak bocorkan email mana yang terdaftar.
+- **CI**: GitHub Actions (`.github/workflows/check.yml`), trigger di tiap push ke `main` dan tiap pull request, menjalankan `npm ci` + `npm run check` (tsc + oxlint + vitest) di `ubuntu-latest` dengan Node 24 (sama seperti versi lokal). Sengaja minimal — cuma gate kualitas yang sudah ada, bukan deploy otomatis (deploy tetap manual, karena cuma ada satu project Firebase langsung produksi, lihat [[feedback-firebase-single-project]]).
 
 ## Tradeoff yang disadari & diterima
 
@@ -45,7 +46,6 @@
 
 - Setup teknis (scaffolding Vite, install Firebase SDK, bikin project Firebase asli di console) — belum dikerjakan, menunggu instruksi lanjut dari user.
 - Bikin akun Firebase Auth di project asli (Firebase Console > Authentication > Users) — langkah manual terakhir sebelum device boleh dipasang di toko. Lihat `CLAUDE.md` bagian "Sebelum device dipasang di toko sungguhan".
-- CI sederhana (mis. GitHub Actions yang menjalankan `npm run check` di setiap push) — belum ada, saat ini gate kualitas (`tsc -b && oxlint && vitest run`) hanya jalan manual.
 
 ## Sudah dibahas
 
