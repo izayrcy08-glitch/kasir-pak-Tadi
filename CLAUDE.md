@@ -2,6 +2,15 @@
 
 Aplikasi kasir untuk toko sparepart motor/mobil. Solo dev non-teknis, sepenuhnya AI-assisted ("vibe coding"). **Ini bukan proyek MVP yang boleh asal jalan** — akan dipakai produksi sehari-hari oleh Pak Tadi & istri untuk transaksi & stok toko sungguhan. "MVP" di `DAFTAR-FITUR.md` hanya soal cakupan fitur, bukan standar kualitas kode.
 
+## 🔴 Blocker sebelum device dipasang di toko sungguhan (dicatat 2026-09-16)
+
+Belum dikerjakan — tapi **wajib** selesai sebelum build APK/PWA ini dipasang dan dipakai transaksi asli, karena proyek ini cuma punya **satu** project Firebase (langsung produksi, lihat `CATATAN-KEPUTUSAN.md`):
+
+1. **Halaman Login belum ada.** Tidak ada fitur auth apa pun di kode saat ini walau sudah direncanakan (Firebase Auth Email/Password, satu akun sharing).
+2. **`firestore.rules` saat ini `allow read, write: if true`** — terbuka untuk siapa saja yang tahu config Firebase (yang selalu ikut terkirim ke browser di web app, jadi bukan rahasia). Ini sengaja dibuat sementara (lihat komentar di file itu) supaya fitur Produk bisa dites lewat emulator sebelum Login ada — **tapi kalau lupa dikembalikan sebelum `firebase deploy --only firestore:rules` ke project asli, data toko (transaksi, stok, harga) terbuka penuh untuk siapa saja.**
+3. Urutan yang harus diikuti: bangun halaman Login dulu → ganti `firestore.rules` ke versi wajib-login (versi wajib-login sudah ditulis sebagai komentar di file `firestore.rules`, tinggal diaktifkan) → baru boleh deploy rules ke project Firebase asli dan pasang build di device toko.
+4. Belum ada CI — `npm run check` cuma jalan manual di laptop. Bukan blocker produksi, tapi kalau lupa jalankan sebelum commit, disiplin test/lint yang sudah bagus di proyek ini jadi sia-sia.
+
 ## Stack (final — lihat CATATAN-KEPUTUSAN.md untuk alasan lengkap)
 - Vite + React + TypeScript (PWA), satu codebase untuk Android/Windows/iOS.
 - Firebase: **Firestore** (bukan SQL/Realtime Database) + Authentication (Email/Password, satu akun sharing).
@@ -35,12 +44,16 @@ src/styles/          tokens.css (design tokens), global.css
 4. Penyimpangan yang disengaja (keterbatasan teknis) dicatat alasannya satu baris di ringkasan tugas.
 
 ## Kalau butuh detail
+
+File ini sengaja dibuat pendek supaya hemat token tiap sesi baru — file di bawah **hanya
+dibaca kalau tugasnya memang menyentuh area itu**, bukan dibaca semua di awal sesi:
+
 | Butuh tahu... | Baca |
 |---|---|
 | Alasan arsitektur & tradeoff | `CATATAN-KEPUTUSAN.md` |
 | Spek fitur lengkap (cakupan vs di luar cakupan) | `DAFTAR-FITUR.md` |
-| Mockup asli per halaman | `design/*.dc.html` |
-| Aturan bisnis spesifik fitur | `src/features/<fitur>/CLAUDE.md` |
+| Mockup asli per halaman | `design/*.dc.html` (buka cuma file `.dc.html` untuk halaman yang dikerjakan, bukan seluruh folder) |
+| Aturan bisnis spesifik fitur | `src/features/<fitur>/CLAUDE.md` (cuma folder fitur yang disentuh) |
 
 ## Perintah
 `npm run dev` / `npm run check` / `npm run build` / `npm run emulate` (Firebase Emulator lokal) / `npm run format`

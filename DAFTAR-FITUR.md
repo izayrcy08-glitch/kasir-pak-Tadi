@@ -10,6 +10,11 @@
 - Pengguna: **satu akun sharing** dipakai Pak Tadi & istri — tidak perlu multi-akun/shift terpisah untuk MVP.
 - Metode bayar: **Tunai + QRIS/transfer** (QRIS dicatat manual, tanpa integrasi payment gateway real-time).
 
+## 0. Login (belum dibangun — lihat CLAUDE.md "Blocker")
+
+- Firebase Auth Email/Password, satu akun sharing (dipakai Pak Tadi & istri bersama, tidak perlu akun terpisah per orang untuk MVP).
+- **Wajib selesai sebelum aplikasi dipasang di device toko** — `firestore.rules` saat ini terbuka untuk siapa saja karena menunggu halaman ini.
+
 ## 1. Manajemen Produk & Stok
 
 - Data produk: kode part (opsional, bebas diisi/tidak — tidak semua sparepart punya kode baku), nama produk, kategori (mis. oli, kampas rem, busi, aki, per, filter, dll — daftar kategori bisa dikelola sendiri oleh user), harga beli, harga jual, stok saat ini, satuan (pcs/set/liter/dus).

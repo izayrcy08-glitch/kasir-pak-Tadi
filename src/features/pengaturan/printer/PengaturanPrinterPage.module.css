@@ -195,3 +195,46 @@
   color: var(--color-text-muted);
   margin: 0;
 }
+
+.btGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.deviceList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.deviceItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-tile);
+  border: var(--border-input);
+  background: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-family: var(--font-body);
+  text-align: left;
+}
+
+.deviceItem.selected {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+.deviceAddress {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  opacity: 0.75;
+  flex-shrink: 0;
+}

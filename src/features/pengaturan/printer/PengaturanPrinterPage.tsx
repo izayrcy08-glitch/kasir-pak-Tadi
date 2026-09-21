@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
+import { BluetoothClassic, type BluetoothDevice } from '@nosslabs/bluetooth-classic';
 import { getPrinterAdapter } from '../../../platform/print';
+import { KUNCI_ALAMAT_PRINTER_BLUETOOTH } from '../../../platform/print/bluetooth';
 import { buildBukaLaciKas, buildInisialisasi, buildTeksBaris, gabungkanPerintah } from './logic/escposBuilder';
 import styles from './PengaturanPrinterPage.module.css';
 
@@ -28,6 +31,18 @@ function tulisKeLocalStorage(kunci: string, nilai: string) {
   }
 }
 
+function bacaAlamatBluetoothTersimpan(): string | null {
+  try {
+    return window.localStorage.getItem(KUNCI_ALAMAT_PRINTER_BLUETOOTH);
+  } catch {
+    return null;
+  }
+}
+
+function pesanDariError(err: unknown, fallback: string): string {
+  return err instanceof Error ? err.message : fallback;
+}
+
 export function PengaturanPrinterPage() {
   const navigate = useNavigate();
   const [koneksi, setKoneksi] = useState<KoneksiPrinter>(() =>
@@ -38,11 +53,18 @@ export function PengaturanPrinterPage() {
   );
   const [pesanAksi, setPesanAksi] = useState('');
   const [terhubung, setTerhubung] = useState(false);
+  const [daftarDevice, setDaftarDevice] = useState<BluetoothDevice[]>([]);
+  const [sedangCariDevice, setSedangCariDevice] = useState(false);
+  const [alamatTerpilih, setAlamatTerpilih] = useState<string | null>(() => bacaAlamatBluetoothTersimpan());
 
   const adapter = getPrinterAdapter();
   // isSupported() cuma berarti platform ini punya API-nya (mis. Web Serial
   // di Chrome/Edge desktop) — bukan berarti printer sudah dipilih/tersambung.
   const printerTersedia = adapter.isSupported();
+  // Bluetooth Classic (beda dengan Web Serial) tidak punya dialog pilih
+  // device bawaan browser — user wajib cari & pilih device spesifik dulu
+  // di sini sebelum tombol Tes Cetak bisa berhasil connect().
+  const diAndroidNative = Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'android';
 
   function handleGantiKoneksi(nilai: KoneksiPrinter) {
     setKoneksi(nilai);
@@ -61,9 +83,9 @@ export function PengaturanPrinterPage() {
       setTerhubung(true);
       const payload = gabungkanPerintah(buildInisialisasi(), buildTeksBaris('Tes cetak — Kasir Pak Tadi'));
       await adapter.printReceipt(payload);
-    } catch {
+    } catch (err) {
       setTerhubung(false);
-      setPesanAksi('Gagal tes cetak. Printer belum terhubung.');
+      setPesanAksi(pesanDariError(err, 'Gagal tes cetak. Printer belum terhubung.'));
     }
   }
 
@@ -73,10 +95,43 @@ export function PengaturanPrinterPage() {
       await adapter.connect();
       setTerhubung(true);
       await adapter.printReceipt(buildBukaLaciKas());
-    } catch {
+    } catch (err) {
       setTerhubung(false);
-      setPesanAksi('Gagal membuka laci kas. Printer belum terhubung.');
+      setPesanAksi(pesanDariError(err, 'Gagal membuka laci kas. Printer belum terhubung.'));
     }
+  }
+
+  async function handleCariPrinterBluetooth() {
+    setPesanAksi('');
+    setSedangCariDevice(true);
+    try {
+      const izin = await BluetoothClassic.checkPermissions();
+      if (izin.status !== 'granted') {
+        const hasilIzin = await BluetoothClassic.requestPermissions();
+        if (hasilIzin.status !== 'granted') {
+          throw new Error('Izin Bluetooth ditolak — aktifkan lewat pengaturan aplikasi di HP.');
+        }
+      }
+      const statusAktif = await BluetoothClassic.isEnabled();
+      if (!statusAktif.enabled) {
+        await BluetoothClassic.enable();
+      }
+      const hasilScan = await BluetoothClassic.scan({ duration: 6000 });
+      setDaftarDevice(hasilScan.devices);
+      if (hasilScan.devices.length === 0) {
+        setPesanAksi('Tidak ada printer ditemukan — pastikan printer menyala & sudah di-pairing di pengaturan Bluetooth HP.');
+      }
+    } catch (err) {
+      setPesanAksi(pesanDariError(err, 'Gagal mencari printer Bluetooth.'));
+    } finally {
+      setSedangCariDevice(false);
+    }
+  }
+
+  function handlePilihDeviceBluetooth(device: BluetoothDevice) {
+    setAlamatTerpilih(device.address);
+    tulisKeLocalStorage(KUNCI_ALAMAT_PRINTER_BLUETOOTH, device.address);
+    setPesanAksi(`Printer "${device.name || device.address}" dipilih.`);
   }
 
   return (
@@ -123,6 +178,40 @@ export function PengaturanPrinterPage() {
           </div>
         </div>
 
+        {diAndroidNative && (
+          <div className={styles.formField}>
+            <label>Printer Bluetooth</label>
+            <div className={styles.btGroup}>
+              <p className={styles.catatan}>
+                {alamatTerpilih ? `Tersimpan: ${alamatTerpilih}` : 'Belum ada printer dipilih.'}
+              </p>
+              <button
+                type="button"
+                className={styles.btnOutlineFlex}
+                onClick={handleCariPrinterBluetooth}
+                disabled={sedangCariDevice}
+              >
+                {sedangCariDevice ? 'Mencari…' : 'Cari Printer'}
+              </button>
+            </div>
+            {daftarDevice.length > 0 && (
+              <div className={styles.deviceList}>
+                {daftarDevice.map((device) => (
+                  <button
+                    key={device.address}
+                    type="button"
+                    className={`${styles.deviceItem} ${alamatTerpilih === device.address ? styles.selected : ''}`}
+                    onClick={() => handlePilihDeviceBluetooth(device)}
+                  >
+                    <span>{device.name || 'Tanpa nama'}</span>
+                    <span className={styles.deviceAddress}>{device.address}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         <div className={styles.formField}>
           <label>Lebar Kertas</label>
           <div className={styles.chipRow}>
@@ -165,8 +254,8 @@ export function PengaturanPrinterPage() {
         {pesanAksi && <p className={styles.catatan}>{pesanAksi}</p>}
         {!printerTersedia && (
           <p className={styles.catatan}>
-            Perangkat ini belum bisa dipakai untuk cetak — printer USB (Web Serial) baru didukung di
-            Chrome/Edge Windows, sedangkan Bluetooth Android menyusul terpisah.
+            Perangkat ini belum bisa dipakai untuk cetak — printer USB (Web Serial) didukung di
+            Chrome/Edge Windows, printer Bluetooth didukung di aplikasi Android (APK).
           </p>
         )}
       </div>

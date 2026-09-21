@@ -31,6 +31,8 @@
 - **Mode offline & sinkronisasi**: pakai **Firestore offline persistence** (bawaan SDK) — transaksi tetap bisa dicatat saat toko tanpa sinyal, otomatis ter-sync ke server begitu online kembali, tanpa perlu membangun sync engine sendiri.
 - **Sinkronisasi antar-device**: pakai **realtime listener** Firestore (`onSnapshot`) — transaksi yang dicatat di kasir (Android/Windows) langsung muncul di device pemantau (iOS) saat online, tanpa perlu refresh manual.
 - **Tooling build Android**: tidak perlu Android Studio — cukup Android SDK Command-Line Tools + JDK, build lewat terminal (`gradlew assembleDebug`), tes ke HP fisik via `adb install` (hindari emulator). Laptop 12GB RAM cukup dengan pendekatan ini.
+- **Plugin Bluetooth Serial dipakai**: `@nosslabs/bluetooth-classic` (npm, repo `nossdev/bluetooth-classic`). Dipilih dibanding kandidat lain (`@kduma-autoid/capacitor-bluetooth-printer`, plugin vendor seperti `capacitor-thermal-printer`) karena method `write()`-nya terima raw bytes (`number[]`) langsung — cocok dipasangkan dengan `escposBuilder.ts` (`Uint8Array` command ESC/POS) tanpa konversi ke string yang berisiko merusak byte kontrol biner. Plugin ini niche/community (bukan resmi Ionic), jadi kalau di kemudian hari bermasalah/berhenti di-maintain, perlu dievaluasi ulang — implementasinya diisolasi di `src/platform/print/bluetooth.ts` lewat interface `PrinterAdapter` supaya gampang diganti.
+- **appId Android**: `com.kasirsparepart.app` — sengaja tidak menyertakan nama "Pak Tadi" di identifier teknis (domain/package name); nama toko tetap dipakai di `appName` tampilan & header struk.
 
 ## Tradeoff yang disadari & diterima
 
@@ -41,6 +43,8 @@
 ## Belum dibahas (langkah selanjutnya)
 
 - Setup teknis (scaffolding Vite, install Firebase SDK, bikin project Firebase asli di console) — belum dikerjakan, menunggu instruksi lanjut dari user.
+- **Halaman Login (Firebase Auth Email/Password) + mengembalikan `firestore.rules` ke versi wajib-login** — ini prioritas sebelum device dipasang di toko sungguhan, jangan ditunda sampai akhir. Lihat detail & alasan di `CLAUDE.md` bagian "Blocker sebelum device dipasang di toko sungguhan". Saat ini `firestore.rules` masih terbuka untuk siapa saja (`allow read, write: if true`) karena Login belum dibangun.
+- CI sederhana (mis. GitHub Actions yang menjalankan `npm run check` di setiap push) — belum ada, saat ini gate kualitas (`tsc -b && oxlint && vitest run`) hanya jalan manual.
 
 ## Sudah dibahas
 
