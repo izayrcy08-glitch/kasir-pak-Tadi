@@ -37,7 +37,7 @@ export function LoginPage() {
       <form className={styles.card} onSubmit={handleSubmit}>
         <div className={styles.brand}>
           <div className={styles.logoBadge}>T</div>
-          <h1>Kasir Pak Tadi</h1>
+          <h1>Kasir Sparepart</h1>
           <p className={styles.sub}>Masuk untuk mulai transaksi.</p>
         </div>
 
