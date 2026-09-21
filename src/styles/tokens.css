@@ -1,24 +1,29 @@
 /*
  * Design tokens — sumber kebenaran tunggal untuk warna/font/radius/shadow.
- * Nilai diambil literal dari design/Main.dc.html (palet "Sage Lembut").
+ * Basis bentuk/tipografi diambil dari design/Main.dc.html; palet hijaunya digeser
+ * dari "Sage Lembut" ke "Lime Stabilo" (hue lime nyala, kegelapan dipertahankan
+ * supaya teks putih & kartu putih tetap kontras — lihat catatan di bawah).
  * Dilarang menulis hex/px baru langsung di komponen — selalu lewat var(--...) di sini.
  */
 :root {
-  /* Warna */
-  --color-bg-app: #57735f;
-  --color-sidebar: #3f5b49;
+  /* Warna
+   * bg-app & sidebar sengaja lime *gelap*, bukan neon terang: kontras vs teks putih
+   * dijaga >= 4.5 (bg-app 4.56, sidebar 7.01) sama seperti palet sage sebelumnya. */
+  --color-bg-app: #56831f;
+  --color-sidebar: #3d6314;
   --color-card: #ffffff;
   --color-accent: #e4a24a;
   --color-accent-text: #241400;
-  --color-text-primary: #202a22;
-  --color-text-secondary: #5b665c;
+  --color-text-primary: #202a15;
+  --color-text-secondary: #5c6650;
   --color-alert: #d65c4a;
-  --color-text-on-dark: #f5f7f2;
+  --color-text-on-dark: #f6f8ee;
 
   /* Tipografi */
-  --font-heading: 'Fraunces', Georgia, serif;
-  --font-body: 'Work Sans', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace; /* semua angka/harga/kode/chip, tabular-nums */
+  --font-heading: "Fraunces", Georgia, serif;
+  --font-body: "Work Sans", system-ui, sans-serif;
+  --font-mono:
+    "IBM Plex Mono", monospace; /* semua angka/harga/kode/chip, tabular-nums */
 
   /* Radius */
   --radius-card: 20px;
@@ -27,35 +32,38 @@
   --radius-pill: 999px;
 
   /* Shadow & border */
-  --shadow-card: 0 1px 2px rgba(20, 26, 18, 0.06), 0 14px 34px rgba(20, 26, 18, 0.12);
-  --border-subtle: 1px solid rgba(32, 42, 34, 0.09);
-  --border-subtle-strong: 1px solid rgba(32, 42, 34, 0.12);
-  --border-subtle-faint: 1px solid rgba(32, 42, 34, 0.07);
-  --border-input: 1.5px solid rgba(32, 42, 34, 0.14);
+  --shadow-card:
+    0 1px 2px rgba(22, 30, 10, 0.06), 0 14px 34px rgba(22, 30, 10, 0.12);
+  --border-subtle: 1px solid rgba(32, 42, 21, 0.09);
+  --border-subtle-strong: 1px solid rgba(32, 42, 21, 0.12);
+  --border-subtle-faint: 1px solid rgba(32, 42, 21, 0.07);
+  --border-input: 1.5px solid rgba(32, 42, 21, 0.14);
+  --border-dashed: 1.5px dashed rgba(32, 42, 21, 0.22);
+  --overlay-modal: rgba(22, 30, 10, 0.45);
 
   /* Overlay teks/permukaan di atas background gelap (sidebar, header halaman) */
-  --text-on-dark-62: rgba(245, 247, 242, 0.62);
-  --text-on-dark-66: rgba(245, 247, 242, 0.66);
-  --text-on-dark-68: rgba(245, 247, 242, 0.68);
-  --text-on-dark-75: rgba(245, 247, 242, 0.75);
-  --text-on-dark-80: rgba(245, 247, 242, 0.8);
+  --text-on-dark-62: rgba(246, 248, 238, 0.62);
+  --text-on-dark-66: rgba(246, 248, 238, 0.66);
+  --text-on-dark-68: rgba(246, 248, 238, 0.68);
+  --text-on-dark-75: rgba(246, 248, 238, 0.75);
+  --text-on-dark-80: rgba(246, 248, 238, 0.8);
   --surface-on-dark-13: rgba(255, 255, 255, 0.13);
-  --surface-on-dark-14: rgba(245, 247, 242, 0.14);
-  --border-on-dark-22: 1px solid rgba(245, 247, 242, 0.22);
-  --border-on-dark-28: 1.5px solid rgba(245, 247, 242, 0.28);
+  --surface-on-dark-14: rgba(246, 248, 238, 0.14);
+  --border-on-dark-22: 1px solid rgba(246, 248, 238, 0.22);
+  --border-on-dark-28: 1.5px solid rgba(246, 248, 238, 0.28);
 
   /* Teks tersier (placeholder/hint/opsional) & input di atas card putih */
-  --color-text-muted: #8a9186;
-  --color-input-bg: #f5f6f1;
+  --color-text-muted: #8b917e;
+  --color-input-bg: #f5f7ec;
 
   /* Chip kategori & pill peringatan (stok rendah) */
-  --color-cat-chip-bg: rgba(63, 91, 73, 0.1);
+  --color-cat-chip-bg: rgba(61, 99, 20, 0.1);
   --color-pill-warn-bg: rgba(214, 92, 74, 0.12);
 
   /* Pill metode bayar & angka "terjual" di Laporan */
   --color-paytag-tunai-bg: rgba(228, 162, 74, 0.18);
   --color-paytag-tunai-text: #8a5a16;
-  --color-paytag-qris-bg: rgba(63, 91, 73, 0.12);
-  --color-paytag-qris-text: #3f5b49;
-  --color-rank-qty: #3f5b49;
+  --color-paytag-qris-bg: rgba(61, 99, 20, 0.12);
+  --color-paytag-qris-text: #3d6314;
+  --color-rank-qty: #3d6314;
 }
