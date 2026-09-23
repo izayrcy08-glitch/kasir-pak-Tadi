@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
     <!-- viewport-fit=cover: wajib supaya env(safe-area-inset-*) terisi di iPhone
          berponi; dipakai bottom-nav & modal agar tidak tertimpa home indicator. -->
     <meta
@@ -12,10 +13,13 @@
     <meta name="theme-color" content="#3d6314" />
     <!-- iOS: "Add to Home Screen" jalan standalone (tanpa address bar Safari).
          status-bar-style sengaja "default" (bukan black-translucent) supaya iOS
-         tetap memesan ruang status bar & judul halaman tidak tertutup poni. -->
+         tetap memesan ruang status bar & judul halaman tidak tertutup poni.
+         apple-touch-icon wajib PNG — iOS tidak baca favicon SVG untuk icon Home Screen. -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Kasir Sparepart" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>Kasir Sparepart</title>
   </head>
   <body>
