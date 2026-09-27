@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import { PengingatBackup } from '../features/pengaturan/backup/components/PengingatBackup';
 import styles from './AppLayout.module.css';
 
 const NAV_ITEMS = [
@@ -27,6 +28,7 @@ export function AppLayout() {
       </div>
 
       <div className={styles.main}>
+        <PengingatBackup />
         <Outlet />
       </div>
     </div>

@@ -10,6 +10,8 @@ import type { Database } from '@sqlite.org/sqlite-wasm';
 import type { PengaturanTokoInput } from '../../types/pengaturanToko';
 import type { ProdukInput } from '../../types/produk';
 import type { TransaksiDraft } from '../../types/transaksi';
+import { ringkasData } from '../berkasBackup';
+import { ambilStatusBackup, catatBackup } from './backup';
 import { ambilAgregatRentang } from './laporan';
 import { ambilPengaturanToko, simpanPengaturanToko } from './pengaturanToko';
 import { daftarProduk, hapusProduk, tambahProduk, updateProduk } from './produk';
@@ -29,6 +31,10 @@ export const OPERASI = {
   simpanPengaturanToko: (db: Database, input: PengaturanTokoInput) => simpanPengaturanToko(db, input),
   // Laporan
   ambilAgregatRentang,
+  // Backup
+  ambilStatusBackup,
+  catatBackup: (db: Database) => catatBackup(db),
+  ringkasData,
 };
 
 export type Operasi = typeof OPERASI;

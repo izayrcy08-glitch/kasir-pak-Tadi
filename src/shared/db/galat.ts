@@ -42,10 +42,31 @@ export class AplikasiSudahTerbukaError extends Error {
   }
 }
 
+// File yang dipilih untuk Pulihkan tidak boleh dipakai menimpa data toko.
+export type AlasanBerkasTidakValid = 'bukanBackup' | 'rusak' | 'versiLebihBaru';
+
+const PESAN_BERKAS_TIDAK_VALID: Record<AlasanBerkasTidakValid, string> = {
+  bukanBackup: 'File ini bukan file backup Kasir. Pilih file yang namanya diawali "backup-kasir".',
+  rusak: 'File backup ini rusak atau tidak utuh. Kirim ulang file-nya dari device asal, lalu coba lagi.',
+  versiLebihBaru:
+    'File backup ini dibuat oleh versi aplikasi yang lebih baru. Perbarui aplikasi di device ini dulu, lalu coba lagi.',
+};
+
+export class BerkasBackupTidakValidError extends Error {
+  readonly alasan: AlasanBerkasTidakValid;
+
+  constructor(alasan: AlasanBerkasTidakValid) {
+    super(PESAN_BERKAS_TIDAK_VALID[alasan]);
+    this.name = 'BerkasBackupTidakValidError';
+    this.alasan = alasan;
+  }
+}
+
 export type GalatTerserialisasi =
   | { nama: 'StokTidakCukupError'; detail: DetailStokKurang[] }
   | { nama: 'PembayaranKurangError'; total: number; dibayar: number }
   | { nama: 'AplikasiSudahTerbukaError' }
+  | { nama: 'BerkasBackupTidakValidError'; alasan: AlasanBerkasTidakValid }
   | { nama: 'Error'; pesan: string };
 
 export function serialisasiGalat(err: unknown): GalatTerserialisasi {
@@ -54,6 +75,7 @@ export function serialisasiGalat(err: unknown): GalatTerserialisasi {
     return { nama: 'PembayaranKurangError', total: err.total, dibayar: err.dibayar };
   }
   if (err instanceof AplikasiSudahTerbukaError) return { nama: 'AplikasiSudahTerbukaError' };
+  if (err instanceof BerkasBackupTidakValidError) return { nama: 'BerkasBackupTidakValidError', alasan: err.alasan };
   return { nama: 'Error', pesan: err instanceof Error ? err.message : String(err) };
 }
 
@@ -65,6 +87,8 @@ export function bangunUlangGalat(g: GalatTerserialisasi): Error {
       return new PembayaranKurangError(g.total, g.dibayar);
     case 'AplikasiSudahTerbukaError':
       return new AplikasiSudahTerbukaError();
+    case 'BerkasBackupTidakValidError':
+      return new BerkasBackupTidakValidError(g.alasan);
     case 'Error':
       return new Error(g.pesan);
   }

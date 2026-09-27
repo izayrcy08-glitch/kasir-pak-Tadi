@@ -1,0 +1,151 @@
+/* Pola overlay/modal sama dengan DetailTransaksiModal (Laporan). */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  padding: max(16px, env(safe-area-inset-top, 0px)) 16px max(16px, env(safe-area-inset-bottom, 0px));
+}
+
+.modal {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal h2 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--color-text-primary);
+  margin: 0 0 4px;
+}
+
+.namaFile {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  word-break: break-all;
+}
+
+.tabel {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.tabel th,
+.tabel td {
+  text-align: left;
+  padding: 8px 6px;
+  border-bottom: var(--border-subtle-faint);
+  vertical-align: top;
+}
+
+/* Judul kolom: gaya sama dengan tabel Laporan/Produk (mono, kapital, kecil). */
+.tabel thead th {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.tabel tbody th {
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.tabel td {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.angka {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.peringatan {
+  background: var(--color-pill-warn-bg);
+  color: var(--color-alert);
+  border-radius: var(--radius-tile);
+  padding: 12px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.cek {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.cek input {
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  flex-shrink: 0;
+  accent-color: var(--color-alert);
+}
+
+.formError {
+  color: var(--color-alert);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.aksi {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btnBatal,
+.btnBahaya {
+  border-radius: var(--radius-pill);
+  padding: 13px 20px;
+  font-weight: 600;
+  font-size: 0.86rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.btnBatal {
+  background: none;
+  border: var(--border-input);
+  color: var(--color-text-primary);
+}
+
+.btnBahaya {
+  background: var(--color-alert);
+  color: var(--color-card);
+  border: none;
+}
+
+.btnBatal:disabled,
+.btnBahaya:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

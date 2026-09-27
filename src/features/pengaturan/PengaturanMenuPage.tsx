@@ -26,6 +26,18 @@ const MENU = [
       </svg>
     ),
   },
+  {
+    to: '/pengaturan/backup',
+    judul: 'Backup & Pulihkan Data',
+    sub: 'Simpan salinan data, pindah kasir ke device lain',
+    icon: (
+      <svg viewBox="0 0 24 24">
+        <ellipse cx="12" cy="5.5" rx="7" ry="2.5" />
+        <path d="M5 5.5v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-6" />
+        <path d="M5 11.5v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-6" />
+      </svg>
+    ),
+  },
 ] as const;
 
 export function PengaturanMenuPage() {

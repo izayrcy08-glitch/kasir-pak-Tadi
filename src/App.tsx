@@ -8,6 +8,7 @@ import { TransaksiPage } from './features/transaksi/TransaksiPage';
 import { PengaturanMenuPage } from './features/pengaturan/PengaturanMenuPage';
 import { IdentitasTokoPage } from './features/pengaturan/identitas-toko/IdentitasTokoPage';
 import { PengaturanPrinterPage } from './features/pengaturan/printer/PengaturanPrinterPage';
+import { BackupPage } from './features/pengaturan/backup/BackupPage';
 import { UjiDbPage } from './app/UjiDbPage';
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="pengaturan" element={<PengaturanMenuPage />} />
           <Route path="pengaturan/identitas" element={<IdentitasTokoPage />} />
           <Route path="pengaturan/printer" element={<PengaturanPrinterPage />} />
+          <Route path="pengaturan/backup" element={<BackupPage />} />
         </Route>
       </Route>
       {/* Alamat tak dikenal (mis. /login dari versi lama yang masih ter-bookmark) → halaman utama. */}

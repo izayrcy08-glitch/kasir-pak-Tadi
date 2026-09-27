@@ -84,6 +84,15 @@ export const MIGRASI: readonly string[] = [
     diperbarui_pada INTEGER NOT NULL
   ) STRICT;
   `,
+
+  // v2 — kapan terakhir file backup dibuat, untuk pengingat backup rutin.
+  // Satu baris saja (id selalu 1); belum ada baris = belum pernah backup.
+  `
+  CREATE TABLE status_backup (
+    id                   INTEGER PRIMARY KEY CHECK (id = 1),
+    terakhir_backup_pada INTEGER NOT NULL
+  ) STRICT;
+  `,
 ];
 
 export const VERSI_SKEMA = MIGRASI.length;

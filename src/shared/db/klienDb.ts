@@ -1,9 +1,10 @@
 // Klien main-thread untuk sqlite.worker.ts. Satu worker untuk seluruh app —
 // VFS opfs-sahpool mengunci file DB, jadi hanya satu koneksi per origin.
 import type { Database } from '@sqlite.org/sqlite-wasm';
+import type { RingkasanData } from './berkasBackup';
 import { bangunUlangGalat } from './galat';
 import type { NamaOperasi, Operasi } from './operasi';
-import { TABEL_DIUBAH, type TabelDb } from './operasi/tabelDiubah';
+import { SEMUA_TABEL, TABEL_DIUBAH, type TabelDb } from './operasi/tabelDiubah';
 import type { DbRequest, DbResponse, InfoDb, NilaiSql } from './protokol';
 
 type TanpaId<T> = T extends unknown ? Omit<T, 'id'> : never;
@@ -78,4 +79,18 @@ export function infoDb(): Promise<InfoDb> {
 // Hasil postMessage selalu di-clone ke ArrayBuffer biasa (bukan Shared).
 export function exportDb(): Promise<Uint8Array<ArrayBuffer>> {
   return kirim({ type: 'export' }) as Promise<Uint8Array<ArrayBuffer>>;
+}
+
+// Periksa file backup tanpa mengubah data apa pun. Gagal dengan
+// BerkasBackupTidakValidError (pesannya siap ditampilkan) kalau file tidak
+// boleh dipakai.
+export function periksaBackup(bytes: Uint8Array): Promise<RingkasanData> {
+  return kirim({ type: 'periksaBackup', bytes }) as Promise<RingkasanData>;
+}
+
+// Ganti SELURUH data toko di device ini dengan isi file backup.
+export async function pulihkanBackup(bytes: Uint8Array): Promise<RingkasanData> {
+  const hasil = (await kirim({ type: 'pulihkanBackup', bytes })) as RingkasanData;
+  beriTahuPerubahan(SEMUA_TABEL);
+  return hasil;
 }

@@ -10,7 +10,7 @@ describe('jalankanMigrasi', () => {
     jalankanMigrasi(db);
     expect(versiSkema(db)).toBe(VERSI_SKEMA);
     const tabel = db.selectValues("select name from sqlite_schema where type = 'table' order by name");
-    expect(tabel).toEqual(['item_transaksi', 'pengaturan_toko', 'produk', 'transaksi']);
+    expect(tabel).toEqual(['item_transaksi', 'pengaturan_toko', 'produk', 'status_backup', 'transaksi']);
   });
 
   it('aman dijalankan ulang (tiap app dibuka)', async () => {
