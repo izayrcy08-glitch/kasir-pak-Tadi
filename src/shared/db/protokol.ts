@@ -14,5 +14,6 @@ export type DbResponse =
 export interface InfoDb {
   versiSqlite: string;
   vfs: string;
+  versiSkema: number;
   file: string[];
 }

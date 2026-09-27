@@ -3,6 +3,7 @@
 // tersedia di worker. Pakai VFS "opfs-sahpool" — tidak butuh header COOP/COEP,
 // jadi aman di Firebase Hosting maupun WebView Capacitor.
 import sqlite3InitModule, { type Database, type SAHPoolUtil } from '@sqlite.org/sqlite-wasm';
+import { jalankanMigrasi, versiSkema } from './migrasi';
 import type { DbRequest, DbResponse } from './protokol';
 
 const NAMA_FILE_DB = '/kasir.sqlite3';
@@ -14,7 +15,9 @@ async function siapkan(): Promise<void> {
   const sqlite3 = await sqlite3InitModule();
   pool = await sqlite3.installOpfsSAHPoolVfs({ directory: '/kasir-db' });
   db = new pool.OpfsSAHPoolDb(NAMA_FILE_DB);
+  // foreign_keys harus diset di luar transaksi, per koneksi.
   db.exec('PRAGMA foreign_keys = ON;');
+  jalankanMigrasi(db);
 }
 
 const siap = siapkan();
@@ -34,6 +37,7 @@ async function tangani(req: DbRequest): Promise<unknown> {
       return {
         versiSqlite: db.selectValue('select sqlite_version()') as string,
         vfs: 'opfs-sahpool',
+        versiSkema: versiSkema(db),
         file: pool.getFileNames(),
       };
     case 'export':

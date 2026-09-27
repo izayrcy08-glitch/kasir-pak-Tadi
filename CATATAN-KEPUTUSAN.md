@@ -82,6 +82,7 @@ iOS PWA (Pemantau)
 
 0. ~~Keputusan tersisa~~ — selesai 2026-09-27 (lihat bullet Windows & mesin DB di atas). Format export: file backup lengkap (untuk pindah kasir/restore) + CSV laporan.
 1. **Fondasi SQLite-WASM**: install SQLite-WASM, desain schema SQL (mirror struktur Firestore sekarang) + versi schema, bangun `src/shared/db/` (ganti `src/shared/firebase/`), PIN/password lokal. Harus jalan di Android WebView & Chrome/Edge Windows.
+   - ✅ 2026-09-27: engine terbukti di Windows & Android; skema v1 (`src/shared/db/skema.ts`: produk, transaksi, item_transaksi, pengaturan_toko) + runner migrasi `PRAGMA user_version` (`migrasi.ts`), diuji di Node lewat `ujiDb.ts` (DB in-memory). `agregat_laporan` tidak ditiru — laporan pakai SUM/GROUP BY. Belum: PIN lokal, pesan ramah "app terbuka di jendela lain".
 2. **Migrasi transaksi** (paling kritis): `runTransaction` Firestore → `BEGIN/COMMIT` SQLite native, tetap jaga transaksi+pengurangan stok 1 operasi atomik (Aturan #3 `CLAUDE.md`). `logic/` tetap pure function (Aturan #1) — SQLite call di layer atasnya.
 3. **Migrasi produk & laporan**: CRUD produk ke SQLite; laporan bisa pakai SQL asli (`SUM`/`GROUP BY`) — lebih simpel dari pola agregat NoSQL yang direncanakan sebelumnya.
 4. **Fitur Export lengkap** (Android & Windows): tombol di `features/pengaturan/` → file backup lengkap + CSV laporan, share via Android intent / download di Windows.

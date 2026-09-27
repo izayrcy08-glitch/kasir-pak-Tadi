@@ -78,6 +78,8 @@ export function UjiDbPage() {
           <dd className={styles.mono}>{info?.versiSqlite ?? '–'}</dd>
           <dt>VFS</dt>
           <dd className={styles.mono}>{info?.vfs ?? '–'}</dd>
+          <dt>Versi skema</dt>
+          <dd className={styles.mono}>{info?.versiSkema ?? '–'}</dd>
           <dt>Penyimpanan permanen</dt>
           <dd>{persisten === null ? 'tidak diketahui' : persisten ? 'ya' : 'belum'}</dd>
           <dt>Jumlah catatan</dt>
