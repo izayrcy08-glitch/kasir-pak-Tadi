@@ -11,7 +11,9 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "check": "tsc -b && oxlint && vitest run",
-    "emulate": "firebase emulators:start --only firestore,auth"
+    "emulate": "firebase emulators:start --only firestore,auth",
+    "seed:emulator": "node scripts/seed-emulator-auth.mjs",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.2",
@@ -31,6 +33,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "firebase-tools": "^15.30.0",
     "oxlint": "^1.81.0",
+    "patch-package": "^8.0.1",
     "prettier": "^3.4.2",
     "typescript": "~6.0.2",
     "vite": "^8.3.0",

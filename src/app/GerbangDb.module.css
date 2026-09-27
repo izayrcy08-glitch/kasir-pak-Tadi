@@ -1,0 +1,51 @@
+.layar {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--color-bg-app);
+  color: var(--text-on-dark-66);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+
+.kartu {
+  max-width: 28rem;
+  padding: 1.75rem;
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text-primary);
+}
+
+.judul {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+}
+
+.teks {
+  margin: 0 0 1.25rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.detail {
+  margin: -0.5rem 0 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.tombol {
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: var(--radius-button);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}

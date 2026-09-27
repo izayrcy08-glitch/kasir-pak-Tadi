@@ -1,0 +1,26 @@
+diff --git a/node_modules/@sqlite.org/sqlite-wasm/dist/index.mjs b/node_modules/@sqlite.org/sqlite-wasm/dist/index.mjs
+index 5e6e43b..53c9f89 100644
+--- a/node_modules/@sqlite.org/sqlite-wasm/dist/index.mjs
++++ b/node_modules/@sqlite.org/sqlite-wasm/dist/index.mjs
+@@ -16950,7 +16950,7 @@ async function sqlite3InitModule$1(moduleArg = {}) {
+ 						thePool.log("VFS initialized.");
+ 						return poolUtil;
+ 					}).catch(async (e) => {
+-						await thePool.removeVfs().catch(() => {});
++						/* PATCH kasir (patches/@sqlite.org+sqlite-wasm*.patch): init gagal TIDAK BOLEH menghapus data. Asli: await thePool.removeVfs() -> menghapus seluruh direktori DB. */ try { thePool.releaseAccessHandles(); } catch {}
+ 						throw e;
+ 					});
+ 				}).catch((err) => {
+diff --git a/node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3-worker1.mjs b/node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3-worker1.mjs
+index 5583655..1b38425 100644
+--- a/node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3-worker1.mjs
++++ b/node_modules/@sqlite.org/sqlite-wasm/dist/sqlite3-worker1.mjs
+@@ -17025,7 +17025,7 @@ async function sqlite3InitModule(moduleArg = {}) {
+ 						thePool.log("VFS initialized.");
+ 						return poolUtil;
+ 					}).catch(async (e) => {
+-						await thePool.removeVfs().catch(() => {});
++						/* PATCH kasir (patches/@sqlite.org+sqlite-wasm*.patch): init gagal TIDAK BOLEH menghapus data. Asli: await thePool.removeVfs() -> menghapus seluruh direktori DB. */ try { thePool.releaseAccessHandles(); } catch {}
+ 						throw e;
+ 					});
+ 				}).catch((err) => {

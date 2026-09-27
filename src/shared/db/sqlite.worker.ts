@@ -3,17 +3,46 @@
 // tersedia di worker. Pakai VFS "opfs-sahpool" — tidak butuh header COOP/COEP,
 // jadi aman di Firebase Hosting maupun WebView Capacitor.
 import sqlite3InitModule, { type Database, type SAHPoolUtil } from '@sqlite.org/sqlite-wasm';
-import { serialisasiGalat } from './galat';
+import { AplikasiSudahTerbukaError, serialisasiGalat } from './galat';
 import { jalankanMigrasi, versiSkema } from './migrasi';
 import { OPERASI } from './operasi';
 import type { DbRequest, DbResponse } from './protokol';
 
 const NAMA_FILE_DB = '/kasir.sqlite3';
 
+// Kunci eksklusif lintas tab/jendela/worker (Web Locks API). Tanpa ini, worker
+// baru bisa mulai membuka file DB saat worker lama (mis. sebelum reload) belum
+// melepasnya — pembukaan gagal, dan library asli lalu MENGHAPUS direktori DB
+// (sudah ditambal, lihat tambalan.test.ts, tapi jangan sampai terjadi sama
+// sekali). Kunci dilepas otomatis oleh browser saat worker mati.
+const NAMA_KUNCI = 'kasir-db';
+// Cukup lama untuk menunggu worker lama selesai ditutup saat reload, cukup
+// singkat supaya jendela kedua segera diberi tahu.
+const BATAS_TUNGGU_KUNCI_MS = 5000;
+
+function ambilKunciEksklusif(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const batal = new AbortController();
+    const timer = setTimeout(() => batal.abort(), BATAS_TUNGGU_KUNCI_MS);
+    navigator.locks
+      .request(NAMA_KUNCI, { mode: 'exclusive', signal: batal.signal }, () => {
+        clearTimeout(timer);
+        resolve();
+        // Promise yang tidak pernah selesai = kunci dipegang sampai worker mati.
+        return new Promise<never>(() => {});
+      })
+      .catch((err: unknown) => {
+        clearTimeout(timer);
+        reject(err instanceof DOMException && err.name === 'AbortError' ? new AplikasiSudahTerbukaError() : err);
+      });
+  });
+}
+
 let db: Database | null = null;
 let pool: SAHPoolUtil | null = null;
 
 async function siapkan(): Promise<void> {
+  await ambilKunciEksklusif();
   const sqlite3 = await sqlite3InitModule();
   pool = await sqlite3.installOpfsSAHPoolVfs({ directory: '/kasir-db' });
   db = new pool.OpfsSAHPoolDb(NAMA_FILE_DB);
