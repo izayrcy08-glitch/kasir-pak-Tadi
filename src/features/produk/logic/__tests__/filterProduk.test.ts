@@ -11,10 +11,10 @@ function buatProduk(override: Partial<Produk>): Produk {
     hargaJual: 0,
     stok: 0,
     satuan: 'pcs',
-    dibuatPada: null,
-    diperbaruiPada: null,
+    dibuatPada: 0,
+    diperbaruiPada: 0,
     ...override,
-  } as unknown as Produk;
+  };
 }
 
 const daftar: Produk[] = [

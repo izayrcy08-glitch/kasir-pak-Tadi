@@ -3,7 +3,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { TransaksiDraft } from '../../types/transaksi';
 import { PembayaranKurangError, StokTidakCukupError } from '../galat';
 import { buatDbUji } from '../ujiDb';
-import { ambilRiwayatTransaksi, type Ketergantungan, simpanTransaksi } from './transaksi';
+import type { Ketergantungan } from './ketergantungan';
+import { ambilRiwayatTransaksi, simpanTransaksi } from './transaksi';
 
 function tambahProduk(db: Database, id: string, hargaJual: number, stok: number, kodePart: string | null = null) {
   db.exec({

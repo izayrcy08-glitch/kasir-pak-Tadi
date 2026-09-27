@@ -35,7 +35,7 @@ export function RiwayatTransaksiCard({ daftar, adaLagi, memuatLebih, onMuatLebih
             </thead>
             <tbody>
               {daftar.map((t) => {
-                const waktu = t.dibuatPada.toDate();
+                const waktu = new Date(t.dibuatPada);
                 return (
                   <tr key={t.id} className={styles.row} onClick={() => onKlikBaris(t)}>
                     <td>{formatTanggalPendek(waktu)}</td>

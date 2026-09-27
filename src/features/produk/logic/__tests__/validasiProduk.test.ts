@@ -30,6 +30,11 @@ describe('validasiProduk', () => {
     expect(hasil.error.hargaBeli).toBeDefined();
   });
 
+  it('menolak harga pecahan (rupiah selalu bulat, DB juga menolaknya)', () => {
+    expect(validasiProduk({ ...produkValid, hargaJual: 45000.5 }).error.hargaJual).toBeDefined();
+    expect(validasiProduk({ ...produkValid, hargaBeli: 32000.25 }).error.hargaBeli).toBeDefined();
+  });
+
   it('menolak stok pecahan atau negatif', () => {
     expect(validasiProduk({ ...produkValid, stok: -1 }).valid).toBe(false);
     expect(validasiProduk({ ...produkValid, stok: 1.5 }).valid).toBe(false);

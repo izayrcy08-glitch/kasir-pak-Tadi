@@ -20,7 +20,7 @@ const LABEL_METODE: Record<MetodeBayar, string> = {
 export function DetailTransaksiModal({ transaksi, onTutup }: Props) {
   const [mengirim, setMengirim] = useState(false);
   const { pengaturan } = usePengaturanToko();
-  const waktu = transaksi.dibuatPada.toDate();
+  const waktu = new Date(transaksi.dibuatPada);
 
   // Printer masih noop (belum ada hardware sungguhan tersambung) — jangan
   // tampilkan pesan "berhasil dicetak" yang menyesatkan, cukup indikasi

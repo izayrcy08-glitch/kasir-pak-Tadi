@@ -11,7 +11,6 @@ function dokumen(parsial: Partial<AgregatLaporanHarian> & { tanggal: string }): 
     qtyTerjualPerProduk: {},
     namaProdukPerId: {},
     // Nilai dummy, tidak dipakai logic ini.
-    diperbaruiPada: null as never,
     ...parsial,
   };
 }

@@ -1,34 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { simpanPengaturanToko, subscribePengaturanToko } from '../../../shared/firebase/pengaturanToko.repo';
-import { withTimeout } from '../../../shared/lib/withTimeout';
-import type { PengaturanToko, PengaturanTokoInput } from '../../../shared/types/pengaturanToko';
+import { panggil } from '../../../shared/db/klienDb';
+import { usePengaturanToko } from '../../../shared/hooks/usePengaturanToko';
+import type { PengaturanTokoInput } from '../../../shared/types/pengaturanToko';
 import { FormIdentitasToko } from './components/FormIdentitasToko';
 import styles from './IdentitasTokoPage.module.css';
 
-const BATAS_TUNGGU_SIMPAN_MS = 1500;
-
 export function IdentitasTokoPage() {
   const navigate = useNavigate();
-  const [pengaturan, setPengaturan] = useState<PengaturanToko | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const { pengaturan, loading, error } = usePengaturanToko();
   const [sukses, setSukses] = useState('');
-
-  useEffect(() => {
-    const unsubscribe = subscribePengaturanToko(
-      (data) => {
-        setPengaturan(data);
-        setLoading(false);
-        setError(null);
-      },
-      (err) => {
-        setError(err);
-        setLoading(false);
-      },
-    );
-    return unsubscribe;
-  }, []);
 
   useEffect(() => {
     if (!sukses) return;
@@ -37,7 +18,7 @@ export function IdentitasTokoPage() {
   }, [sukses]);
 
   async function handleSimpan(input: PengaturanTokoInput) {
-    await withTimeout(simpanPengaturanToko(input), BATAS_TUNGGU_SIMPAN_MS);
+    await panggil('simpanPengaturanToko', input);
     setSukses('Identitas toko tersimpan.');
   }
 
@@ -65,7 +46,7 @@ export function IdentitasTokoPage() {
       )}
 
       {error ? (
-        <div className={styles.card}>Gagal memuat pengaturan toko. Periksa koneksi, lalu muat ulang halaman.</div>
+        <div className={styles.card}>Gagal memuat pengaturan toko. Tutup lalu buka ulang aplikasi.</div>
       ) : loading ? (
         <div className={styles.card}>Memuat pengaturan…</div>
       ) : (

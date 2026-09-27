@@ -50,7 +50,7 @@ export function FormIdentitasToko({ awal, onSimpan }: Props) {
     try {
       await onSimpan({ namaToko: namaTrim, logoWebp });
     } catch {
-      setGagalSimpan('Gagal menyimpan pengaturan. Periksa koneksi, lalu coba lagi.');
+      setGagalSimpan('Gagal menyimpan pengaturan. Coba lagi.');
     } finally {
       setMenyimpan(false);
     }

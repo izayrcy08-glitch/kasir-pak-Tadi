@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ambilAgregatRentang } from '../../../shared/firebase/agregatLaporan.repo';
+import { panggil } from '../../../shared/db/klienDb';
 import { idHariIni } from '../../../shared/lib/idHariIni';
 import type { AgregatLaporanHarian } from '../../../shared/types/agregatLaporan';
 import type { RentangTanggal } from '../logic/rentangTanggal';
@@ -18,7 +18,7 @@ export function useLaporanPeriode(rentang: RentangTanggal, pemicuMuatUlang = 0) 
   useEffect(() => {
     let dibatalkan = false;
     setLoading(true);
-    ambilAgregatRentang(idMulai, idAkhir)
+    panggil('ambilAgregatRentang', idMulai, idAkhir)
       .then((hasil) => {
         if (dibatalkan) return;
         setDokumen(hasil);

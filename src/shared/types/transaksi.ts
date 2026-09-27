@@ -1,5 +1,3 @@
-import type { Timestamp } from 'firebase/firestore';
-
 export type MetodeBayar = 'tunai' | 'qris_transfer';
 
 export type Diskon = { tipe: 'nominal' | 'persen'; nilai: number } | null;
@@ -28,7 +26,7 @@ export interface Transaksi {
   metodeBayar: MetodeBayar;
   dibayar?: number;
   kembalian?: number;
-  dibuatPada: Timestamp;
+  dibuatPada: number; // epoch ms
 }
 
 // Payload dari UI ke repo — hanya id+qty, harga/nama otoritatif diambil

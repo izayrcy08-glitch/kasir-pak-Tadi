@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getPrinterAdapter } from '../../platform/print';
-import { simpanTransaksi, StokTidakCukupError } from '../../shared/firebase/transaksi.repo';
+import { panggil } from '../../shared/db/klienDb';
+import { PembayaranKurangError, StokTidakCukupError } from '../../shared/db/galat';
 import { usePengaturanToko } from '../../shared/hooks/usePengaturanToko';
 import type { Diskon, ItemTransaksi, MetodeBayar, TransaksiDraft } from '../../shared/types/transaksi';
 import { filterProduk } from '../produk/logic/filterProduk';
@@ -55,7 +56,7 @@ export function TransaksiPage() {
         metodeBayar,
         dibayar: metodeBayar === 'tunai' ? dibayar : undefined,
       };
-      const id = await simpanTransaksi(draft);
+      const id = await panggil('simpanTransaksi', draft);
 
       try {
         const itemStruk: ItemTransaksi[] = keranjang.item.map((it) => ({
@@ -94,8 +95,10 @@ export function TransaksiPage() {
           .map((d) => `${d.nama} (diminta ${d.diminta}, tersedia ${d.tersedia})`)
           .join('; ');
         setErrorSimpan(`Stok tidak cukup: ${detail}.`);
+      } else if (err instanceof PembayaranKurangError) {
+        setErrorSimpan('Uang yang dibayar kurang dari total.');
       } else {
-        setErrorSimpan('Gagal menyimpan transaksi. Periksa koneksi, lalu coba lagi.');
+        setErrorSimpan('Gagal menyimpan transaksi. Coba lagi; kalau terus gagal, tutup lalu buka ulang aplikasi.');
       }
     } finally {
       setMenyimpan(false);
@@ -124,7 +127,7 @@ export function TransaksiPage() {
         <div className={`${styles.card} ${styles.panelSearch}`}>
           <SearchProduk value={kataKunci} onChange={setKataKunci} />
           {error ? (
-            <p className={styles.empty}>Gagal memuat data produk. Periksa koneksi, lalu muat ulang halaman.</p>
+            <p className={styles.empty}>Gagal memuat data produk. Tutup lalu buka ulang aplikasi.</p>
           ) : loading ? (
             <p className={styles.empty}>Memuat data produk…</p>
           ) : (

@@ -1,9 +1,7 @@
-import type { Timestamp } from 'firebase/firestore';
-
 export interface PengaturanToko {
   namaToko: string;
   logoWebp?: string;
-  diperbaruiPada: Timestamp;
+  diperbaruiPada: number; // epoch ms
 }
 
 export type PengaturanTokoInput = Omit<PengaturanToko, 'diperbaruiPada'>;

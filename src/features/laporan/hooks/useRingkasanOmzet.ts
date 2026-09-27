@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ambilAgregatRentang } from '../../../shared/firebase/agregatLaporan.repo';
+import { panggil } from '../../../shared/db/klienDb';
 import { idHariIni } from '../../../shared/lib/idHariIni';
 import { agregatOmzet, type RingkasanOmzet } from '../logic/agregatOmzet';
 import { awalBulan, awalMinggu } from '../logic/rentangTanggal';
@@ -34,7 +34,7 @@ export function useRingkasanOmzet() {
     const idBulan = idHariIni(awalBulan(sekarang));
     const idMin = idMinggu < idBulan ? idMinggu : idBulan;
 
-    ambilAgregatRentang(idMin, idHari)
+    panggil('ambilAgregatRentang', idMin, idHari)
       .then((dokumen) => {
         if (dibatalkan) return;
         setData({

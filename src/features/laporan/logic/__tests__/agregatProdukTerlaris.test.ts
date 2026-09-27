@@ -10,7 +10,6 @@ function dokumen(parsial: Partial<AgregatLaporanHarian> & { tanggal: string }): 
     jumlahTransaksiPerMetode: {},
     qtyTerjualPerProduk: {},
     namaProdukPerId: {},
-    diperbaruiPada: null as never,
     ...parsial,
   };
 }

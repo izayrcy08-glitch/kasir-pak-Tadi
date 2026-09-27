@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
-import {
-  ambilRiwayatTransaksi,
-  type RiwayatTransaksiHalaman,
-} from '../../../shared/firebase/transaksi.repo';
+import { panggil } from '../../../shared/db/klienDb';
+import type { RiwayatTransaksiHalaman } from '../../../shared/db/operasi/transaksi';
 import type { Transaksi } from '../../../shared/types/transaksi';
 import type { RentangTanggal } from '../logic/rentangTanggal';
 
@@ -21,7 +19,7 @@ export function useRiwayatTransaksi(rentang: RentangTanggal, pemicuMuatUlang = 0
   useEffect(() => {
     let dibatalkan = false;
     setLoading(true);
-    ambilRiwayatTransaksi({ mulai: new Date(mulaiMs), akhir: new Date(akhirMs) }, { batas: BATAS_HALAMAN })
+    panggil('ambilRiwayatTransaksi', { mulai: new Date(mulaiMs), akhir: new Date(akhirMs) }, { batas: BATAS_HALAMAN })
       .then((hasil) => {
         if (dibatalkan) return;
         setDaftar(hasil.daftar);
@@ -44,7 +42,7 @@ export function useRiwayatTransaksi(rentang: RentangTanggal, pemicuMuatUlang = 0
     if (!kursor || memuatLebih) return;
     setMemuatLebih(true);
     try {
-      const hasil = await ambilRiwayatTransaksi(
+      const hasil = await panggil('ambilRiwayatTransaksi', 
         { mulai: new Date(mulaiMs), akhir: new Date(akhirMs) },
         { batas: BATAS_HALAMAN, kursorSetelah: kursor },
       );

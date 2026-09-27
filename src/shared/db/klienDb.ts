@@ -3,6 +3,7 @@
 import type { Database } from '@sqlite.org/sqlite-wasm';
 import { bangunUlangGalat } from './galat';
 import type { NamaOperasi, Operasi } from './operasi';
+import { TABEL_DIUBAH, type TabelDb } from './operasi/tabelDiubah';
 import type { DbRequest, DbResponse, InfoDb, NilaiSql } from './protokol';
 
 type TanpaId<T> = T extends unknown ? Omit<T, 'id'> : never;
@@ -38,11 +39,32 @@ type ArgumenTanpaDb<F> = F extends (db: Database, ...args: infer A) => unknown ?
 
 // Jalankan satu operasi dari shared/db/operasi di worker. Error bisnis
 // (StokTidakCukupError, dll.) sampai ke pemanggil sebagai class aslinya.
-export function panggil<K extends NamaOperasi>(
+export async function panggil<K extends NamaOperasi>(
   nama: K,
   ...args: ArgumenTanpaDb<Operasi[K]>
 ): Promise<ReturnType<Operasi[K]>> {
-  return kirim({ type: 'panggil', nama, args }) as Promise<ReturnType<Operasi[K]>>;
+  const hasil = (await kirim({ type: 'panggil', nama, args })) as ReturnType<Operasi[K]>;
+  const diubah = TABEL_DIUBAH[nama];
+  if (diubah) beriTahuPerubahan(diubah);
+  return hasil;
+}
+
+// Pengganti onSnapshot Firestore: hook yang menampilkan data suatu tabel
+// mendaftar di sini, lalu dipanggil ulang tiap ada operasi tulis yang
+// berhasil ke tabel itu. Cukup karena hanya ada satu jendela app yang boleh
+// membuka DB (kunci opfs-sahpool) — tidak ada penulis lain yang terlewat.
+const pendengar = new Set<{ tabel: readonly TabelDb[]; panggilUlang: () => void }>();
+
+export function pantauTabel(tabel: readonly TabelDb[], panggilUlang: () => void): () => void {
+  const entri = { tabel, panggilUlang };
+  pendengar.add(entri);
+  return () => pendengar.delete(entri);
+}
+
+function beriTahuPerubahan(diubah: readonly TabelDb[]): void {
+  for (const p of pendengar) {
+    if (p.tabel.some((t) => diubah.includes(t))) p.panggilUlang();
+  }
 }
 
 export function query<T = Record<string, unknown>>(sql: string, bind?: NilaiSql[]): Promise<T[]> {

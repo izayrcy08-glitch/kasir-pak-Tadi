@@ -77,7 +77,7 @@ export function LaporanPage() {
       />
 
       {ringkasanTetap.error || periode.error || riwayat.error ? (
-        <div className={styles.errorBanner}>Gagal memuat sebagian data laporan. Periksa koneksi, lalu coba lagi.</div>
+        <div className={styles.errorBanner}>Gagal memuat sebagian data laporan. Coba lagi.</div>
       ) : null}
 
       <StatRow

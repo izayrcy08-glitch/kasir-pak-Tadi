@@ -11,10 +11,10 @@ Halaman Login sudah ada (`src/features/auth/`) dan `firestore.rules` sudah wajib
 
 ## Stack (final — lihat CATATAN-KEPUTUSAN.md untuk alasan lengkap)
 - Vite + React + TypeScript (PWA), satu codebase untuk Android/Windows/iOS.
-- Firebase: **Firestore** (bukan SQL/Realtime Database) + Authentication (Email/Password, satu akun sharing).
+- **Data: SQLite-WASM lokal** (`src/shared/db/`, offline-only, satu kasir aktif per waktu) — pivot dari Firestore per 2026-09-27, migrasi berjalan di branch `migrasi-sqlite` (lihat CATATAN-KEPUTUSAN.md "Pivot ke offline-only"). Login sementara masih Firebase Authentication sampai diganti PIN lokal.
 - **Satu project Firebase saja** (`kasir-pak-tadi`, langsung produksi) — tidak ada project dev terpisah. Testing lokal pakai **Firebase Emulator Suite** (`npm run emulate`), bukan cloud project kedua.
 - Android: dibungkus Capacitor + Bluetooth Serial. Windows: PWA + Web Serial (USB) untuk print. iOS: PWA read/manage-only, **bukan** stasiun cetak.
-- Laporan pakai pola agregat/counter (Firestore NoSQL, bukan SQL `SUM`/`GROUP BY`).
+- Laporan dihitung langsung dengan SQL (`SUM`/`GROUP BY`) di `src/shared/db/operasi/laporan.ts`.
 
 ## Struktur folder (feature-based)
 ```
@@ -29,7 +29,7 @@ src/styles/          tokens.css (design tokens), global.css
 ## Aturan wajib
 1. File di `logic/` **dilarang** `import` dari `react` atau `firebase` — pure function, harus gampang di-unit-test.
 2. Semua warna/font/radius/shadow **wajib** dari `src/styles/tokens.css` (`var(--...)`) — dilarang hex/px baru di komponen. Styling pakai **CSS Modules** (`*.module.css`), bukan Tailwind.
-3. Penyimpanan transaksi + pengurangan stok wajib satu operasi atomik (Firestore `runTransaction`) — lihat `features/transaksi/CLAUDE.md`.
+3. Penyimpanan transaksi + pengurangan stok wajib satu operasi atomik (SQLite `BEGIN IMMEDIATE`, `src/shared/db/operasi/transaksi.ts`) — lihat `features/transaksi/CLAUDE.md`. Operasi DB dijalankan di dalam worker lewat `panggil()`; jangan pernah menghapus tambalan `patches/@sqlite.org+sqlite-wasm*.patch` (tanpanya, gagal buka DB = seluruh data terhapus).
 4. Konfigurasi Firebase selalu lewat env var (`.env.local`, di-gitignore) via `src/shared/firebase/config.ts` — **tidak pernah** hardcode credential di kode yang di-commit. Dev/test selalu `VITE_USE_EMULATOR=true`.
 5. Sebelum tugas UI ditandai selesai: wajib verifikasi visual vs `design/*.dc.html` (lihat bagian di bawah).
 6. Sebelum tugas ditandai selesai & sebelum commit: jalankan `npm run check` (`tsc -b && oxlint && vitest run`). CI (`.github/workflows/check.yml`) menjalankan ulang ini tiap push ke GitHub sebagai pengaman kedua kalau lupa jalankan manual.

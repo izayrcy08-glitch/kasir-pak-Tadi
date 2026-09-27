@@ -57,7 +57,7 @@ export function FormProduk({ awal, daftarKategori, onSimpan, onBatal }: Props) {
     try {
       await onSimpan(input);
     } catch {
-      setGagalSimpan('Gagal menyimpan produk. Periksa koneksi, lalu coba lagi.');
+      setGagalSimpan('Gagal menyimpan produk. Coba lagi.');
     } finally {
       setMenyimpan(false);
     }

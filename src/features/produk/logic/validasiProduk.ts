@@ -17,11 +17,11 @@ export function validasiProduk(input: ProdukInput): HasilValidasiProduk {
   if (!input.satuan) {
     error.satuan = 'Satuan wajib dipilih';
   }
-  if (!Number.isFinite(input.hargaBeli) || input.hargaBeli < 0) {
-    error.hargaBeli = 'Harga beli tidak boleh negatif';
+  if (!Number.isInteger(input.hargaBeli) || input.hargaBeli < 0) {
+    error.hargaBeli = 'Harga beli harus rupiah bulat, tidak boleh negatif';
   }
-  if (!Number.isFinite(input.hargaJual) || input.hargaJual < 0) {
-    error.hargaJual = 'Harga jual tidak boleh negatif';
+  if (!Number.isInteger(input.hargaJual) || input.hargaJual < 0) {
+    error.hargaJual = 'Harga jual harus rupiah bulat, tidak boleh negatif';
   }
   if (!Number.isInteger(input.stok) || input.stok < 0) {
     error.stok = 'Stok harus bilangan bulat, tidak boleh negatif';

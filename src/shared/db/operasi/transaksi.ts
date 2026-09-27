@@ -5,18 +5,9 @@ import type { Database } from '@sqlite.org/sqlite-wasm';
 import { hitungKembalian } from '../../../features/transaksi/logic/hitungKembalian';
 import { hitungTotal } from '../../../features/transaksi/logic/hitungTotal';
 import { idHariIni } from '../../lib/idHariIni';
-import type { Diskon, ItemTransaksi, MetodeBayar, TransaksiDraft } from '../../types/transaksi';
+import type { ItemTransaksi, MetodeBayar, Transaksi, TransaksiDraft } from '../../types/transaksi';
 import { type DetailStokKurang, PembayaranKurangError, StokTidakCukupError } from '../galat';
-
-export interface Ketergantungan {
-  sekarang: () => Date;
-  buatId: () => string;
-}
-
-const ketergantunganBawaan: Ketergantungan = {
-  sekarang: () => new Date(),
-  buatId: () => crypto.randomUUID(),
-};
+import { type Ketergantungan, ketergantunganBawaan } from './ketergantungan';
 
 // Gabungkan qty per produkId — pertahanan kalau draft berisi produkId ganda.
 // Seharusnya tidak terjadi karena useKeranjang selalu menggabungkan qty,
@@ -130,21 +121,6 @@ export function simpanTransaksi(
 // ---------------------------------------------------------------------------
 // Riwayat
 
-// Bentuk transaksi hasil baca dari SQLite. Sama dengan `Transaksi` di
-// shared/types, kecuali waktu berupa epoch ms (bukan Timestamp Firestore).
-export interface TransaksiTersimpan {
-  id: string;
-  item: ItemTransaksi[];
-  subtotal: number;
-  diskon: Diskon;
-  totalDiskon: number;
-  total: number;
-  metodeBayar: MetodeBayar;
-  dibayar?: number;
-  kembalian?: number;
-  dibuatPada: number;
-}
-
 // Kursor keyset: (dibuat_pada, id) baris terakhir halaman sebelumnya. id ikut
 // dipakai supaya dua transaksi di milidetik yang sama tidak terlewat/dobel.
 export interface KursorRiwayat {
@@ -153,7 +129,7 @@ export interface KursorRiwayat {
 }
 
 export interface RiwayatTransaksiHalaman {
-  daftar: TransaksiTersimpan[];
+  daftar: Transaksi[];
   kursorBerikutnya: KursorRiwayat | null;
 }
 
@@ -224,7 +200,7 @@ export function ambilRiwayatTransaksi(
     }
   }
 
-  const daftar: TransaksiTersimpan[] = baris.map((b) => ({
+  const daftar: Transaksi[] = baris.map((b) => ({
     id: b.id,
     item: itemPerTransaksi.get(b.id) ?? [],
     subtotal: b.subtotal,

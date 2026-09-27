@@ -1,5 +1,3 @@
-import type { Timestamp } from 'firebase/firestore';
-
 export type SatuanProduk = 'pcs' | 'set' | 'liter' | 'dus';
 
 export interface Produk {
@@ -13,8 +11,8 @@ export interface Produk {
   satuan: SatuanProduk;
   kompatibilitas?: string;
   ambangStokRendah?: number;
-  dibuatPada: Timestamp;
-  diperbaruiPada: Timestamp;
+  dibuatPada: number; // epoch ms
+  diperbaruiPada: number; // epoch ms
 }
 
 export type ProdukInput = Omit<Produk, 'id' | 'dibuatPada' | 'diperbaruiPada'>;

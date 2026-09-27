@@ -1,9 +1,9 @@
-import type { Timestamp } from 'firebase/firestore';
 import type { MetodeBayar } from './transaksi';
 
-// Bentuk baca dokumen agregat harian yang ditulis `transaksi.repo.ts`
-// (buildAgregatUpdate) — satu dokumen per hari, id = idHariIni() ('YYYY-MM-DD').
-// Fitur Laporan hanya membaca skema ini, tidak pernah menulis/mengubahnya.
+// Ringkasan penjualan satu hari (tanggal = idHariIni(), 'YYYY-MM-DD').
+// Dihitung dengan SQL dari tabel transaksi + item_transaksi
+// (shared/db/operasi/laporan.ts) — hari tanpa transaksi tidak muncul.
+// Bentuknya dipertahankan dari era Firestore supaya logic/ Laporan tetap sama.
 export interface AgregatLaporanHarian {
   tanggal: string;
   omzet: number;
@@ -12,5 +12,4 @@ export interface AgregatLaporanHarian {
   jumlahTransaksiPerMetode: Partial<Record<MetodeBayar, number>>;
   qtyTerjualPerProduk: Record<string, number>;
   namaProdukPerId: Record<string, string>;
-  diperbaruiPada: Timestamp;
 }

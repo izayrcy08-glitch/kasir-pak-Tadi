@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { hapusProduk } from '../../shared/firebase/produk.repo';
+import { panggil } from '../../shared/db/klienDb';
 import type { Produk } from '../../shared/types/produk';
 import { TabelProduk } from './components/TabelProduk';
 import { useProduk } from './hooks/useProduk';
@@ -35,9 +35,9 @@ export function ProdukListPage() {
     if (!yakin) return;
     setGagalHapus('');
     try {
-      await hapusProduk(produk.id);
+      await panggil('hapusProduk', produk.id);
     } catch {
-      setGagalHapus(`Gagal menghapus "${produk.nama}". Periksa koneksi, lalu coba lagi.`);
+      setGagalHapus(`Gagal menghapus "${produk.nama}". Coba lagi.`);
     }
   }
 
@@ -89,7 +89,7 @@ export function ProdukListPage() {
       {gagalHapus && <div className={styles.errorBanner}>{gagalHapus}</div>}
 
       {error ? (
-        <div className={styles.card}>Gagal memuat data produk. Periksa koneksi, lalu muat ulang halaman.</div>
+        <div className={styles.card}>Gagal memuat data produk. Tutup lalu buka ulang aplikasi.</div>
       ) : loading ? (
         <div className={styles.card}>Memuat data produk…</div>
       ) : (

@@ -1,17 +1,10 @@
 import { useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { tambahProduk, updateProduk } from '../../shared/firebase/produk.repo';
-import { withTimeout } from '../../shared/lib/withTimeout';
+import { panggil } from '../../shared/db/klienDb';
 import type { ProdukInput } from '../../shared/types/produk';
 import { FormProduk } from './components/FormProduk';
 import { useProduk } from './hooks/useProduk';
 import styles from './ProdukFormPage.module.css';
-
-// Kalau perangkat offline, promise simpan ke Firestore baru selesai setelah
-// tersambung lagi ke server — padahal datanya sudah masuk cache lokal dan
-// langsung kelihatan di daftar (onSnapshot). Jangan sampai tombol "Menyimpan…"
-// menggantung selamanya menunggu itu; anggap sudah "diantre" setelah batas ini.
-const BATAS_TUNGGU_SIMPAN_MS = 1500;
 
 export function ProdukFormPage() {
   const { id } = useParams();
@@ -25,13 +18,15 @@ export function ProdukFormPage() {
   );
 
   async function handleSimpan(input: ProdukInput) {
-    const tugas = id ? updateProduk(id, input) : tambahProduk(input);
-    await withTimeout(tugas, BATAS_TUNGGU_SIMPAN_MS);
+    // Ditunggu sampai benar-benar tersimpan di DB lokal — kalau gagal, error
+    // dilempar ke FormProduk yang menampilkan pesan gagal.
+    if (id) await panggil('updateProduk', id, input);
+    else await panggil('tambahProduk', input);
     navigate('/produk');
   }
 
   if (id && error) {
-    return <div className={styles.card}>Gagal memuat data produk. Periksa koneksi, lalu muat ulang halaman.</div>;
+    return <div className={styles.card}>Gagal memuat data produk. Tutup lalu buka ulang aplikasi.</div>;
   }
   if (id && loading) {
     return <div className={styles.card}>Memuat data produk…</div>;
