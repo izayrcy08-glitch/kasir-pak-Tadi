@@ -137,6 +137,11 @@ export function BackupPage() {
             {membuat ? 'Membuat file…' : 'Buat file backup'}
           </button>
           {errorBackup && <p className={styles.formError}>{errorBackup}</p>}
+          <p className={styles.catatan}>
+            File backup tidak bisa dibuka seperti dokumen biasa — isinya hanya bisa dipakai lewat{' '}
+            <strong>Pulihkan dari backup</strong> di bawah. Kalau disimpan ke Google Drive, pastikan unggahannya
+            sudah selesai (tidak tertulis &ldquo;Menunggu Wi-Fi&rdquo;).
+          </p>
         </section>
 
         <section className={styles.card}>
@@ -155,6 +160,10 @@ export function BackupPage() {
             {memeriksa ? 'Memeriksa file…' : 'Pilih file backup…'}
           </button>
           {errorPulihkan && <p className={styles.formError}>{errorPulihkan}</p>}
+          <p className={styles.catatan}>
+            Ingin memastikan file backup bisa dipakai? Pilih file-nya — aplikasi memeriksa dan menampilkan isinya dulu.
+            Tekan <strong>Batal</strong> kalau hanya mengecek; data di device ini tidak berubah.
+          </p>
         </section>
 
         <section className={styles.card}>

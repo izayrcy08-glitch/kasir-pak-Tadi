@@ -84,6 +84,18 @@
   font-weight: 600;
 }
 
+.catatan {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.catatan strong {
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
 .status {
   display: flex;
   flex-wrap: wrap;
