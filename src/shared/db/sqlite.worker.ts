@@ -3,7 +3,9 @@
 // tersedia di worker. Pakai VFS "opfs-sahpool" — tidak butuh header COOP/COEP,
 // jadi aman di Firebase Hosting maupun WebView Capacitor.
 import sqlite3InitModule, { type Database, type SAHPoolUtil } from '@sqlite.org/sqlite-wasm';
+import { serialisasiGalat } from './galat';
 import { jalankanMigrasi, versiSkema } from './migrasi';
+import { OPERASI } from './operasi';
 import type { DbRequest, DbResponse } from './protokol';
 
 const NAMA_FILE_DB = '/kasir.sqlite3';
@@ -33,6 +35,13 @@ async function tangani(req: DbRequest): Promise<unknown> {
         rowMode: 'object',
         returnValue: 'resultRows',
       });
+    case 'panggil': {
+      if (!Object.hasOwn(OPERASI, req.nama)) throw new Error(`Operasi tidak dikenal: ${req.nama}`);
+      const op = OPERASI[req.nama as keyof typeof OPERASI] as (db: Database, ...args: unknown[]) => unknown;
+      // Sinkron dari awal sampai akhir — tidak ada await di sini, jadi
+      // operasi ini tidak bisa tersela pesan lain.
+      return op(db, ...req.args);
+    }
     case 'info':
       return {
         versiSqlite: db.selectValue('select sqlite_version()') as string,
@@ -51,7 +60,7 @@ self.onmessage = async (e: MessageEvent<DbRequest>) => {
   try {
     res = { id: req.id, ok: true, hasil: await tangani(req) };
   } catch (err) {
-    res = { id: req.id, ok: false, pesan: err instanceof Error ? err.message : String(err) };
+    res = { id: req.id, ok: false, galat: serialisasiGalat(err) };
   }
   self.postMessage(res);
 };

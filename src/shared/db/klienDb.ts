@@ -1,5 +1,8 @@
 // Klien main-thread untuk sqlite.worker.ts. Satu worker untuk seluruh app —
 // VFS opfs-sahpool mengunci file DB, jadi hanya satu koneksi per origin.
+import type { Database } from '@sqlite.org/sqlite-wasm';
+import { bangunUlangGalat } from './galat';
+import type { NamaOperasi, Operasi } from './operasi';
 import type { DbRequest, DbResponse, InfoDb, NilaiSql } from './protokol';
 
 type TanpaId<T> = T extends unknown ? Omit<T, 'id'> : never;
@@ -17,7 +20,7 @@ function ambilWorker(): Worker {
       if (!p) return;
       menunggu.delete(res.id);
       if (res.ok) p.resolve(res.hasil);
-      else p.reject(new Error(res.pesan));
+      else p.reject(bangunUlangGalat(res.galat));
     };
   }
   return worker;
@@ -29,6 +32,17 @@ function kirim(req: TanpaId<DbRequest>): Promise<unknown> {
     menunggu.set(id, { resolve, reject });
     ambilWorker().postMessage({ ...req, id });
   });
+}
+
+type ArgumenTanpaDb<F> = F extends (db: Database, ...args: infer A) => unknown ? A : never;
+
+// Jalankan satu operasi dari shared/db/operasi di worker. Error bisnis
+// (StokTidakCukupError, dll.) sampai ke pemanggil sebagai class aslinya.
+export function panggil<K extends NamaOperasi>(
+  nama: K,
+  ...args: ArgumenTanpaDb<Operasi[K]>
+): Promise<ReturnType<Operasi[K]>> {
+  return kirim({ type: 'panggil', nama, args }) as Promise<ReturnType<Operasi[K]>>;
 }
 
 export function query<T = Record<string, unknown>>(sql: string, bind?: NilaiSql[]): Promise<T[]> {

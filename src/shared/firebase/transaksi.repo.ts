@@ -26,22 +26,10 @@ const produkCollection = collection(db, COLLECTIONS.produk);
 const transaksiCollection = collection(db, COLLECTIONS.transaksi);
 const agregatLaporanCollection = collection(db, COLLECTIONS.agregatLaporan);
 
-export interface DetailStokKurang {
-  produkId: string;
-  nama: string;
-  diminta: number;
-  tersedia: number;
-}
-
-export class StokTidakCukupError extends Error {
-  readonly detail: DetailStokKurang[];
-
-  constructor(detail: DetailStokKurang[]) {
-    super('Stok tidak cukup untuk beberapa produk.');
-    this.name = 'StokTidakCukupError';
-    this.detail = detail;
-  }
-}
+// Dipindah ke shared/db/galat.ts supaya UI mengenali error yang sama dari
+// Firestore (sementara, selama migrasi) maupun dari SQLite.
+import { type DetailStokKurang, StokTidakCukupError } from '../db/galat';
+export { StokTidakCukupError, type DetailStokKurang };
 
 // Gabungkan qty per produkId — pertahanan kalau draft berisi produkId ganda.
 // Seharusnya tidak terjadi karena useKeranjang selalu menggabungkan qty,
