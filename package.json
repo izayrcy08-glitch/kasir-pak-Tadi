@@ -11,8 +11,6 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "check": "tsc -b && oxlint && vitest run",
-    "emulate": "firebase emulators:start --only firestore,auth",
-    "seed:emulator": "node scripts/seed-emulator-auth.mjs",
     "postinstall": "patch-package"
   },
   "dependencies": {
@@ -21,7 +19,6 @@
     "@capacitor/core": "^8.5.2",
     "@nosslabs/bluetooth-classic": "^1.2.0",
     "@sqlite.org/sqlite-wasm": "^3.53.4-build1",
-    "firebase": "^12.4.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.3"

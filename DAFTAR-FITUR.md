@@ -7,14 +7,13 @@
 - Jenis usaha: **toko sparepart** (motor/mobil).
 - Pencarian produk saat transaksi: **manual by nama/kode part** — bukan scan barcode, karena banyak sparepart tidak berbarcode.
 - Tidak ada fitur piutang/utang pelanggan — semua transaksi lunas di tempat.
-- Pengguna: **satu akun sharing** dipakai Pak Tadi & istri — tidak perlu multi-akun/shift terpisah untuk MVP.
+- Pengguna: Pak Tadi & istri, tanpa akun/login — tidak perlu multi-akun/shift terpisah untuk MVP.
 - Metode bayar: **Tunai + QRIS/transfer** (QRIS dicatat manual, tanpa integrasi payment gateway real-time).
 
 ## 0. Login
 
-- Firebase Auth Email/Password, satu akun sharing (dipakai Pak Tadi & istri bersama, tidak perlu akun terpisah per orang untuk MVP). Sesi persist per device — login cuma sekali per HP/laptop.
-- Tidak ada signup/lupa-password di UI — akun dibuat manual lewat Firebase Console.
-- Sisa langkah sebelum device toko boleh dipasang: buat akun di project Firebase asli — lihat `CLAUDE.md`.
+- **Dihapus per 2026-09-27** — aplikasi dibuka langsung tanpa login/PIN. Setelah pivot offline-only, data cuma ada di device kasir (tidak ada server yang perlu dilindungi), dan pemakainya hanya Pak Tadi & istri. Pengaman akses = kunci layar device (pola/PIN Android, login Windows) — wajib aktif di device toko.
+- PIN lokal bisa ditambahkan belakangan (mis. kalau toko punya karyawan) tanpa mengubah data yang sudah ada.
 
 ## 1. Manajemen Produk & Stok
 

@@ -2,35 +2,37 @@
 
 Aplikasi kasir untuk toko sparepart motor/mobil. Solo dev non-teknis, sepenuhnya AI-assisted ("vibe coding"). **Ini bukan proyek MVP yang boleh asal jalan** — akan dipakai produksi sehari-hari oleh Pak Tadi & istri untuk transaksi & stok toko sungguhan. "MVP" di `DAFTAR-FITUR.md` hanya soal cakupan fitur, bukan standar kualitas kode.
 
-## 🔴 Sebelum device dipasang di toko sungguhan (diperbarui 2026-09-21)
+## 🔴 Sebelum device dipasang di toko sungguhan (diperbarui 2026-09-27)
 
-Halaman Login sudah ada (`src/features/auth/`) dan `firestore.rules` sudah wajib-login (`request.auth != null`). Sisa langkah manual sebelum deploy ke project Firebase asli & pasang build di device toko:
+Aplikasi offline-only **tanpa login/PIN** (keputusan 2026-09-27, lihat `CATATAN-KEPUTUSAN.md`). Sisa langkah sebelum build dipasang di device toko:
 
-1. **Buat akun Firebase Auth di project asli** — Firebase Console > Authentication > Users > Add user, pakai email+password yang sudah disepakati. Ini harus dilakukan manual oleh pemilik project (Claude tidak boleh membuat akun produksi secara otomatis).
-2. Pastikan `firestore.rules` yang ter-deploy memang versi wajib-login (`allow read, write: if request.auth != null`) — cek file ini sebelum tiap `firebase deploy --only firestore:rules`, karena project cuma satu (langsung produksi, lihat `CATATAN-KEPUTUSAN.md`).
+1. **Keystore rilis APK** — buat satu keystore, simpan + backup di luar repo. Jangan pernah pasang build debug di tablet toko (keystore beda = update ditolak = terpaksa uninstall = seluruh data toko hilang).
+2. **Kunci layar device wajib aktif** (pola/PIN Android, login Windows) — satu-satunya pengaman akses karena app tidak punya login.
+3. Fitur Export/Import + pengingat backup harus sudah ada (tanpa itu, tablet rusak/hilang = data hilang permanen).
+4. Uji persistensi data di PWA Windows sungguhan (tutup-buka app, restart laptop).
 
 ## Stack (final — lihat CATATAN-KEPUTUSAN.md untuk alasan lengkap)
 - Vite + React + TypeScript (PWA), satu codebase untuk Android/Windows/iOS.
-- **Data: SQLite-WASM lokal** (`src/shared/db/`, offline-only, satu kasir aktif per waktu) — pivot dari Firestore per 2026-09-27, migrasi berjalan di branch `migrasi-sqlite` (lihat CATATAN-KEPUTUSAN.md "Pivot ke offline-only"). Login sementara masih Firebase Authentication sampai diganti PIN lokal.
-- **Satu project Firebase saja** (`kasir-pak-tadi`, langsung produksi) — tidak ada project dev terpisah. Testing lokal pakai **Firebase Emulator Suite** (`npm run emulate`), bukan cloud project kedua.
+- **Data: SQLite-WASM lokal** (`src/shared/db/`, offline-only, satu kasir aktif per waktu) — pivot dari Firestore per 2026-09-27, migrasi berjalan di branch `migrasi-sqlite` (lihat CATATAN-KEPUTUSAN.md "Pivot ke offline-only").
+- **Tanpa login/PIN, tanpa Firebase SDK** — Firebase cuma dipakai untuk **Hosting** PWA (`firebase.json`, project `kasir-pak-tadi`).
 - Android: dibungkus Capacitor + Bluetooth Serial. Windows: PWA + Web Serial (USB) untuk print. iOS: PWA read/manage-only, **bukan** stasiun cetak.
 - Laporan dihitung langsung dengan SQL (`SUM`/`GROUP BY`) di `src/shared/db/operasi/laporan.ts`.
 
 ## Struktur folder (feature-based)
 ```
-src/app/            AppLayout (sidebar+shell), RequireAuth (route guard)
-src/features/{auth,transaksi,produk,laporan,pengaturan}/
+src/app/            AppLayout (sidebar+shell), GerbangDb (tunggu DB terbuka)
+src/features/{transaksi,produk,laporan,pengaturan}/
                      logic/ (pure fn + __tests__/) + components/ + hooks/ + CLAUDE.md
-src/shared/          components/, firebase/ (config.ts, collections.ts), lib/, types/
+src/shared/          db/ (SQLite: worker, skema, operasi/), hooks/, lib/, types/
 src/platform/print/  adapter per platform (bluetooth.ts=Android, webserial.ts=Windows, noop.ts=iOS)
 src/styles/          tokens.css (design tokens), global.css
 ```
 
 ## Aturan wajib
-1. File di `logic/` **dilarang** `import` dari `react` atau `firebase` — pure function, harus gampang di-unit-test.
+1. File di `logic/` **dilarang** `import` dari `react` atau `shared/db` — pure function, harus gampang di-unit-test.
 2. Semua warna/font/radius/shadow **wajib** dari `src/styles/tokens.css` (`var(--...)`) — dilarang hex/px baru di komponen. Styling pakai **CSS Modules** (`*.module.css`), bukan Tailwind.
 3. Penyimpanan transaksi + pengurangan stok wajib satu operasi atomik (SQLite `BEGIN IMMEDIATE`, `src/shared/db/operasi/transaksi.ts`) — lihat `features/transaksi/CLAUDE.md`. Operasi DB dijalankan di dalam worker lewat `panggil()`; jangan pernah menghapus tambalan `patches/@sqlite.org+sqlite-wasm*.patch` (tanpanya, gagal buka DB = seluruh data terhapus).
-4. Konfigurasi Firebase selalu lewat env var (`.env.local`, di-gitignore) via `src/shared/firebase/config.ts` — **tidak pernah** hardcode credential di kode yang di-commit. Dev/test selalu `VITE_USE_EMULATOR=true`.
+4. Tidak pernah hardcode credential/secret di kode yang di-commit (keystore rilis & sejenisnya disimpan di luar repo).
 5. Sebelum tugas UI ditandai selesai: wajib verifikasi visual vs `design/*.dc.html` (lihat bagian di bawah).
 6. Sebelum tugas ditandai selesai & sebelum commit: jalankan `npm run check` (`tsc -b && oxlint && vitest run`). CI (`.github/workflows/check.yml`) menjalankan ulang ini tiap push ke GitHub sebagai pengaman kedua kalau lupa jalankan manual.
 7. Commit: Conventional Commits + scope fitur (`feat(transaksi): ...`), satu commit = satu unit kerja yang lolos `npm run check`.
@@ -54,4 +56,4 @@ dibaca kalau tugasnya memang menyentuh area itu**, bukan dibaca semua di awal se
 | Aturan bisnis spesifik fitur | `src/features/<fitur>/CLAUDE.md` (cuma folder fitur yang disentuh) |
 
 ## Perintah
-`npm run dev` / `npm run check` / `npm run build` / `npm run emulate` (Firebase Emulator lokal) / `npm run format`
+`npm run dev` / `npm run check` / `npm run build` / `npm run format`
