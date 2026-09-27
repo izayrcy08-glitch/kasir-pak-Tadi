@@ -88,6 +88,16 @@ iOS PWA (Pemantau)
 5. **Fitur Import**: (a) import lengkap di kasir (pindah kasir/restore, menimpa + konfirmasi + validasi); (b) import read-only di iOS pemantau → render laporan (reuse komponen laporan yang ada).
 6. **Bersih-bersih**: hapus dependency `firebase`, `firestore.rules`, script `emulate`; update `CLAUDE.md` & catatan ini; `npm run check` harus lolos total.
 
+### Hasil uji coba SQLite-WASM (2026-09-27, Chromium/Windows)
+
+Library `@sqlite.org/sqlite-wasm` 3.53.4, VFS `opfs-sahpool` (jalan di Web Worker, **tidak** butuh header COOP/COEP). Kode di `src/shared/db/`, halaman uji sementara `/uji-db` (dev only).
+
+- ✅ Data tetap ada setelah tab ditutup & dibuka lagi.
+- ✅ `exportFile()` menghasilkan file SQLite utuh (header `SQLite format 3`); `importDb()` tersedia untuk restore/pindah kasir.
+- ⚠️ Tab/jendela kedua **tidak bisa** membuka DB selama yang pertama masih terbuka (kunci file OPFS). Bagus sebagai pengaman (tidak ada dua penulis), tapi app wajib menampilkan pesan ramah ("aplikasi sudah terbuka di jendela lain"), bukan error mentah.
+- ⚠️ `navigator.storage.persisted()` = belum. App harus memanggil `navigator.storage.persist()` supaya browser tidak menghapus data saat ruang disk menipis.
+- ⏳ Belum diuji di **Android WebView** (butuh HP/tablet fisik lewat `adb`).
+
 ### Risiko yang disadari (belum diselesaikan, jangan lupa)
 
 Tanpa cloud, **data SQLite di tablet hilang permanen kalau tablet rusak/hilang/di-uninstall tanpa backup dulu** — tidak ada safety net otomatis seperti Firestore sebelumnya. Fitur reminder backup rutin sebaiknya masuk scope migrasi, bukan dianggap opsional selamanya. Mekanisme restore-nya sudah tercakup oleh fitur Export/Import lengkap (langkah 4–5); yang masih perlu ditambahkan adalah pengingat rutinnya.

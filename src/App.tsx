@@ -9,11 +9,13 @@ import { TransaksiPage } from './features/transaksi/TransaksiPage';
 import { PengaturanMenuPage } from './features/pengaturan/PengaturanMenuPage';
 import { IdentitasTokoPage } from './features/pengaturan/identitas-toko/IdentitasTokoPage';
 import { PengaturanPrinterPage } from './features/pengaturan/printer/PengaturanPrinterPage';
+import { UjiDbPage } from './app/UjiDbPage';
 
 export default function App() {
   return (
     <Routes>
       <Route path="login" element={<LoginPage />} />
+      {import.meta.env.DEV && <Route path="uji-db" element={<UjiDbPage />} />}
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>
           <Route index element={<Navigate to="/transaksi" replace />} />
