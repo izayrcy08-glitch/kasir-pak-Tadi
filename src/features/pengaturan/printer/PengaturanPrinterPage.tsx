@@ -81,7 +81,7 @@ export function PengaturanPrinterPage() {
     try {
       await adapter.connect();
       setTerhubung(true);
-      const payload = gabungkanPerintah(buildInisialisasi(), buildTeksBaris('Tes cetak — Kasir Pak Tadi'));
+      const payload = gabungkanPerintah(buildInisialisasi(), buildTeksBaris('Tes cetak — Kasir'));
       await adapter.printReceipt(payload);
     } catch (err) {
       setTerhubung(false);
