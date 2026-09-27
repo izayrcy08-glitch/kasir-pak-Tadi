@@ -20,6 +20,8 @@
 
 ## Keputusan arsitektur
 
+> ⚠️ **Diganti sebagian per 2026-09-25**: bullet "Backend & database", "Mode offline & sinkronisasi", dan "Sinkronisasi antar-device" di bawah ini sudah tidak berlaku — lihat bagian [Pivot ke offline-only](#pivot-ke-offline-only-2026-09-25) di bawah untuk keputusan terbaru (SQLite lokal, bukan Firestore).
+
 - **Kodebase inti**: satu PWA — Vite + React + TypeScript (pola sama seperti `aplikasi-monitoring-spa`).
 - **Android**: kodebase yang sama dibungkus **Capacitor** + plugin Bluetooth Serial → APK, print langsung ke printer Bluetooth Classic tanpa app tambahan, sideload manual (tanpa Play Store).
 - **Windows**: instal sebagai PWA biasa ("Install App"), print ke printer yang sama lewat kabel **USB** pakai **Web Serial API** (adaptasi dari `printViaWebSerial()` di proyek lama).
@@ -42,6 +44,53 @@
 - Build Android tidak lagi "murni PWA" — perlu di-build ulang lewat Capacitor tiap update besar (Windows/iOS cukup deploy web).
 - iPhone tidak bisa jadi stasiun cetak struk dengan printer Bluetooth Classic biasa — keterbatasan dari Apple. Kalau nanti dibutuhkan, satu-satunya jalan adalah printer bersertifikasi MFi/AirPrint (lebih mahal, jarang stok) — belum jadi keputusan sekarang, hanya dicatat sebagai opsi masa depan.
 - Firestore itu NoSQL (bukan SQL), jadi fitur Laporan Penjualan (omzet, produk terlaris, breakdown metode bayar) nanti didesain pakai pola "agregat/counter" (angka ringkasan di-update tiap ada transaksi baru), bukan query `SUM`/`GROUP BY` seperti di database SQL.
+
+## Pivot ke offline-only (2026-09-25)
+
+### Alasan
+
+Klien (Pak Tadi) minta aplikasi **tanpa database online sama sekali** — alasannya takut kebijakan free tier Firebase berubah di kemudian hari dan jadi wajib bayar. Sudah dijelaskan trade-off-nya (aplikasi jadi hanya bisa dipakai penuh di **satu device**, tidak ada sync otomatis antar-device) dan klien setuju menerima trade-off itu.
+
+Ini mengganti keputusan "Backend & database: Firebase (Firestore)" dan "Mode offline & sinkronisasi" di bagian atas — **bukan** cuma menambah offline persistence di atas Firestore, tapi database-nya sendiri pindah total ke lokal (SQLite), tidak ada Firestore/Firebase Auth/Firebase Hosting untuk data sama sekali.
+
+### Arsitektur baru
+
+```
+Kasir aktif — SATU device saja di satu waktu:
+  Android Tablet (.apk via Capacitor)  ATAU  Laptop Windows (PWA)
+  SQLite-WASM (file DB di OPFS) — single source of truth
+  ├─ semua write (transaksi, stok, produk)
+  ├─ transaksi atomik pakai BEGIN/COMMIT SQLite
+  └─ print: Bluetooth Classic (Android) / Web Serial USB (Windows)
+        │
+        │ Export lengkap (backup) — dikirim lewat WhatsApp/USB/dll
+        ├──────────────► Pindah kasir: import lengkap di device baru
+        │                (menimpa semua data), device lama berhenti jadi kasir
+        ▼
+iOS PWA (Pemantau)
+  Import file → read-only → render laporan
+  TIDAK sync balik ke kasir
+```
+
+- **Kenapa tetap dianggap "offline" walau kirim file lewat WhatsApp**: transfer file pribadi bukan infrastruktur berbayar milik mereka — beda dengan database cloud yang mereka sewa & bisa berubah kebijakan harganya. Ketakutan klien soal biaya database tetap terhindar sepenuhnya.
+- **Auth**: PIN/password lokal menggantikan Firebase Auth (tidak ada login online lagi).
+- **Windows (diputuskan 2026-09-27)**: bisa jadi kasir, tapi **bukan kasir kedua yang jalan bareng** — model "pindah kasir". Default kasir di Android; kalau klien mau ganti ke laptop, export lengkap dari Android → import lengkap di laptop → laptop jadi satu-satunya kasir. Dua kasir aktif bersamaan sengaja ditolak: tanpa cloud, dua DB lokal pasti divergen (stok & penjualan tidak cocok) dan tidak ada cara otomatis menggabungkannya. Windows tetap **PWA**, bukan desktop app (Electron).
+- **Mesin DB: SQLite-WASM di semua platform** (bukan `capacitor-sqlite` native di Android). Alasan: satu jalur kode simpan-data untuk Android + Windows (+ iOS pemantau); SQL identik di mana-mana; serah-terima data antar-device tanpa konversi format, jadi risiko data rusak saat pindah kasir paling kecil. Trade-off: native Android sedikit lebih cepat & file `.db` lebih gampang di-copy manual — tidak signifikan untuk volume toko ini, dan backup resmi lewat fitur Export.
+- **Export/Import lengkap = satu fitur untuk tiga kebutuhan**: pindah kasir, backup/restore (jawaban risiko tablet hilang di bawah), dan sumber data iOS pemantau. Pengaman wajib: import minta konfirmasi eksplisit ("menimpa semua data") + validasi file (format & versi schema) sebelum menimpa; export untuk pindah kasir memberi peringatan bahwa device lama tidak boleh dipakai transaksi lagi.
+
+### Rencana migrasi (belum dieksekusi, untuk sesi berikutnya)
+
+0. ~~Keputusan tersisa~~ — selesai 2026-09-27 (lihat bullet Windows & mesin DB di atas). Format export: file backup lengkap (untuk pindah kasir/restore) + CSV laporan.
+1. **Fondasi SQLite-WASM**: install SQLite-WASM, desain schema SQL (mirror struktur Firestore sekarang) + versi schema, bangun `src/shared/db/` (ganti `src/shared/firebase/`), PIN/password lokal. Harus jalan di Android WebView & Chrome/Edge Windows.
+2. **Migrasi transaksi** (paling kritis): `runTransaction` Firestore → `BEGIN/COMMIT` SQLite native, tetap jaga transaksi+pengurangan stok 1 operasi atomik (Aturan #3 `CLAUDE.md`). `logic/` tetap pure function (Aturan #1) — SQLite call di layer atasnya.
+3. **Migrasi produk & laporan**: CRUD produk ke SQLite; laporan bisa pakai SQL asli (`SUM`/`GROUP BY`) — lebih simpel dari pola agregat NoSQL yang direncanakan sebelumnya.
+4. **Fitur Export lengkap** (Android & Windows): tombol di `features/pengaturan/` → file backup lengkap + CSV laporan, share via Android intent / download di Windows.
+5. **Fitur Import**: (a) import lengkap di kasir (pindah kasir/restore, menimpa + konfirmasi + validasi); (b) import read-only di iOS pemantau → render laporan (reuse komponen laporan yang ada).
+6. **Bersih-bersih**: hapus dependency `firebase`, `firestore.rules`, script `emulate`; update `CLAUDE.md` & catatan ini; `npm run check` harus lolos total.
+
+### Risiko yang disadari (belum diselesaikan, jangan lupa)
+
+Tanpa cloud, **data SQLite di tablet hilang permanen kalau tablet rusak/hilang/di-uninstall tanpa backup dulu** — tidak ada safety net otomatis seperti Firestore sebelumnya. Fitur reminder backup rutin sebaiknya masuk scope migrasi, bukan dianggap opsional selamanya. Mekanisme restore-nya sudah tercakup oleh fitur Export/Import lengkap (langkah 4–5); yang masih perlu ditambahkan adalah pengingat rutinnya.
 
 ## Belum dibahas (langkah selanjutnya)
 
