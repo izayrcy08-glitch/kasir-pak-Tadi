@@ -8,6 +8,8 @@ interface ImportMetaEnv {
   readonly VITE_FIREBASE_MESSAGING_SENDER_ID: string;
   readonly VITE_FIREBASE_APP_ID: string;
   readonly VITE_USE_EMULATOR: string;
+  /** SEMENTARA: "true" = build APK uji yang langsung membuka halaman /uji-db. */
+  readonly VITE_UJI_DB?: string;
 }
 
 interface ImportMeta {

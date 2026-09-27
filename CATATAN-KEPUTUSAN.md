@@ -96,7 +96,10 @@ Library `@sqlite.org/sqlite-wasm` 3.53.4, VFS `opfs-sahpool` (jalan di Web Worke
 - ✅ `exportFile()` menghasilkan file SQLite utuh (header `SQLite format 3`); `importDb()` tersedia untuk restore/pindah kasir.
 - ⚠️ Tab/jendela kedua **tidak bisa** membuka DB selama yang pertama masih terbuka (kunci file OPFS). Bagus sebagai pengaman (tidak ada dua penulis), tapi app wajib menampilkan pesan ramah ("aplikasi sudah terbuka di jendela lain"), bukan error mentah.
 - ⚠️ `navigator.storage.persisted()` = belum. App harus memanggil `navigator.storage.persist()` supaya browser tidak menghapus data saat ruang disk menipis.
-- ⏳ Belum diuji di **Android WebView** (butuh HP/tablet fisik lewat `adb`).
+- ✅ **Android WebView** (Redmi 10 2022, Android 13, WebView 154): SQLite-WASM + opfs-sahpool jalan; data bertahan setelah `am force-stop` & buka ulang. APK uji dibuild dengan `VITE_UJI_DB=true npm run build` (seluruh app diganti halaman uji).
+- File DB di Android ada di data pribadi app (`/data/data/com.kasirsparepart.app/app_webview/Default/File System/`), bukan cache browser: aman saat app ditutup/restart/**diupdate**, hilang kalau app di-uninstall atau "Hapus data". `navigator.storage.persisted()` tetap `false` di WebView — wajar, tidak relevan untuk app Android.
+- 🔴 **Konsekuensi untuk rilis**: update APK hanya mempertahankan data kalau ditandatangani **keystore yang sama**. Keystore beda → update ditolak → terpaksa uninstall → seluruh data toko hilang. Sebelum APK pertama dipasang di toko: buat satu keystore rilis, simpan + backup di tempat aman (bukan di repo), dan jangan pernah pasang build debug di tablet toko.
+- Xiaomi/Redmi: `adb install` butuh "Instal melalui USB" di Opsi pengembang (wajib login Akun Mi).
 
 ### Risiko yang disadari (belum diselesaikan, jangan lupa)
 

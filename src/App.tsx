@@ -12,6 +12,9 @@ import { PengaturanPrinterPage } from './features/pengaturan/printer/PengaturanP
 import { UjiDbPage } from './app/UjiDbPage';
 
 export default function App() {
+  // SEMENTARA: build uji Android (VITE_UJI_DB=true) cuma berisi halaman uji DB.
+  if (import.meta.env.VITE_UJI_DB === 'true') return <UjiDbPage />;
+
   return (
     <Routes>
       <Route path="login" element={<LoginPage />} />
