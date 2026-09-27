@@ -14,12 +14,13 @@
   margin: 0 0 16px;
 }
 
-table {
+/* Selektor elemen dibatasi .tabel — CSS Modules tidak membatasi selektor elemen. */
+.tabel {
   width: 100%;
   border-collapse: collapse;
 }
 
-th {
+.tabel th {
   text-align: left;
   font-family: var(--font-mono);
   font-size: 0.6rem;
@@ -31,13 +32,13 @@ th {
   border-bottom: var(--border-subtle);
 }
 
-td {
+.tabel td {
   padding: 12px 10px;
   font-size: 0.82rem;
   border-bottom: var(--border-subtle-faint);
 }
 
-tr:last-child td {
+.tabel tr:last-child td {
   border-bottom: none;
 }
 

@@ -26,7 +26,7 @@ export function TabelProduk({
 
   return (
     <div className={styles.card}>
-      <table>
+      <table className={styles.tabel}>
         <thead>
           <tr>
             <th>Produk</th>

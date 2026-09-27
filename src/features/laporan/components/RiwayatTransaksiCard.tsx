@@ -24,7 +24,7 @@ export function RiwayatTransaksiCard({ daftar, adaLagi, memuatLebih, onMuatLebih
         <p className={styles.empty}>Belum ada transaksi pada rentang ini.</p>
       ) : (
         <>
-          <table>
+          <table className={styles.tabel}>
             <thead>
               <tr>
                 <th>Tanggal</th>

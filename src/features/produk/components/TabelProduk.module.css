@@ -4,6 +4,9 @@
  * label dari atribut data-label (itu sebabnya TabelProduk.tsx menuliskannya).
  * Markup-nya tetap <table> asli supaya struktur & pembacaan screen reader utuh.
  * Di >=1024px (stasiun kasir) tampil sebagai tabel persis mockup.
+ *
+ * Semua selektor elemen WAJIB di bawah .tabel: CSS Modules hanya membatasi
+ * class — `td { ... }` polos berlaku ke seluruh tabel di aplikasi.
  */
 
 .card {
@@ -13,12 +16,12 @@
   padding: 12px;
 }
 
-table {
+.tabel {
   width: 100%;
   border-collapse: collapse;
 }
 
-thead {
+.tabel thead {
   /* Disembunyikan dari mata, tetap terbaca screen reader. */
   position: absolute;
   width: 1px;
@@ -28,18 +31,18 @@ thead {
   white-space: nowrap;
 }
 
-tbody tr {
+.tabel tbody tr {
   display: block;
   border: var(--border-subtle);
   border-radius: var(--radius-tile);
   padding: 14px;
 }
 
-tbody tr + tr {
+.tabel tbody tr + tr {
   margin-top: 10px;
 }
 
-td {
+.tabel td {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -49,7 +52,7 @@ td {
   border-bottom: none;
 }
 
-td::before {
+.tabel td::before {
   content: attr(data-label);
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -61,7 +64,7 @@ td::before {
 }
 
 /* Nama produk jadi judul kartu, bukan baris berlabel. */
-.nameCell {
+.tabel .nameCell {
   display: block;
   font-weight: 600;
   font-size: 0.95rem;
@@ -70,16 +73,16 @@ td::before {
   border-bottom: var(--border-subtle-faint);
 }
 
-.nameCell::before {
+.tabel .nameCell::before {
   content: none;
 }
 
-.aksiCell {
+.tabel .aksiCell {
   justify-content: flex-end;
   padding-top: 12px;
 }
 
-.aksiCell::before {
+.tabel .aksiCell::before {
   margin-right: auto;
 }
 
@@ -169,7 +172,7 @@ td::before {
     padding: 8px 24px 4px;
   }
 
-  thead {
+  .tabel thead {
     position: static;
     width: auto;
     height: auto;
@@ -177,7 +180,7 @@ td::before {
     clip: auto;
   }
 
-  th {
+  .tabel th {
     text-align: left;
     font-family: var(--font-mono);
     font-size: 0.62rem;
@@ -189,18 +192,18 @@ td::before {
     border-bottom: var(--border-subtle);
   }
 
-  tbody tr {
+  .tabel tbody tr {
     display: table-row;
     border: none;
     border-radius: 0;
     padding: 0;
   }
 
-  tbody tr + tr {
+  .tabel tbody tr + tr {
     margin-top: 0;
   }
 
-  td {
+  .tabel td {
     display: table-cell;
     padding: 13px 12px;
     font-size: 0.84rem;
@@ -208,22 +211,22 @@ td::before {
     vertical-align: middle;
   }
 
-  td::before {
+  .tabel td::before {
     content: none;
   }
 
-  tbody tr:last-child td {
+  .tabel tbody tr:last-child td {
     border-bottom: none;
   }
 
-  .nameCell {
+  .tabel .nameCell {
     display: table-cell;
     font-weight: 400;
     font-size: 0.84rem;
     margin-bottom: 0;
   }
 
-  .aksiCell {
+  .tabel .aksiCell {
     padding-top: 13px;
   }
 
