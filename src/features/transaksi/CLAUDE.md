@@ -11,4 +11,4 @@ Mockup acuan: `design/Main.dc.html`.
 
 ## Struktur
 - `logic/` — pure function, tanpa import react/firebase: `hitungTotal.ts`, `hitungKembalian.ts`, `terapkanDiskon.ts`, masing-masing wajib ada test di `logic/__tests__/`.
-- `components/` — `ProdukGrid`, `KeranjangPanel`, `SearchProduk` (turunan dari `design/Main.dc.html`).
+- `components/` — `CariTambahProduk` (kolom cari; daftar barang baru muncul saat kolom diketuk — pengganti grid produk mockup atas permintaan pemilik 2026-09-30, logika di `logic/cariProduk.ts`), `SearchProduk`, `KeranjangPanel` (turunan dari `design/Main.dc.html`).

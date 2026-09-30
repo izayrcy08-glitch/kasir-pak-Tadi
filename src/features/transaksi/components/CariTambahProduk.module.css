@@ -1,0 +1,185 @@
+/* Tidak ada di mockup (design/Main.dc.html memakai grid produk) — diganti
+   atas permintaan pemilik 2026-09-30: cari → ketuk → masuk keranjang. */
+.wadah {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+}
+
+.petunjuk,
+.kosong {
+  margin: 0;
+  padding: 6px 4px 2px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
+.kosong {
+  padding: 24px 4px;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.ditambah {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-sidebar);
+}
+
+.ditambah svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* Kotak gulir sendiri, supaya keranjang di bawahnya (HP) tidak terdorong. */
+.daftar {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 55vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: var(--border-subtle);
+  border-radius: var(--radius-tile);
+}
+
+.daftar li + li {
+  border-top: var(--border-subtle-faint);
+}
+
+.baris {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  min-height: 56px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.baris:hover:not(:disabled),
+.disorot {
+  background: var(--color-input-bg);
+}
+
+.baris:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nama {
+  font-size: 0.87rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.kode {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  margin-right: 6px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.kategori {
+  background: var(--color-cat-chip-bg);
+  color: var(--color-sidebar);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+}
+
+.kompat {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.kanan {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.harga {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 0.86rem;
+}
+
+.stok,
+.stokRendah,
+.stokHabis,
+.diKeranjang {
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.stok {
+  color: var(--color-text-muted);
+}
+
+.stokRendah,
+.stokHabis {
+  color: var(--color-alert);
+}
+
+.diKeranjang {
+  color: var(--color-sidebar);
+  font-weight: 600;
+}
+
+.angka {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Stasiun kasir: panel cari setinggi keranjang, daftar mengisi sisa tinggi. */
+@media (min-width: 1024px) {
+  /* Setinggi isinya, paling tinggi sampai dekat bawah layar (240px = judul
+     halaman + kolom cari + jarak bawah) — lebih dari itu menggulir sendiri. */
+  .daftar {
+    max-height: max(240px, calc(100dvh - 240px));
+  }
+
+  .baris {
+    min-height: 0;
+    padding: 9px 12px;
+  }
+}

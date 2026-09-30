@@ -35,3 +35,32 @@
 .search input::placeholder {
   color: var(--color-text-muted);
 }
+
+/* Sembunyikan tombol hapus bawaan <input type="search"> — diganti tombol sendiri
+   yang lebih besar (target sentuh) dan sama di semua browser. */
+.search input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.hapus {
+  width: 36px;
+  height: 36px;
+  margin-right: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.hapus svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}

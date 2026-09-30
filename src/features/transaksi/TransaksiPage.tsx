@@ -3,16 +3,11 @@ import { getPrinterAdapter } from '../../platform/print';
 import { pesanGagalCetak } from '../../platform/print/pesanGagalCetak';
 import { panggil } from '../../shared/db/klienDb';
 import { PembayaranKurangError, StokTidakCukupError } from '../../shared/db/galat';
-import { LihatLebih } from '../../shared/components/LihatLebih';
-import { useBatasTampil } from '../../shared/hooks/useBatasTampil';
-import { useMediaQuery } from '../../shared/hooks/useMediaQuery';
 import { usePengaturanToko } from '../../shared/hooks/usePengaturanToko';
 import type { Diskon, ItemTransaksi, MetodeBayar, TransaksiDraft } from '../../shared/types/transaksi';
-import { filterProduk } from '../produk/logic/filterProduk';
 import { useProduk } from '../produk/hooks/useProduk';
 import { KeranjangPanel } from './components/KeranjangPanel';
-import { ProdukGrid } from './components/ProdukGrid';
-import { SearchProduk } from './components/SearchProduk';
+import { CariTambahProduk } from './components/CariTambahProduk';
 import { useKeranjang } from './hooks/useKeranjang';
 import { formatStruk } from './logic/formatStruk';
 import { hitungKembalian } from './logic/hitungKembalian';
@@ -24,7 +19,6 @@ export function TransaksiPage() {
   const { pengaturan } = usePengaturanToko();
   const keranjang = useKeranjang();
 
-  const [kataKunci, setKataKunci] = useState('');
   const [diskon, setDiskon] = useState<Diskon>(null);
   const [metodeBayar, setMetodeBayar] = useState<MetodeBayar>('tunai');
   const [dibayarStr, setDibayarStr] = useState('');
@@ -34,15 +28,10 @@ export function TransaksiPage() {
   const [gagalCetak, setGagalCetak] = useState<{ pesan: string; bytes: Uint8Array } | null>(null);
   const [mencetakUlang, setMencetakUlang] = useState(false);
 
-  const hasilFilter = useMemo(() => filterProduk(daftar, kataKunci, 'Semua'), [daftar, kataKunci]);
-  // Di HP/tablet grid produk ada DI ATAS keranjang dan halaman ikut
-  // menggulir — tanpa batas, keranjang terdorong jauh ke bawah. Di stasiun
-  // kasir (>=1024px) grid punya gulir sendiri di samping keranjang, jadi
-  // tampil semua seperti mockup.
-  const layarLebar = useMediaQuery('(min-width: 1024px)');
-  const tampil = useBatasTampil(6, kataKunci);
-  const batasProduk = layarLebar ? Infinity : tampil.batas;
-  const produkTampil = hasilFilter.slice(0, batasProduk);
+  const qtyDiKeranjang = useMemo(
+    () => new Map(keranjang.item.map((it) => [it.produkId, it.qty])),
+    [keranjang.item],
+  );
   const ringkasan = useMemo(() => hitungTotal(keranjang.item, diskon), [keranjang.item, diskon]);
   const dibayar = Number(dibayarStr || 0);
   const kembalian = metodeBayar === 'tunai' ? hitungKembalian(ringkasan.total, dibayar) : undefined;
@@ -173,29 +162,12 @@ export function TransaksiPage() {
 
       <div className={styles.workspace}>
         <div className={`${styles.card} ${styles.panelSearch}`}>
-          <SearchProduk value={kataKunci} onChange={setKataKunci} />
           {error ? (
             <p className={styles.empty}>Gagal memuat data produk. Tutup lalu buka ulang aplikasi.</p>
           ) : loading ? (
             <p className={styles.empty}>Memuat data produk…</p>
           ) : (
-            <>
-              <ProdukGrid daftar={produkTampil} onTambah={keranjang.tambah} />
-              <LihatLebih
-                bisaLebihBanyak={hasilFilter.length > batasProduk}
-                bisaLebihSedikit={!layarLebar && produkTampil.length > 6}
-                onLebihBanyak={tampil.lebihBanyak}
-                onLebihSedikit={tampil.lebihSedikit}
-                keterangan={
-                  hasilFilter.length > batasProduk || produkTampil.length > 6 ? (
-                    <>
-                      <span className={styles.angka}>{produkTampil.length}</span> dari{' '}
-                      <span className={styles.angka}>{hasilFilter.length}</span> produk
-                    </>
-                  ) : undefined
-                }
-              />
-            </>
+            <CariTambahProduk daftar={daftar} qtyDiKeranjang={qtyDiKeranjang} onTambah={keranjang.tambah} />
           )}
         </div>
 

@@ -70,7 +70,7 @@ export function KeranjangPanel({
       </div>
 
       {item.length === 0 ? (
-        <p className={styles.empty}>Keranjang masih kosong. Klik produk di sebelah kiri untuk menambah.</p>
+        <p className={styles.empty}>Keranjang masih kosong. Cari barang, lalu ketuk untuk menambahkannya.</p>
       ) : (
         <div className={styles.items}>
           {item.map((it) => (
