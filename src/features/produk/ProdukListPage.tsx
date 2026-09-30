@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MODE_PEMANTAU } from '../../platform/perangkat';
 import { panggil } from '../../shared/db/klienDb';
 import type { Produk } from '../../shared/types/produk';
 import { TabelProduk } from './components/TabelProduk';
@@ -45,18 +46,20 @@ export function ProdukListPage() {
     <>
       <div className={styles.pageHead}>
         <div>
-          <h1>Manajemen Produk</h1>
+          <h1>{MODE_PEMANTAU ? 'Daftar Produk' : 'Manajemen Produk'}</h1>
           <p className={styles.sub}>
             {daftar.length} produk terdaftar · {jumlahStokRendah} stok rendah
           </p>
         </div>
-        <button type="button" className={styles.btnAccent} onClick={() => navigate('/produk/tambah')}>
-          <svg viewBox="0 0 24 24">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-          Tambah Produk
-        </button>
+        {!MODE_PEMANTAU && (
+          <button type="button" className={styles.btnAccent} onClick={() => navigate('/produk/tambah')}>
+            <svg viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Tambah Produk
+          </button>
+        )}
       </div>
 
       <div className={styles.toolbar}>
@@ -97,11 +100,12 @@ export function ProdukListPage() {
           daftar={hasilFilter}
           pesanKosong={
             daftar.length === 0
-              ? 'Belum ada produk. Klik "Tambah Produk" untuk mulai mengisi katalog.'
+              ? MODE_PEMANTAU
+                ? 'Belum ada produk di data yang dimuat.'
+                : 'Belum ada produk. Klik "Tambah Produk" untuk mulai mengisi katalog.'
               : undefined
           }
-          onEdit={(produk) => navigate(`/produk/${produk.id}/edit`)}
-          onHapus={handleHapus}
+          aksi={MODE_PEMANTAU ? undefined : { onEdit: (produk) => navigate(`/produk/${produk.id}/edit`), onHapus: handleHapus }}
         />
       )}
     </>

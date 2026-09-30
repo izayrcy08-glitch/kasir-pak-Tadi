@@ -15,7 +15,7 @@ Aplikasi offline-only **tanpa login/PIN** (keputusan 2026-09-27, lihat `CATATAN-
 - Vite + React + TypeScript (PWA), satu codebase untuk Android/Windows/iOS.
 - **Data: SQLite-WASM lokal** (`src/shared/db/`, offline-only, satu kasir aktif per waktu) — pivot dari Firestore per 2026-09-27, migrasi berjalan di branch `migrasi-sqlite` (lihat CATATAN-KEPUTUSAN.md "Pivot ke offline-only").
 - **Tanpa login/PIN, tanpa Firebase SDK** — Firebase cuma dipakai untuk **Hosting** PWA (`firebase.json`, project `kasir-pak-tadi`).
-- Android: dibungkus Capacitor + Bluetooth Serial. Windows: PWA + Web Serial (USB) untuk print. iOS: PWA read/manage-only, **bukan** stasiun cetak.
+- Android: dibungkus Capacitor + Bluetooth Serial. Windows: PWA + Web Serial (USB) untuk print. iOS: PWA **mode pemantau** hanya-baca (otomatis di iPhone/iPad, `src/platform/perangkat.ts`) — data = salinan dari file backup kasir, bukan stasiun cetak.
 - Laporan dihitung langsung dengan SQL (`SUM`/`GROUP BY`) di `src/shared/db/operasi/laporan.ts`.
 
 ## Struktur folder (feature-based)

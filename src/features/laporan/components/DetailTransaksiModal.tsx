@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { MODE_PEMANTAU } from '../../../platform/perangkat';
 import { getPrinterAdapter } from '../../../platform/print';
 import { usePengaturanToko } from '../../../shared/hooks/usePengaturanToko';
 import { formatRupiah } from '../../../shared/lib/formatRupiah';
@@ -110,9 +111,12 @@ export function DetailTransaksiModal({ transaksi, onTutup }: Props) {
           )}
         </div>
 
-        <button type="button" className={styles.ctaFull} onClick={handleCetakUlang} disabled={mengirim}>
-          {mengirim ? 'Mengirim…' : 'Cetak Ulang Struk'}
-        </button>
+        {/* iPhone (mode pemantau) tidak bisa mencetak — lihat platform/print. */}
+        {!MODE_PEMANTAU && (
+          <button type="button" className={styles.ctaFull} onClick={handleCetakUlang} disabled={mengirim}>
+            {mengirim ? 'Mengirim…' : 'Cetak Ulang Struk'}
+          </button>
+        )}
       </div>
     </div>
   );

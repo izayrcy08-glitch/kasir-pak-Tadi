@@ -1,0 +1,185 @@
+/* Tidak ada mockup khusus — mengikuti pola BackupPage (header di atas bg
+   gelap, kartu putih, tabel ringkas seperti dialog KonfirmasiPulihkan). */
+.pageHead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.pageHead h1 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.62rem;
+  color: var(--color-text-on-dark);
+  margin: 0 0 4px;
+  letter-spacing: -0.005em;
+}
+
+.sub {
+  font-size: 0.87rem;
+  line-height: 1.5;
+  color: var(--text-on-dark-66);
+  margin: 0 0 22px;
+  max-width: 560px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 560px;
+}
+
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.card h2 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.langkah {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.87rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.langkah strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.catatan {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.btnAccent {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 14px 22px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.btnAccent:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.formError {
+  color: var(--color-alert);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.tabel {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tabel th,
+.tabel td {
+  text-align: left;
+  padding: 9px 6px;
+  border-bottom: var(--border-subtle-faint);
+  vertical-align: top;
+}
+
+.tabel th {
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.tabel td {
+  color: var(--color-text-primary);
+  font-weight: 500;
+  text-align: right;
+}
+
+.angka {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sama dengan toast sukses halaman Backup/Identitas Toko. */
+.successToast {
+  position: fixed;
+  top: 28px;
+  right: 40px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-card);
+  color: var(--color-sidebar);
+  border-radius: var(--radius-button);
+  box-shadow: var(--shadow-card);
+  padding: 13px 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  animation:
+    successToastMasuk 0.2s ease-out,
+    successToastKeluar 0.2s ease-in 2.8s forwards;
+}
+
+.successToast svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--color-sidebar);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+@keyframes successToastMasuk {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes successToastKeluar {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 32px;
+  }
+}

@@ -1,6 +1,7 @@
 // Klien main-thread untuk sqlite.worker.ts. Satu worker untuk seluruh app —
 // VFS opfs-sahpool mengunci file DB, jadi hanya satu koneksi per origin.
 import type { Database } from '@sqlite.org/sqlite-wasm';
+import { MODE_PEMANTAU } from '../../platform/perangkat';
 import type { RingkasanData } from './berkasBackup';
 import { bangunUlangGalat } from './galat';
 import type { NamaOperasi, Operasi } from './operasi';
@@ -44,8 +45,13 @@ export async function panggil<K extends NamaOperasi>(
   nama: K,
   ...args: ArgumenTanpaDb<Operasi[K]>
 ): Promise<ReturnType<Operasi[K]>> {
-  const hasil = (await kirim({ type: 'panggil', nama, args })) as ReturnType<Operasi[K]>;
   const diubah = TABEL_DIUBAH[nama];
+  // Lapis kedua di belakang UI yang menyembunyikan tombol ubah data di mode
+  // pemantau (lihat platform/perangkat.ts).
+  if (diubah && MODE_PEMANTAU) {
+    throw new Error('Mode pemantau hanya untuk melihat data — ubah data dari perangkat kasir.');
+  }
+  const hasil = (await kirim({ type: 'panggil', nama, args })) as ReturnType<Operasi[K]>;
   if (diubah) beriTahuPerubahan(diubah);
   return hasil;
 }

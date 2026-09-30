@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { RingkasanData } from '../../../../shared/db/berkasBackup';
 import { formatTanggalPendek, formatWaktu } from '../../../../shared/lib/formatTanggal';
+import { adaTransaksiLebihBaru } from '../logic/bandingkanIsi';
 import styles from './KonfirmasiPulihkan.module.css';
 
 interface Props {
@@ -25,9 +26,7 @@ export function KonfirmasiPulihkan({ namaFile, isiFile, isiSekarang, onGanti, on
 
   // Device ini punya transaksi yang lebih baru dari isi file → transaksi itu
   // akan hilang. Peringatan paling penting di dialog ini.
-  const adaTransaksiLebihBaru =
-    isiSekarang.transaksiTerakhirPada !== null &&
-    (isiFile.transaksiTerakhirPada === null || isiSekarang.transaksiTerakhirPada > isiFile.transaksiTerakhirPada);
+  const deviceLebihBaru = adaTransaksiLebihBaru(isiSekarang, isiFile);
 
   async function handleGanti() {
     setError('');
@@ -87,7 +86,7 @@ export function KonfirmasiPulihkan({ namaFile, isiFile, isiSekarang, onGanti, on
           </tbody>
         </table>
 
-        {adaTransaksiLebihBaru && (
+        {deviceLebihBaru && (
           <p className={styles.peringatan} role="alert">
             Device ini punya transaksi yang lebih baru dari isi file backup. Transaksi itu akan hilang kalau data
             diganti.
