@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import { useStatusBackup } from './backup/hooks/useStatusBackup';
+import { perluPengingatBackup, selisihHariKalender } from './backup/logic/jadwalBackup';
 import styles from './PengaturanMenuPage.module.css';
 
 const MENU = [
@@ -42,6 +44,22 @@ const MENU = [
 
 export function PengaturanMenuPage() {
   const navigate = useNavigate();
+  const { status } = useStatusBackup();
+
+  // Tetap tampil walau banner pengingat di halaman utama sudah ditutup (✕) —
+  // di sinilah peringatan backup "tinggal" sampai data benar-benar di-backup.
+  const sekarang = new Date();
+  const peringatanBackup =
+    status && perluPengingatBackup(status, sekarang)
+      ? status.terakhirBackupPada === null
+        ? 'Belum pernah backup'
+        : (
+            <>
+              <span className={styles.angka}>{selisihHariKalender(new Date(status.terakhirBackupPada), sekarang)}</span>{' '}
+              hari belum backup
+            </>
+          )
+      : null;
 
   return (
     <>
@@ -57,6 +75,16 @@ export function PengaturanMenuPage() {
             <div className={styles.text}>
               <p className={styles.title}>{item.judul}</p>
               <p className={styles.rowSub}>{item.sub}</p>
+              {item.to === '/pengaturan/backup' && peringatanBackup && (
+                <span className={styles.pillWarn}>
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                    <path d="M10.3 3.9 2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
+                  </svg>
+                  {peringatanBackup}
+                </span>
+              )}
             </div>
             <svg className={styles.chev} viewBox="0 0 24 24">
               <path d="M9 5l7 7-7 7" />

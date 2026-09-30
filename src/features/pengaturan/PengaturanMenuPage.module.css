@@ -87,3 +87,32 @@
   flex-shrink: 0;
 }
 
+
+/* Peringatan backup di baris menu Backup — tidak bisa ditutup. */
+.pillWarn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  background: var(--color-pill-warn-bg);
+  color: var(--color-alert);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.pillWarn svg {
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.angka {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}

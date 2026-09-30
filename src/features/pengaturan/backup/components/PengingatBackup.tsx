@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { idHariIni } from '../../../../shared/lib/idHariIni';
 import { useStatusBackup } from '../hooks/useStatusBackup';
-import { pengingatDitutupHariIni, perluPengingatBackup, selisihHariKalender } from '../logic/jadwalBackup';
+import {
+  bannerPengingatDitutup,
+  penandaPeriodePengingat,
+  perluPengingatBackup,
+  selisihHariKalender,
+} from '../logic/jadwalBackup';
 import styles from './PengingatBackup.module.css';
 
 const RUTE_BACKUP = '/pengaturan/backup';
 
-// Per device, cukup localStorage: kalau hilang, akibatnya hanya pengingat
-// muncul lagi — arah yang aman.
-const KUNCI_DITUTUP = 'pengingat-backup-ditutup-pada';
+// Per device, cukup localStorage: kalau hilang, akibatnya hanya banner muncul
+// lagi — arah yang aman.
+const KUNCI_DITUTUP = 'pengingat-backup-ditutup-untuk';
 
 function bacaDitutup(): string | null {
   try {
@@ -20,32 +24,33 @@ function bacaDitutup(): string | null {
 }
 
 // Banner di atas semua halaman kalau data belum di-backup cukup lama. Tanpa
-// cloud, backup adalah satu-satunya penyelamat data kalau device rusak/hilang
-// — makanya "Tutup" hanya menyembunyikan sampai besok, tidak selamanya.
+// cloud, backup adalah satu-satunya penyelamat data kalau device rusak/hilang.
+// Bisa ditutup (✕) untuk periode telat yang sedang berjalan (lihat
+// bannerPengingatDitutup); peringatan di menu Pengaturan tetap tampil.
 export function PengingatBackup() {
   const { status } = useStatusBackup();
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [ditutupPada, setDitutupPada] = useState(bacaDitutup);
+  const [ditutupUntuk, setDitutupUntuk] = useState(bacaDitutup);
 
   const sekarang = new Date();
   if (
     !status ||
     pathname === RUTE_BACKUP ||
     !perluPengingatBackup(status, sekarang) ||
-    pengingatDitutupHariIni(ditutupPada, sekarang)
+    bannerPengingatDitutup(ditutupUntuk, status.terakhirBackupPada)
   ) {
     return null;
   }
 
+  const penanda = penandaPeriodePengingat(status.terakhirBackupPada);
   function tutup() {
-    const hariIni = idHariIni();
     try {
-      localStorage.setItem(KUNCI_DITUTUP, hariIni);
+      localStorage.setItem(KUNCI_DITUTUP, penanda);
     } catch {
       // Tetap tersembunyi untuk sesi ini saja.
     }
-    setDitutupPada(hariIni);
+    setDitutupUntuk(penanda);
   }
 
   const pesan =
@@ -71,14 +76,20 @@ export function PengingatBackup() {
       <p className={styles.teks}>
         <strong>{pesan}</strong> Kalau device rusak atau hilang, data yang belum di-backup ikut hilang.
       </p>
-      <div className={styles.aksi}>
-        <button type="button" className={styles.tombol} onClick={() => navigate(RUTE_BACKUP)}>
-          Backup sekarang
-        </button>
-        <button type="button" className={styles.tombolTutup} onClick={tutup} title="Sembunyikan sampai besok">
-          Nanti saja
-        </button>
-      </div>
+      <button type="button" className={styles.tombol} onClick={() => navigate(RUTE_BACKUP)}>
+        Backup sekarang
+      </button>
+      <button
+        type="button"
+        className={styles.tombolTutup}
+        onClick={tutup}
+        aria-label="Tutup pengingat"
+        title="Tutup — peringatan tetap ada di menu Pengaturan"
+      >
+        <svg viewBox="0 0 24 24">
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
+      </button>
     </div>
   );
 }

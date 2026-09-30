@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   BATAS_HARI_PENGINGAT,
+  bannerPengingatDitutup,
   namaBerkasBackup,
-  pengingatDitutupHariIni,
+  penandaPeriodePengingat,
   perluPengingatBackup,
   selisihHariKalender,
 } from '../jadwalBackup';
@@ -39,10 +40,21 @@ describe('perluPengingatBackup', () => {
   });
 });
 
-describe('pengingatDitutupHariIni', () => {
-  it('tersembunyi hanya pada hari kalender yang sama saat ditutup', () => {
-    expect(pengingatDitutupHariIni('2026-09-30', new Date(2026, 8, 30, 23, 59))).toBe(true);
-    expect(pengingatDitutupHariIni('2026-09-30', new Date(2026, 9, 1, 0, 0))).toBe(false);
-    expect(pengingatDitutupHariIni(null, new Date(2026, 8, 30))).toBe(false);
+describe('bannerPengingatDitutup', () => {
+  it('belum pernah ditutup → tampil', () => {
+    expect(bannerPengingatDitutup(null, null)).toBe(false);
+    expect(bannerPengingatDitutup(null, 1000)).toBe(false);
+  });
+
+  it('ditutup saat belum pernah backup → tetap tersembunyi selama belum ada backup', () => {
+    const ditutup = penandaPeriodePengingat(null);
+    expect(bannerPengingatDitutup(ditutup, null)).toBe(true);
+    expect(bannerPengingatDitutup(ditutup, 5000)).toBe(false);
+  });
+
+  it('ditutup untuk backup tertentu → muncul lagi setelah ada backup yang lebih baru (dan telat lagi)', () => {
+    const ditutup = penandaPeriodePengingat(1000);
+    expect(bannerPengingatDitutup(ditutup, 1000)).toBe(true);
+    expect(bannerPengingatDitutup(ditutup, 2000)).toBe(false);
   });
 });

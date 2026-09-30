@@ -32,8 +32,14 @@ export function perluPengingatBackup(
   return selisihHariKalender(new Date(status.terakhirBackupPada), sekarang) >= BATAS_HARI_PENGINGAT;
 }
 
-// Pengingat boleh ditutup, tapi hanya untuk hari itu — besoknya muncul lagi
-// selama backup masih perlu. `ditutupPadaHari` = idHariIni saat ditutup.
-export function pengingatDitutupHariIni(ditutupPadaHari: string | null, sekarang: Date): boolean {
-  return ditutupPadaHari === idHariIni(sekarang);
+// Banner pengingat di halaman utama boleh ditutup (✕) untuk "periode telat"
+// yang sedang berjalan: tetap tersembunyi sampai ada backup baru, lalu boleh
+// muncul lagi kalau backup baru itu pun sudah telat. Tanda di menu Pengaturan
+// tidak ikut tersembunyi. Nilai yang disimpan saat menutup = penandaPeriodePengingat().
+export function penandaPeriodePengingat(terakhirBackupPada: number | null): string {
+  return terakhirBackupPada === null ? 'belum-pernah' : String(terakhirBackupPada);
+}
+
+export function bannerPengingatDitutup(ditutupUntuk: string | null, terakhirBackupPada: number | null): boolean {
+  return ditutupUntuk === penandaPeriodePengingat(terakhirBackupPada);
 }
