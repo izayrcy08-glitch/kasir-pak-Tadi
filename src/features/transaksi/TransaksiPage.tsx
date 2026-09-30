@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getPrinterAdapter } from '../../platform/print';
+import { pesanGagalCetak } from '../../platform/print/pesanGagalCetak';
 import { panggil } from '../../shared/db/klienDb';
 import { PembayaranKurangError, StokTidakCukupError } from '../../shared/db/galat';
 import { usePengaturanToko } from '../../shared/hooks/usePengaturanToko';
@@ -27,6 +28,8 @@ export function TransaksiPage() {
   const [menyimpan, setMenyimpan] = useState(false);
   const [errorSimpan, setErrorSimpan] = useState('');
   const [sukses, setSukses] = useState('');
+  const [gagalCetak, setGagalCetak] = useState<{ pesan: string; bytes: Uint8Array } | null>(null);
+  const [mencetakUlang, setMencetakUlang] = useState(false);
 
   const hasilFilter = useMemo(() => filterProduk(daftar, kataKunci, 'Semua'), [daftar, kataKunci]);
   const ringkasan = useMemo(() => hitungTotal(keranjang.item, diskon), [keranjang.item, diskon]);
@@ -45,9 +48,30 @@ export function TransaksiPage() {
     return () => clearTimeout(timer);
   }, [sukses]);
 
+  async function cetak(bytes: Uint8Array): Promise<boolean> {
+    try {
+      await getPrinterAdapter().printReceipt(bytes);
+      setGagalCetak(null);
+      return true;
+    } catch (err) {
+      // Transaksi sudah tersimpan — gagal cetak tidak boleh membatalkannya,
+      // tapi kasir wajib tahu struk tidak keluar (dulu gagal diam-diam).
+      setGagalCetak({ pesan: pesanGagalCetak(err), bytes });
+      return false;
+    }
+  }
+
+  async function handleCobaCetakLagi() {
+    if (!gagalCetak) return;
+    setMencetakUlang(true);
+    if (await cetak(gagalCetak.bytes)) setSukses('Struk tercetak.');
+    setMencetakUlang(false);
+  }
+
   async function handleBayar() {
     setErrorSimpan('');
     setSukses('');
+    setGagalCetak(null);
     setMenyimpan(true);
     try {
       const draft: TransaksiDraft = {
@@ -58,37 +82,30 @@ export function TransaksiPage() {
       };
       const id = await panggil('simpanTransaksi', draft);
 
-      try {
-        const itemStruk: ItemTransaksi[] = keranjang.item.map((it) => ({
-          produkId: it.produkId,
-          nama: it.nama,
-          kodePart: it.kodePart,
-          hargaSatuan: it.hargaSatuan,
-          qty: it.qty,
-          subtotalItem: it.hargaSatuan * it.qty,
-        }));
-        const teks = formatStruk({
-          namaToko: pengaturan?.namaToko,
-          transaksiId: id,
-          item: itemStruk,
-          ringkasan,
-          diskon,
-          metodeBayar,
-          dibayar: metodeBayar === 'tunai' ? dibayar : undefined,
-          kembalian: metodeBayar === 'tunai' ? kembalian : undefined,
-          dibuatPada: new Date(),
-        });
-        await getPrinterAdapter().printReceipt(new TextEncoder().encode(teks));
-      } catch {
-        // Cetak best-effort — printer belum tersedia (noop) sampai fitur
-        // Pengaturan > Printer dibangun. Kegagalan print tidak boleh
-        // membatalkan status sukses transaksi yang sudah tersimpan.
-      }
+      const itemStruk: ItemTransaksi[] = keranjang.item.map((it) => ({
+        produkId: it.produkId,
+        nama: it.nama,
+        kodePart: it.kodePart,
+        hargaSatuan: it.hargaSatuan,
+        qty: it.qty,
+        subtotalItem: it.hargaSatuan * it.qty,
+      }));
+      const teks = formatStruk({
+        namaToko: pengaturan?.namaToko,
+        transaksiId: id,
+        item: itemStruk,
+        ringkasan,
+        diskon,
+        metodeBayar,
+        dibayar: metodeBayar === 'tunai' ? dibayar : undefined,
+        kembalian: metodeBayar === 'tunai' ? kembalian : undefined,
+        dibuatPada: new Date(),
+      });
 
       keranjang.kosongkan();
       setDiskon(null);
       setDibayarStr('');
-      setSukses('Transaksi tersimpan.');
+      if (await cetak(new TextEncoder().encode(teks))) setSukses('Transaksi tersimpan.');
     } catch (err) {
       if (err instanceof StokTidakCukupError) {
         const detail = err.detail
@@ -113,6 +130,26 @@ export function TransaksiPage() {
       </div>
 
       {errorSimpan && <div className={styles.errorBanner}>{errorSimpan}</div>}
+      {gagalCetak && (
+        <div className={styles.cetakGagal} role="alert">
+          <p className={styles.cetakGagalTeks}>
+            <strong>Transaksi tersimpan, tapi struk tidak tercetak.</strong> {gagalCetak.pesan}
+          </p>
+          <div className={styles.cetakGagalAksi}>
+            <button
+              type="button"
+              className={styles.btnCobaLagi}
+              onClick={handleCobaCetakLagi}
+              disabled={mencetakUlang}
+            >
+              {mencetakUlang ? 'Mencetak…' : 'Coba cetak lagi'}
+            </button>
+            <button type="button" className={styles.btnTutup} onClick={() => setGagalCetak(null)}>
+              Tutup
+            </button>
+          </div>
+        </div>
+      )}
       {sukses && (
         <div className={styles.successToast} role="status">
           <svg viewBox="0 0 24 24">

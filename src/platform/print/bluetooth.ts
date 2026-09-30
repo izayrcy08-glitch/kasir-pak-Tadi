@@ -1,6 +1,6 @@
 import { Capacitor } from '@capacitor/core';
 import { BluetoothClassic } from '@nosslabs/bluetooth-classic';
-import type { PrinterAdapter } from './printerAdapter';
+import { GalatPrinter, type PrinterAdapter } from './printerAdapter';
 
 // Printer thermal murah pakai Bluetooth Classic (SPP), bukan BLE — Web
 // Bluetooth API browser tidak bisa bicara ke jenis ini sama sekali (lihat
@@ -33,7 +33,7 @@ async function pastikanIzinBluetooth(): Promise<void> {
   if (status.status === 'granted') return;
   const hasil = await BluetoothClassic.requestPermissions();
   if (hasil.status !== 'granted') {
-    throw new Error('Izin Bluetooth ditolak — aktifkan lewat pengaturan aplikasi di HP.');
+    throw new GalatPrinter('Izin Bluetooth ditolak — aktifkan lewat pengaturan aplikasi di HP.');
   }
 }
 
@@ -54,7 +54,7 @@ export const bluetoothPrinter: PrinterAdapter = {
 
   async connect() {
     if (!platformAndroidNative()) {
-      throw new Error('Bluetooth Classic cuma didukung di aplikasi Android.');
+      throw new GalatPrinter('Bluetooth Classic cuma didukung di aplikasi Android.');
     }
     const alamat = alamatPrinterTersimpan();
     if (!alamat) {
@@ -63,7 +63,7 @@ export const bluetoothPrinter: PrinterAdapter = {
       // Pengaturan > Printer — tanpa itu tidak ada cara aman menebak
       // device mana yang dimaksud di antara semua device yang di-pairing
       // di HP.
-      throw new Error('Belum pilih printer Bluetooth. Buka Pengaturan > Printer untuk cari & pilih printer dulu.');
+      throw new GalatPrinter('Printer Bluetooth belum dipilih. Buka Pengaturan → Printer Struk & Laci Kas untuk memilih printer.');
     }
     await pastikanIzinBluetooth();
     await pastikanBluetoothAktif();
@@ -78,7 +78,15 @@ export const bluetoothPrinter: PrinterAdapter = {
       // seperti pola lazy-connect di webserial.ts.
       await bluetoothPrinter.connect();
     }
-    await BluetoothClassic.write({ data: Array.from(bytes) });
+    try {
+      await BluetoothClassic.write({ data: Array.from(bytes) });
+    } catch (err) {
+      // Printer mati/di luar jangkauan setelah sempat tersambung — lupakan
+      // sambungan lama supaya percobaan berikutnya menyambung ulang, bukan
+      // terus menulis ke sambungan yang sudah putus.
+      sedangTerhubung = false;
+      throw err;
+    }
   },
 
   async openCashDrawer() {

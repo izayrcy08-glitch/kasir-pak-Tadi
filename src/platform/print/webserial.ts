@@ -1,4 +1,4 @@
-import type { PrinterAdapter } from './printerAdapter';
+import { GalatPrinter, type PrinterAdapter } from './printerAdapter';
 
 // Tipe minimal Web Serial API (belum ada di lib TypeScript bawaan) — cukup
 // bagian yang dipakai di sini, adaptasi dari printViaWebSerial() di proyek
@@ -81,7 +81,7 @@ export const webSerialPrinter: PrinterAdapter = {
 
   async connect() {
     const nav = ambilSerialNavigator();
-    if (!nav) throw new Error('Web Serial tidak didukung di browser ini.');
+    if (!nav) throw new GalatPrinter('Browser ini tidak bisa mencetak ke printer USB — pakai Chrome atau Edge.');
     // Selalu minta pilih port lewat dialog OS, jangan diam-diam pakai port
     // tersimpan dari sesi sebelumnya — port yang salah bisa bikin printer
     // cetak kertas kosong tanpa error yang jelas.
@@ -90,7 +90,7 @@ export const webSerialPrinter: PrinterAdapter = {
 
   async printReceipt(bytes) {
     const nav = ambilSerialNavigator();
-    if (!nav) throw new Error('Web Serial tidak didukung di browser ini.');
+    if (!nav) throw new GalatPrinter('Browser ini tidak bisa mencetak ke printer USB — pakai Chrome atau Edge.');
     if (!portTersambung) {
       // Belum pernah connect() eksplisit di sesi ini (mis. cetak otomatis
       // setelah bayar) — pakai port yang browser sudah izinkan sebelumnya
