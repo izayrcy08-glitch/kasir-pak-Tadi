@@ -120,6 +120,16 @@ Library `@sqlite.org/sqlite-wasm` 3.53.4, VFS `opfs-sahpool` (jalan di Web Worke
 
 Tanpa cloud, **data SQLite di tablet hilang permanen kalau tablet rusak/hilang/di-uninstall tanpa backup dulu** — tidak ada safety net otomatis seperti Firestore sebelumnya. Fitur reminder backup rutin sebaiknya masuk scope migrasi, bukan dianggap opsional selamanya. Mekanisme restore-nya sudah tercakup oleh fitur Export/Import lengkap (langkah 4–5); yang masih perlu ditambahkan adalah pengingat rutinnya.
 
+### Keystore rilis (disiapkan 2026-09-30)
+
+Kunci tanda tangan APK rilis. Semua APK yang dipasang di tablet toko **wajib** ditandatangani kunci yang sama selamanya — kunci hilang/beda = update ditolak Android = terpaksa uninstall = data di device terhapus (masih bisa dipulihkan dari file backup, tapi transaksi setelah backup terakhir hilang).
+
+- Lokasi: `C:\Users\USER\kunci-rilis-kasir\` (di luar repo): `kasir-rilis.jks` (kunci) + `keystore.properties` (path, alias `kasir`, kata sandi). `android/app/build.gradle` membacanya dari sana (bisa diganti lewat env `KASIR_KEYSTORE_PROPERTIES`); build rilis **gagal dengan sengaja** kalau file itu tidak ada, build debug tetap jalan. `android/.gitignore` menolak `*.jks`, `*.keystore`, `keystore.properties`.
+- Dibuat oleh pemilik sendiri (kata sandi tidak pernah diketik/dilihat AI): `keytool -genkeypair -v -keystore "C:\Users\USER\kunci-rilis-kasir\kasir-rilis.jks" -alias kasir -keyalg RSA -keysize 4096 -validity 36500`, lalu salin `keystore.properties.contoh` → `keystore.properties` dan isi kata sandinya.
+- **Wajib backup**: salin seluruh folder `kunci-rilis-kasir` ke minimal 2 tempat (mis. Google Drive + flashdisk) dan catat kata sandinya terpisah dari file itu. Tanpa file + kata sandi, APK toko tidak bisa di-update lagi.
+- Build rilis: `npm run build && npx cap sync android && cd android && ./gradlew.bat assembleRelease` → `android/app/build/outputs/apk/release/app-release.apk`. Tiap rilis berikutnya naikkan `versionCode` di `android/app/build.gradle`.
+- HP uji yang pernah dipasang build debug harus uninstall dulu sebelum pasang APK rilis (tanda tangan beda). Tablet toko: **hanya** pernah dipasang APK rilis.
+
 ## Belum dibahas (langkah selanjutnya)
 
 - Setup teknis (scaffolding Vite, install Firebase SDK, bikin project Firebase asli di console) — belum dikerjakan, menunggu instruksi lanjut dari user.
