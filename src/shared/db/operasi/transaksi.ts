@@ -177,30 +177,65 @@ export function ambilRiwayatTransaksi(
     [rentang.mulai.getTime(), rentang.akhir.getTime(), k?.id ?? null, k?.dibuatPada ?? null, k?.id ?? null, batas],
   ) as unknown as BarisTransaksi[];
 
+  const semuaItem =
+    baris.length === 0
+      ? []
+      : (db.selectObjects(
+          `SELECT transaksi_id, produk_id, nama, kode_part, harga_satuan, qty, subtotal_item
+           FROM item_transaksi
+           WHERE transaksi_id IN (${baris.map(() => '?').join(', ')})
+           ORDER BY transaksi_id, urutan`,
+          baris.map((b) => b.id),
+        ) as unknown as BarisItem[]);
+  const daftar = susunTransaksi(baris, semuaItem);
+
+  const terakhir = baris.at(-1);
+  const kursorBerikutnya =
+    baris.length === batas && terakhir ? { dibuatPada: terakhir.dibuat_pada, id: terakhir.id } : null;
+
+  return { daftar, kursorBerikutnya };
+}
+
+// Semua transaksi dalam rentang, urut dari yang terlama — untuk ekspor CSV
+// laporan. Tanpa batas halaman; item diambil lewat subquery rentang (bukan
+// daftar id di `IN (?, ?, ...)`) supaya tidak mentok batas jumlah parameter
+// SQLite saat rentangnya berisi ribuan transaksi.
+export function ambilTransaksiRentang(db: Database, rentang: { mulai: Date; akhir: Date }): Transaksi[] {
+  const bind = [rentang.mulai.getTime(), rentang.akhir.getTime()];
+  const baris = db.selectObjects(
+    `SELECT id, subtotal, diskon_tipe, diskon_nilai, total_diskon, total, metode_bayar,
+            dibayar, kembalian, dibuat_pada
+     FROM transaksi
+     WHERE dibuat_pada BETWEEN ? AND ?
+     ORDER BY dibuat_pada, id`,
+    bind,
+  ) as unknown as BarisTransaksi[];
+  const semuaItem = db.selectObjects(
+    `SELECT transaksi_id, produk_id, nama, kode_part, harga_satuan, qty, subtotal_item
+     FROM item_transaksi
+     WHERE transaksi_id IN (SELECT id FROM transaksi WHERE dibuat_pada BETWEEN ? AND ?)
+     ORDER BY transaksi_id, urutan`,
+    bind,
+  ) as unknown as BarisItem[];
+  return susunTransaksi(baris, semuaItem);
+}
+
+function susunTransaksi(baris: BarisTransaksi[], semuaItem: BarisItem[]): Transaksi[] {
   const itemPerTransaksi = new Map<string, ItemTransaksi[]>();
-  if (baris.length > 0) {
-    const semuaItem = db.selectObjects(
-      `SELECT transaksi_id, produk_id, nama, kode_part, harga_satuan, qty, subtotal_item
-       FROM item_transaksi
-       WHERE transaksi_id IN (${baris.map(() => '?').join(', ')})
-       ORDER BY transaksi_id, urutan`,
-      baris.map((b) => b.id),
-    ) as unknown as BarisItem[];
-    for (const it of semuaItem) {
-      const daftar = itemPerTransaksi.get(it.transaksi_id) ?? [];
-      daftar.push({
-        produkId: it.produk_id,
-        nama: it.nama,
-        kodePart: it.kode_part ?? undefined,
-        hargaSatuan: it.harga_satuan,
-        qty: it.qty,
-        subtotalItem: it.subtotal_item,
-      });
-      itemPerTransaksi.set(it.transaksi_id, daftar);
-    }
+  for (const it of semuaItem) {
+    const daftar = itemPerTransaksi.get(it.transaksi_id) ?? [];
+    daftar.push({
+      produkId: it.produk_id,
+      nama: it.nama,
+      kodePart: it.kode_part ?? undefined,
+      hargaSatuan: it.harga_satuan,
+      qty: it.qty,
+      subtotalItem: it.subtotal_item,
+    });
+    itemPerTransaksi.set(it.transaksi_id, daftar);
   }
 
-  const daftar: Transaksi[] = baris.map((b) => ({
+  return baris.map((b) => ({
     id: b.id,
     item: itemPerTransaksi.get(b.id) ?? [],
     subtotal: b.subtotal,
@@ -212,10 +247,4 @@ export function ambilRiwayatTransaksi(
     kembalian: b.kembalian ?? undefined,
     dibuatPada: b.dibuat_pada,
   }));
-
-  const terakhir = baris.at(-1);
-  const kursorBerikutnya =
-    baris.length === batas && terakhir ? { dibuatPada: terakhir.dibuat_pada, id: terakhir.id } : null;
-
-  return { daftar, kursorBerikutnya };
 }

@@ -15,12 +15,13 @@ import { ambilStatusBackup, catatBackup } from './backup';
 import { ambilAgregatRentang } from './laporan';
 import { ambilPengaturanToko, simpanPengaturanToko } from './pengaturanToko';
 import { daftarProduk, hapusProduk, tambahProduk, updateProduk } from './produk';
-import { ambilRiwayatTransaksi, simpanTransaksi } from './transaksi';
+import { ambilRiwayatTransaksi, ambilTransaksiRentang, simpanTransaksi } from './transaksi';
 
 export const OPERASI = {
   // Transaksi
   simpanTransaksi: (db: Database, draft: TransaksiDraft) => simpanTransaksi(db, draft),
   ambilRiwayatTransaksi,
+  ambilTransaksiRentang,
   // Produk
   daftarProduk,
   tambahProduk: (db: Database, input: ProdukInput) => tambahProduk(db, input),

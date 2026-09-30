@@ -8,6 +8,7 @@ import { RangeFilterToolbar, type PilihanRentang } from './components/RangeFilte
 import { RingkasanMetodeBayar } from './components/RingkasanMetodeBayar';
 import { RiwayatTransaksiCard } from './components/RiwayatTransaksiCard';
 import { StatRow } from './components/StatRow';
+import { useEksporCsv } from './hooks/useEksporCsv';
 import { useLaporanPeriode } from './hooks/useLaporanPeriode';
 import { useRingkasanOmzet } from './hooks/useRingkasanOmzet';
 import { useRiwayatTransaksi } from './hooks/useRiwayatTransaksi';
@@ -35,6 +36,7 @@ export function LaporanPage() {
   const ringkasanTetap = useRingkasanOmzet();
   const periode = useLaporanPeriode(rentangAktif, pemicuMuatUlang);
   const riwayat = useRiwayatTransaksi(rentangAktif, pemicuMuatUlang);
+  const eksporCsv = useEksporCsv(rentangAktif);
 
   const ringkasanPeriode = useMemo(() => agregatOmzet(periode.dokumen), [periode.dokumen]);
   const produkTerlaris = useMemo(() => agregatProdukTerlaris(periode.dokumen), [periode.dokumen]);
@@ -64,8 +66,31 @@ export function LaporanPage() {
           <button type="button" className={styles.muatUlangBtn} onClick={muatUlang}>
             Muat Ulang
           </button>
+          <button
+            type="button"
+            className={styles.eksporBtn}
+            onClick={eksporCsv.ekspor}
+            disabled={eksporCsv.mengekspor || (!riwayat.loading && riwayat.daftar.length === 0)}
+          >
+            <svg viewBox="0 0 24 24">
+              <path d="M12 4v11" />
+              <path d="m7.5 10.5 4.5 4.5 4.5-4.5" />
+              <path d="M5 19.5h14" />
+            </svg>
+            {eksporCsv.mengekspor ? 'Menyiapkan…' : 'Ekspor CSV'}
+          </button>
         </div>
       </div>
+
+      {eksporCsv.sukses && (
+        <div className={styles.successToast} role="status">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M8 12.5 10.8 15.3 16 9.5" />
+          </svg>
+          {eksporCsv.sukses}
+        </div>
+      )}
 
       <RangeFilterToolbar
         pilihan={pilihan}
@@ -79,6 +104,11 @@ export function LaporanPage() {
       {ringkasanTetap.error || periode.error || riwayat.error ? (
         <div className={styles.errorBanner}>Gagal memuat sebagian data laporan. Coba lagi.</div>
       ) : null}
+      {eksporCsv.error && (
+        <div className={styles.errorBanner} role="alert">
+          {eksporCsv.error}
+        </div>
+      )}
 
       <StatRow
         omzetHariIni={ringkasanTetap.hariIni.omzet}

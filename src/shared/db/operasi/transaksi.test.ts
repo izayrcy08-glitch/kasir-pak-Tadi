@@ -4,7 +4,7 @@ import type { TransaksiDraft } from '../../types/transaksi';
 import { PembayaranKurangError, StokTidakCukupError } from '../galat';
 import { buatDbUji } from '../ujiDb';
 import type { Ketergantungan } from './ketergantungan';
-import { ambilRiwayatTransaksi, simpanTransaksi } from './transaksi';
+import { ambilRiwayatTransaksi, ambilTransaksiRentang, simpanTransaksi } from './transaksi';
 
 function tambahProduk(db: Database, id: string, hargaJual: number, stok: number, kodePart: string | null = null) {
   db.exec({
@@ -223,5 +223,41 @@ describe('ambilRiwayatTransaksi', () => {
     } while (kursor);
 
     expect(semua).toEqual(['t07', 't06', 't05', 't04', 't03', 't02', 't01']);
+  });
+});
+
+describe('ambilTransaksiRentang', () => {
+  let db: Database;
+  const rentangHari = { mulai: new Date(2026, 8, 27, 0, 0, 0), akhir: new Date(2026, 8, 27, 23, 59, 59, 999) };
+
+  beforeEach(async () => {
+    db = await buatDbUji();
+    tambahProduk(db, 'busi', 15000, 1000);
+    tambahProduk(db, 'oli', 50000, 1000);
+  });
+
+  it('semua transaksi dalam rentang (tanpa batas halaman), terlama dulu, item urut sesuai keranjang', () => {
+    simpanTransaksi(db, draftTunai([{ produkId: 'busi', qty: 1 }]), {
+      sekarang: () => new Date(2026, 8, 26, 23, 59),
+      buatId: () => 'kemarin',
+    });
+    const dep = depUji(new Date(2026, 8, 27, 8, 0));
+    for (let i = 0; i < 60; i++) {
+      simpanTransaksi(db, draftTunai([{ produkId: 'oli', qty: 1 }, { produkId: 'busi', qty: 2 }]), dep);
+    }
+
+    const daftar = ambilTransaksiRentang(db, rentangHari);
+    expect(daftar).toHaveLength(60);
+    expect(daftar[0]!.id).toBe('t1');
+    expect(daftar.at(-1)!.id).toBe('t60');
+    expect(daftar[0]!.item.map((it) => [it.produkId, it.qty])).toEqual([
+      ['oli', 1],
+      ['busi', 2],
+    ]);
+    expect(daftar.every((t) => t.item.length === 2)).toBe(true);
+  });
+
+  it('kosong kalau tidak ada transaksi di rentang', () => {
+    expect(ambilTransaksiRentang(db, rentangHari)).toEqual([]);
   });
 });
