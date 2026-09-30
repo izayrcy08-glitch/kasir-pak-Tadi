@@ -1,6 +1,8 @@
 import { formatTanggalPendek, formatWaktu } from '../../../shared/lib/formatTanggal';
 import { formatRupiah } from '../../../shared/lib/formatRupiah';
+import { LihatLebih } from '../../../shared/components/LihatLebih';
 import type { MetodeBayar, Transaksi } from '../../../shared/types/transaksi';
+import { BATAS_HALAMAN } from '../hooks/useRiwayatTransaksi';
 import styles from './RiwayatTransaksiCard.module.css';
 
 interface Props {
@@ -8,6 +10,7 @@ interface Props {
   adaLagi: boolean;
   memuatLebih: boolean;
   onMuatLebih: () => void;
+  onLebihSedikit: () => void;
   onKlikBaris: (transaksi: Transaksi) => void;
 }
 
@@ -16,7 +19,14 @@ const LABEL_METODE: Record<MetodeBayar, string> = {
   qris_transfer: 'QRIS',
 };
 
-export function RiwayatTransaksiCard({ daftar, adaLagi, memuatLebih, onMuatLebih, onKlikBaris }: Props) {
+export function RiwayatTransaksiCard({
+  daftar,
+  adaLagi,
+  memuatLebih,
+  onMuatLebih,
+  onLebihSedikit,
+  onKlikBaris,
+}: Props) {
   return (
     <div className={styles.card}>
       <h2>Riwayat Transaksi</h2>
@@ -51,11 +61,13 @@ export function RiwayatTransaksiCard({ daftar, adaLagi, memuatLebih, onMuatLebih
               })}
             </tbody>
           </table>
-          {adaLagi && (
-            <button type="button" className={styles.muatLebih} onClick={onMuatLebih} disabled={memuatLebih}>
-              {memuatLebih ? 'Memuat…' : 'Muat Lebih'}
-            </button>
-          )}
+          <LihatLebih
+            bisaLebihBanyak={adaLagi}
+            bisaLebihSedikit={daftar.length > BATAS_HALAMAN}
+            onLebihBanyak={onMuatLebih}
+            onLebihSedikit={onLebihSedikit}
+            memuat={memuatLebih}
+          />
         </>
       )}
     </div>

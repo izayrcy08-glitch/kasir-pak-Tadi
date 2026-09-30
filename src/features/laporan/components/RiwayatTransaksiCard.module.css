@@ -73,24 +73,6 @@
   color: var(--color-paytag-qris-text);
 }
 
-.muatLebih {
-  width: 100%;
-  margin-top: 12px;
-  padding: 10px;
-  border-radius: var(--radius-button);
-  border: var(--border-subtle-strong);
-  background: none;
-  color: var(--color-text-secondary);
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.muatLebih:disabled {
-  opacity: 0.6;
-  cursor: default;
-}
 
 .empty {
   padding: 24px 4px;

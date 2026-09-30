@@ -1,7 +1,9 @@
-/* auto-fit: 1 kolom di HP, otomatis sebaris penuh begitu lebarnya cukup. */
+/* auto-fit: 1 kolom di HP, otomatis sebaris penuh begitu lebarnya cukup.
+   Minimal 210px: omzet bulanan bisa 11+ digit ("Rp 131.860.900") — kolom
+   170px dulu membuat 2 kolom sempit di HP dan angkanya keluar kotak. */
 .statRow {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
   gap: 12px;
 }
 
@@ -11,6 +13,8 @@
   box-shadow: var(--shadow-card);
   padding: 16px 18px;
   min-width: 0;
+  /* Supaya ukuran angka bisa mengikuti lebar kotak (cqi di .value). */
+  container-type: inline-size;
 }
 
 .label {
@@ -25,9 +29,12 @@
 .value {
   font-family: var(--font-mono);
   font-weight: 600;
-  font-size: 1.3rem;
+  /* Mengecil kalau kotak sempit (angka omzet panjang): ±15 karakter mono
+     muat di 100cqi; tidak pernah lebih besar dari ukuran desain. */
+  font-size: min(1.3rem, 10.5cqi);
   margin: 0;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 @media (min-width: 1024px) {
@@ -40,6 +47,6 @@
   }
 
   .value {
-    font-size: 1.5rem;
+    font-size: min(1.5rem, 10.5cqi);
   }
 }

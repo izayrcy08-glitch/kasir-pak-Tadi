@@ -198,3 +198,8 @@
     right: 40px;
   }
 }
+
+.angka {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}

@@ -126,6 +126,7 @@ export function LaporanPage() {
           adaLagi={riwayat.adaLagi}
           memuatLebih={riwayat.memuatLebih}
           onMuatLebih={riwayat.muatLebih}
+          onLebihSedikit={riwayat.lebihSedikit}
           onKlikBaris={setTransaksiDipilih}
         />
       </div>

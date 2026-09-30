@@ -151,3 +151,8 @@
     padding: 8px 15px;
   }
 }
+
+.angka {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}

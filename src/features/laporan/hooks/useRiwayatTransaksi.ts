@@ -4,7 +4,9 @@ import type { RiwayatTransaksiHalaman } from '../../../shared/db/operasi/transak
 import type { Transaksi } from '../../../shared/types/transaksi';
 import type { RentangTanggal } from '../logic/rentangTanggal';
 
-const BATAS_HALAMAN = 50;
+// Kecil supaya kartu riwayat tidak memanjang jauh di HP; sisanya lewat
+// "Lihat lebih banyak".
+export const BATAS_HALAMAN = 10;
 
 export function useRiwayatTransaksi(rentang: RentangTanggal, pemicuMuatUlang = 0) {
   const [daftar, setDaftar] = useState<Transaksi[]>([]);
@@ -55,5 +57,14 @@ export function useRiwayatTransaksi(rentang: RentangTanggal, pemicuMuatUlang = 0
     }
   }
 
-  return { daftar, loading, error, adaLagi: kursor !== null, memuatLebih, muatLebih };
+  // Kembali ke halaman pertama tanpa memuat ulang dari DB: potong daftar dan
+  // lanjutkan kursor dari item terakhir yang masih tampil.
+  function lebihSedikit() {
+    if (daftar.length <= BATAS_HALAMAN) return;
+    const terakhir = daftar[BATAS_HALAMAN - 1]!;
+    setDaftar((prev) => prev.slice(0, BATAS_HALAMAN));
+    setKursor({ dibuatPada: terakhir.dibuatPada, id: terakhir.id });
+  }
+
+  return { daftar, loading, error, adaLagi: kursor !== null, memuatLebih, muatLebih, lebihSedikit };
 }

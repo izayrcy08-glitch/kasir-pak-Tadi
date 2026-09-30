@@ -3,6 +3,9 @@ import { getPrinterAdapter } from '../../platform/print';
 import { pesanGagalCetak } from '../../platform/print/pesanGagalCetak';
 import { panggil } from '../../shared/db/klienDb';
 import { PembayaranKurangError, StokTidakCukupError } from '../../shared/db/galat';
+import { LihatLebih } from '../../shared/components/LihatLebih';
+import { useBatasTampil } from '../../shared/hooks/useBatasTampil';
+import { useMediaQuery } from '../../shared/hooks/useMediaQuery';
 import { usePengaturanToko } from '../../shared/hooks/usePengaturanToko';
 import type { Diskon, ItemTransaksi, MetodeBayar, TransaksiDraft } from '../../shared/types/transaksi';
 import { filterProduk } from '../produk/logic/filterProduk';
@@ -32,6 +35,14 @@ export function TransaksiPage() {
   const [mencetakUlang, setMencetakUlang] = useState(false);
 
   const hasilFilter = useMemo(() => filterProduk(daftar, kataKunci, 'Semua'), [daftar, kataKunci]);
+  // Di HP/tablet grid produk ada DI ATAS keranjang dan halaman ikut
+  // menggulir — tanpa batas, keranjang terdorong jauh ke bawah. Di stasiun
+  // kasir (>=1024px) grid punya gulir sendiri di samping keranjang, jadi
+  // tampil semua seperti mockup.
+  const layarLebar = useMediaQuery('(min-width: 1024px)');
+  const tampil = useBatasTampil(6, kataKunci);
+  const batasProduk = layarLebar ? Infinity : tampil.batas;
+  const produkTampil = hasilFilter.slice(0, batasProduk);
   const ringkasan = useMemo(() => hitungTotal(keranjang.item, diskon), [keranjang.item, diskon]);
   const dibayar = Number(dibayarStr || 0);
   const kembalian = metodeBayar === 'tunai' ? hitungKembalian(ringkasan.total, dibayar) : undefined;
@@ -168,7 +179,23 @@ export function TransaksiPage() {
           ) : loading ? (
             <p className={styles.empty}>Memuat data produk…</p>
           ) : (
-            <ProdukGrid daftar={hasilFilter} onTambah={keranjang.tambah} />
+            <>
+              <ProdukGrid daftar={produkTampil} onTambah={keranjang.tambah} />
+              <LihatLebih
+                bisaLebihBanyak={hasilFilter.length > batasProduk}
+                bisaLebihSedikit={!layarLebar && produkTampil.length > 6}
+                onLebihBanyak={tampil.lebihBanyak}
+                onLebihSedikit={tampil.lebihSedikit}
+                keterangan={
+                  hasilFilter.length > batasProduk || produkTampil.length > 6 ? (
+                    <>
+                      <span className={styles.angka}>{produkTampil.length}</span> dari{' '}
+                      <span className={styles.angka}>{hasilFilter.length}</span> produk
+                    </>
+                  ) : undefined
+                }
+              />
+            </>
           )}
         </div>
 

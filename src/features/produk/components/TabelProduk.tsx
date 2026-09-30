@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { formatRupiah } from "../../../shared/lib/formatRupiah";
 import type { Produk } from "../../../shared/types/produk";
 import { hitungStokRendah } from "../logic/hitungStokRendah";
@@ -11,12 +12,15 @@ interface Props {
     onEdit: (produk: Produk) => void;
     onHapus: (produk: Produk) => void;
   };
+  /** Ditaruh di dalam kartu, di bawah tabel (mis. tombol lihat lebih banyak). */
+  footer?: ReactNode;
 }
 
 export function TabelProduk({
   daftar,
   pesanKosong = "Belum ada produk yang cocok. Coba ubah kata kunci atau kategori.",
   aksi,
+  footer,
 }: Props) {
   if (daftar.length === 0) {
     return (
@@ -102,6 +106,7 @@ export function TabelProduk({
           })}
         </tbody>
       </table>
+      {footer}
     </div>
   );
 }

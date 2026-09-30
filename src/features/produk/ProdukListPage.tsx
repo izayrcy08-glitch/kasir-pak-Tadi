@@ -1,13 +1,17 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MODE_PEMANTAU } from '../../platform/perangkat';
+import { LihatLebih } from '../../shared/components/LihatLebih';
 import { panggil } from '../../shared/db/klienDb';
+import { useBatasTampil } from '../../shared/hooks/useBatasTampil';
 import type { Produk } from '../../shared/types/produk';
 import { TabelProduk } from './components/TabelProduk';
 import { useProduk } from './hooks/useProduk';
 import { filterProduk } from './logic/filterProduk';
 import { hitungStokRendah } from './logic/hitungStokRendah';
 import styles from './ProdukListPage.module.css';
+
+const PER_HALAMAN = 20;
 
 export function ProdukListPage() {
   const { daftar, loading, error } = useProduk();
@@ -25,6 +29,9 @@ export function ProdukListPage() {
     () => filterProduk(daftar, kataKunci, kategori),
     [daftar, kataKunci, kategori],
   );
+
+  const tampil = useBatasTampil(PER_HALAMAN, `${kataKunci}|${kategori}`);
+  const produkTampil = hasilFilter.slice(0, tampil.batas);
 
   const jumlahStokRendah = useMemo(
     () => daftar.filter((p) => hitungStokRendah(p.stok, p.ambangStokRendah)).length,
@@ -97,7 +104,7 @@ export function ProdukListPage() {
         <div className={styles.card}>Memuat data produk…</div>
       ) : (
         <TabelProduk
-          daftar={hasilFilter}
+          daftar={produkTampil}
           pesanKosong={
             daftar.length === 0
               ? MODE_PEMANTAU
@@ -106,6 +113,20 @@ export function ProdukListPage() {
               : undefined
           }
           aksi={MODE_PEMANTAU ? undefined : { onEdit: (produk) => navigate(`/produk/${produk.id}/edit`), onHapus: handleHapus }}
+          footer={
+            <LihatLebih
+              bisaLebihBanyak={hasilFilter.length > tampil.batas}
+              bisaLebihSedikit={produkTampil.length > PER_HALAMAN}
+              onLebihBanyak={tampil.lebihBanyak}
+              onLebihSedikit={tampil.lebihSedikit}
+              keterangan={
+                <>
+                  <span className={styles.angka}>{produkTampil.length}</span> dari{' '}
+                  <span className={styles.angka}>{hasilFilter.length}</span> produk
+                </>
+              }
+            />
+          }
         />
       )}
     </>
