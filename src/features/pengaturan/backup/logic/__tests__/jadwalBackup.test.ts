@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { BATAS_HARI_PENGINGAT, namaBerkasBackup, perluPengingatBackup, selisihHariKalender } from '../jadwalBackup';
+import {
+  BATAS_HARI_PENGINGAT,
+  namaBerkasBackup,
+  pengingatDitutupHariIni,
+  perluPengingatBackup,
+  selisihHariKalender,
+} from '../jadwalBackup';
 
 describe('namaBerkasBackup', () => {
   it('memakai tanggal & jam lokal, dua digit', () => {
@@ -30,5 +36,13 @@ describe('perluPengingatBackup', () => {
     expect(perluPengingatBackup({ terakhirBackupPada: hariLalu(6), adaData: true }, sekarang)).toBe(false);
     expect(perluPengingatBackup({ terakhirBackupPada: hariLalu(7), adaData: true }, sekarang)).toBe(true);
     expect(perluPengingatBackup({ terakhirBackupPada: hariLalu(30), adaData: true }, sekarang)).toBe(true);
+  });
+});
+
+describe('pengingatDitutupHariIni', () => {
+  it('tersembunyi hanya pada hari kalender yang sama saat ditutup', () => {
+    expect(pengingatDitutupHariIni('2026-09-30', new Date(2026, 8, 30, 23, 59))).toBe(true);
+    expect(pengingatDitutupHariIni('2026-09-30', new Date(2026, 9, 1, 0, 0))).toBe(false);
+    expect(pengingatDitutupHariIni(null, new Date(2026, 8, 30))).toBe(false);
   });
 });

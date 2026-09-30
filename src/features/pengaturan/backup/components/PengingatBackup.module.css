@@ -61,3 +61,21 @@
   font-family: var(--font-body);
   white-space: nowrap;
 }
+
+.aksi {
+  display: flex;
+  gap: 8px;
+}
+
+.tombolTutup {
+  background: none;
+  border: var(--border-input);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-pill);
+  padding: 10px 14px;
+  font-weight: 500;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+  white-space: nowrap;
+}

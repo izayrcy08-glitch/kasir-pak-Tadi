@@ -31,3 +31,9 @@ export function perluPengingatBackup(
   if (status.terakhirBackupPada === null) return status.adaData;
   return selisihHariKalender(new Date(status.terakhirBackupPada), sekarang) >= BATAS_HARI_PENGINGAT;
 }
+
+// Pengingat boleh ditutup, tapi hanya untuk hari itu — besoknya muncul lagi
+// selama backup masih perlu. `ditutupPadaHari` = idHariIni saat ditutup.
+export function pengingatDitutupHariIni(ditutupPadaHari: string | null, sekarang: Date): boolean {
+  return ditutupPadaHari === idHariIni(sekarang);
+}

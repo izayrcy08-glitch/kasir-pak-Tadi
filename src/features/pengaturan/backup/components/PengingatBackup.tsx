@@ -1,20 +1,52 @@
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { idHariIni } from '../../../../shared/lib/idHariIni';
 import { useStatusBackup } from '../hooks/useStatusBackup';
-import { perluPengingatBackup, selisihHariKalender } from '../logic/jadwalBackup';
+import { pengingatDitutupHariIni, perluPengingatBackup, selisihHariKalender } from '../logic/jadwalBackup';
 import styles from './PengingatBackup.module.css';
 
 const RUTE_BACKUP = '/pengaturan/backup';
 
-// Banner di atas semua halaman kalau data belum di-backup cukup lama. Sengaja
-// tidak bisa ditutup: tanpa cloud, backup adalah satu-satunya penyelamat data
-// kalau device rusak/hilang.
+// Per device, cukup localStorage: kalau hilang, akibatnya hanya pengingat
+// muncul lagi — arah yang aman.
+const KUNCI_DITUTUP = 'pengingat-backup-ditutup-pada';
+
+function bacaDitutup(): string | null {
+  try {
+    return localStorage.getItem(KUNCI_DITUTUP);
+  } catch {
+    return null;
+  }
+}
+
+// Banner di atas semua halaman kalau data belum di-backup cukup lama. Tanpa
+// cloud, backup adalah satu-satunya penyelamat data kalau device rusak/hilang
+// — makanya "Tutup" hanya menyembunyikan sampai besok, tidak selamanya.
 export function PengingatBackup() {
   const { status } = useStatusBackup();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [ditutupPada, setDitutupPada] = useState(bacaDitutup);
 
   const sekarang = new Date();
-  if (!status || pathname === RUTE_BACKUP || !perluPengingatBackup(status, sekarang)) return null;
+  if (
+    !status ||
+    pathname === RUTE_BACKUP ||
+    !perluPengingatBackup(status, sekarang) ||
+    pengingatDitutupHariIni(ditutupPada, sekarang)
+  ) {
+    return null;
+  }
+
+  function tutup() {
+    const hariIni = idHariIni();
+    try {
+      localStorage.setItem(KUNCI_DITUTUP, hariIni);
+    } catch {
+      // Tetap tersembunyi untuk sesi ini saja.
+    }
+    setDitutupPada(hariIni);
+  }
 
   const pesan =
     status.terakhirBackupPada === null ? (
@@ -39,9 +71,14 @@ export function PengingatBackup() {
       <p className={styles.teks}>
         <strong>{pesan}</strong> Kalau device rusak atau hilang, data yang belum di-backup ikut hilang.
       </p>
-      <button type="button" className={styles.tombol} onClick={() => navigate(RUTE_BACKUP)}>
-        Backup sekarang
-      </button>
+      <div className={styles.aksi}>
+        <button type="button" className={styles.tombol} onClick={() => navigate(RUTE_BACKUP)}>
+          Backup sekarang
+        </button>
+        <button type="button" className={styles.tombolTutup} onClick={tutup} title="Sembunyikan sampai besok">
+          Nanti saja
+        </button>
+      </div>
     </div>
   );
 }
