@@ -11,18 +11,13 @@ import { PengaturanPrinterPage } from './features/pengaturan/printer/PengaturanP
 import { BackupPage } from './features/pengaturan/backup/BackupPage';
 import { MuatDataPage } from './features/pengaturan/pemantau/MuatDataPage';
 import { RUTE_MUAT_DATA } from './features/pengaturan/pemantau/rute';
-import { UjiDbPage } from './app/UjiDbPage';
 import { MODE_PEMANTAU } from './platform/perangkat';
 
 const HALAMAN_AWAL = MODE_PEMANTAU ? '/laporan' : '/transaksi';
 
 export default function App() {
-  // SEMENTARA: build uji Android (VITE_UJI_DB=true) cuma berisi halaman uji DB.
-  if (import.meta.env.VITE_UJI_DB === 'true') return <UjiDbPage />;
-
   return (
     <Routes>
-      {import.meta.env.DEV && <Route path="uji-db" element={<UjiDbPage />} />}
       <Route element={<GerbangDb />}>
         <Route element={<AppLayout />}>
           <Route index element={<Navigate to={HALAMAN_AWAL} replace />} />
