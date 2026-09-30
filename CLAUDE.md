@@ -6,9 +6,9 @@ Aplikasi kasir untuk toko sparepart motor/mobil. Solo dev non-teknis, sepenuhnya
 
 Aplikasi offline-only **tanpa login/PIN** (keputusan 2026-09-27, lihat `CATATAN-KEPUTUSAN.md`). Sisa langkah sebelum build dipasang di device toko:
 
-1. **Keystore rilis APK** — buat satu keystore, simpan + backup di luar repo. Jangan pernah pasang build debug di tablet toko (keystore beda = update ditolak = terpaksa uninstall = seluruh data toko hilang).
+1. ✅ **Keystore rilis APK** (2026-09-30, `C:\Users\USER\kunci-rilis-kasir\`, sudah di-backup; lihat CATATAN "Keystore rilis"). Jangan pernah pasang build debug di tablet toko (keystore beda = update ditolak = terpaksa uninstall = seluruh data toko hilang).
 2. **Kunci layar device wajib aktif** (pola/PIN Android, login Windows) — satu-satunya pengaman akses karena app tidak punya login.
-3. Fitur Export/Import + pengingat backup harus sudah ada (tanpa itu, tablet rusak/hilang = data hilang permanen).
+3. ✅ Fitur Export/Import + pengingat backup harus sudah ada (tanpa itu, tablet rusak/hilang = data hilang permanen).
 4. Uji persistensi data di PWA Windows sungguhan (tutup-buka app, restart laptop).
 
 ## Stack (final — lihat CATATAN-KEPUTUSAN.md untuk alasan lengkap)
