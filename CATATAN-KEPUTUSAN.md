@@ -128,6 +128,7 @@ Kunci tanda tangan APK rilis. Semua APK yang dipasang di tablet toko **wajib** d
 - Dibuat oleh pemilik sendiri (kata sandi tidak pernah diketik/dilihat AI): `keytool -genkeypair -v -keystore "C:\Users\USER\kunci-rilis-kasir\kasir-rilis.jks" -alias kasir -keyalg RSA -keysize 4096 -validity 36500`, lalu ganti `GANTI_DENGAN_KATA_SANDI` di `keystore.properties` (sudah disiapkan di folder itu) dengan kata sandinya.
 - **Wajib backup**: salin seluruh folder `kunci-rilis-kasir` ke minimal 2 tempat (mis. Google Drive + flashdisk) dan catat kata sandinya terpisah dari file itu. Tanpa file + kata sandi, APK toko tidak bisa di-update lagi.
 - Build rilis: `npm run build && npx cap sync android && cd android && ./gradlew.bat assembleRelease` → `android/app/build/outputs/apk/release/app-release.apk`. Tiap rilis berikutnya naikkan `versionCode` di `android/app/build.gradle`.
+- ✅ Kunci dibuat pemilik 2026-09-30; APK rilis pertama terverifikasi (`apksigner verify`: skema v2, DN `CN=Kasir, O=Toko Sparepart, C=ID`). **SHA-256 sertifikat: `ef87d14dfba1e28673f47842ecfad0c6b1476c56eddf03b4be04cb0103d71f4e`** — setiap APK rilis berikutnya wajib punya sidik jari yang sama (cek: `apksigner verify --print-certs app-release.apk`, apksigner ada di `<Android SDK>/build-tools/<versi>/`).
 - HP uji yang pernah dipasang build debug harus uninstall dulu sebelum pasang APK rilis (tanda tangan beda). Tablet toko: **hanya** pernah dipasang APK rilis.
 
 ## Belum dibahas (langkah selanjutnya)
